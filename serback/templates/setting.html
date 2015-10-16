@@ -1,0 +1,299 @@
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">網站設定<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+          <a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>
+         </div>
+
+
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+<form action="" method="post" id="form" name="form">
+<div id="tabs">
+<ul>
+	<li><a href="#tabs-1">網站設定</a></li>
+    <!--<li><a href="#tabs-2">按鈕設定</a></li>-->
+    ({if $admin_info.control<=1 && $ini_webset.web_set.design_button=='1'})<li><a href="#tabs-4">設計師設定</a></li>({/if})
+    ({if $admin_info.control=='0' && $ini_webset.web_set.system_button=='1'})<li><a href="#tabs-3">系統管理者設定</a></li>({/if})
+    ({if $admin_info.control=='0'})<li><a href="#tabs-6">網站參數設定</a></li>({/if})
+    ({if $ini_webset.web_set.post_fee_button=='1'})<li><a href="#tabs-5">運費設定</a></li>({/if})
+<!--	<li><a href="#tabs-2">購物設定</a></li>-->
+</ul>
+
+<div id="tabs-1">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+
+	({section name=idex loop=$data.list})
+	({if $data.list[idex].no<'6'&&$data.list[idex].status<4})
+		<tr>
+		<td width="120" align="right" >({$data.list[idex].name})：</td>
+		  <td >
+		  ({if $data.list[idex].status=='2'})
+			  <textarea name="detail_({$data.list[idex].id})" cols="50" rows="8">({$data.list[idex].detail})</textarea>
+		  ({elseif $data.list[idex].status=='1'})
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="45"  />
+		  ({elseif $data.list[idex].status=='3'})
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="10" maxlength="10"
+			  onkeyup="this.value=this.value.replace(/\D/g,'');"/>
+		  ({/if})
+		   </td>
+		</tr>
+	({/if})
+	({/section})
+	
+  </table>
+
+</div>
+<!--
+<div id="tabs-2">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+	<td width="120" align="center" >按鈕</td><td>連結路徑</td>
+	({section name=idex loop=$data.list})
+	({if $data.list[idex].type==button})
+		<tr>
+		<td width="200" align="right" >({$data.list[idex].name})：</td>
+		  <td >
+		  ({if $data.list[idex].status=='2'})
+			  <textarea name="detail_({$data.list[idex].id})" cols="50" rows="8">({$data.list[idex].detail})</textarea>
+		  ({elseif $data.list[idex].status=='1'||$data.list[idex].status=='4'})
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="45"  />
+		  ({elseif $data.list[idex].status=='3'})
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="10" maxlength="6"
+			  onkeyup="this.value=this.value.replace(/\D/g,'');"/>
+		  ({/if})
+		   </td>
+		</tr>
+	({/if})
+	({/section})
+	
+  </table>
+
+</div>
+-->
+({if $ini_webset.web_set.post_fee_button=='1'})
+<div id="tabs-5">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+	({section name=idex loop=$data.list})
+	({if $data.list[idex].type=='post_fee' || $data.list[idex].type=='no_post_fee' || $data.list[idex].type=='post_fee2'})
+    	({if $data.list[idex].name!='達到金額運費'})
+		<tr>
+		<td width="200" align="right" >({$data.list[idex].name})：</td>
+		  <td >
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="10" maxlength="6"
+			  onkeyup="this.value=this.value.replace(/\D/g,'');"/>
+		   </td>
+		</tr>
+        ({/if})
+	({/if})
+	({/section})
+	
+  </table>
+
+</div>
+({/if})
+
+
+({if $admin_info.control<=1 && $ini_webset.web_set.design_button=='1'})
+<div id="tabs-4">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+	({section name=idex loop=$data.list})
+	({if $data.list[idex].type==design})
+		<tr>
+		<td width="200" align="right" >({$data.list[idex].name})：</td>
+		  <td >
+		  ({if $data.list[idex].status=='2'})
+			  <textarea name="detail_({$data.list[idex].id})" cols="50" rows="8">({$data.list[idex].detail})</textarea>
+		  ({elseif $data.list[idex].status=='1'||$data.list[idex].status=='4'})
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="45"  />
+		  ({elseif $data.list[idex].status=='3'})
+			  <input type="text" name="detail_({$data.list[idex].id})" value="({$data.list[idex].detail})"  size="10" maxlength="6"
+			  onkeyup="this.value=this.value.replace(/\D/g,'');"/>
+		  ({/if})
+		   </td>
+		</tr>
+	({/if})
+	({/section})
+	
+  </table>
+
+</div>
+({/if})
+({if $admin_info.control=='0' && $ini_webset.web_set.system_button=='1'})
+<div id="tabs-3">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+	({section name=idex loop=$data.list})
+	({if in_array($data.list[idex].type,$setup.setting_type)})
+		<tr>
+		<td width="200" align="right" >({$data.list[idex].name})：</td>
+		  <td >
+          ({if $data.list[idex].status==1})
+			   <input name="detail_({$data.list[idex].id})" type="text" value="({$data.list[idex].detail})" size="40">
+               ({if $data.list[idex].type==backup})
+               <a href="../includes/DataBase_backup.php"> 備份資料庫 </a><br>已備份檔案:<br>
+               <table>
+               <tr><td align="center">時間點</td><td colspan="2" align="center">操作</td></tr>
+             ({section name=file loop=$data.file})
+ 	           <tr>
+    	      <td><a href="({$data.file_url})/({$data.file[file]})" target="_blank">({$data.file[file]})</a></td><td><a href="?del_file=({$data.file[file]})">[刪除檔案]</a></td>
+              <td><a href="javascript:re_pk('({$data.file_url})({$data.file[file]})')" target="_blank">[還原到這個時間點]</a></td>
+               </tr>
+	          ({/section})
+              </table>
+              <script>
+			  function re_pk(url){
+				  alert('請注意還原內容可能對網站造成嚴重傷害\n請評估後再確認');
+				  if(confirm('請確認是否還原到這個時間點的資料內容?')){
+					  var person = prompt("一旦操作後，將會現在資料庫內容完全被取代 你確定嘛 ( 是 | 否 )", "否");
+					  	if (person=="是")
+					  window.location.href='../includes/DataBase_backup.php?type='+url;
+				  }
+			  }
+			  </script>
+              ({/if})
+          ({elseif $data.list[idex].status==2})
+          <input type="radio" name="detail_({$data.list[idex].id})" value="1" ({if $data.list[idex].detail==1})checked({/if})>開
+          <input type="radio" name="detail_({$data.list[idex].id})" value="0" ({if $data.list[idex].detail==0})checked({/if})>關
+          ({elseif $data.list[idex].status==3})
+          		<textarea rows="10" cols="50" name="detail_({$data.list[idex].id})" id="detail_({$data.list[idex].id})"></textarea>
+                <div style="display:none;" cp="detail_({$data.list[idex].id})">({$data.list[idex].detail})</div>
+                <script>$('textarea#detail_({$data.list[idex].id})').val($('div[cp="detail_({$data.list[idex].id})"]').html());</script>
+              ({if $data.list[idex].type=='demo_show'})
+              	<script>
+					CKEDITOR.replace( 'detail_({$data.list[idex].id})',
+					{
+						filebrowserBrowseUrl : '../ckfinder/ckfinder.html',
+						filebrowserImageBrowseUrl : '../ckfinder/ckfinder.html?type=Images',
+						filebrowserFlashBrowseUrl : '../ckfinder/ckfinder.html?type=Flash',
+						filebrowserUploadUrl : '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+						filebrowserImageUploadUrl : '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+						filebrowserFlashUploadUrl : '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+					});
+				</script>
+              ({/if})
+              
+          ({/if})
+		   </td>
+		</tr>
+	({/if})
+	({/section})
+    	<tr>
+		<td width="120" align="right" >舊資料時間修正：</td>
+		  <td >
+	          	<input type="text" id="update" value="({$admin_info.today})">
+				<script>Datepick('#update',"","yyyy-mm-dd");</script> 
+                <a href="javascript:redate($('#update').val());">開始修正</a>
+                <script>
+				function redate(ud_data){
+		            $.ajax( {
+						url: "setting.php",
+						data: {ud:ud_data},
+						type:"GET",
+						dataType:'json',
+		
+						success: function(msg){
+							alert(msg.msg);
+						},
+		
+						 error:function(xhr, ajaxOptions, thrownError){ 
+							alert(xhr.status); 
+							alert(thrownError); 
+						 }
+		            });
+				}
+				</script>
+		   </td>
+		</tr>
+  </table>
+
+</div>
+({/if})
+
+({if $admin_info.control=='0'})
+<div id="tabs-6">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  		<tr><th colspan="2" style="text-align:center;">網站參數管理</th></tr>
+		<tr>
+		<td width="120" align="right" >容量顯示開關：</td>
+		  <td >
+			  ({$data.web_set.upload_check_status})
+		   </td>
+		</tr>
+		<tr>
+		<td width="120" align="right" >網站最大容量(bytes)：</td>
+		  <td >
+			  <input type="text" name="upload_max_size" value="({$ini_webset.web_set.upload_max_size})" /> bytes <br>( 1024bytes = 1MB , 1024MB = 1GB , 1024GB = 1TB)
+		   </td>
+		</tr>
+		<tr>
+		<td width="120" align="right" >容量已滿顯示詞：</td>
+		  <td >
+			  <input type="text" name="upload_full_msg" value="({$ini_webset.web_set.upload_full_msg})" />
+		   </td>
+		</tr>
+        <tr><th colspan="2" style="text-align:center;">網站參數管理</th></tr>
+		<tr>
+		<td width="120" align="right" >運費設定顯示：</td>
+		  <td >
+			  ({$data.web_set.post_fee_button_html})
+		   </td>
+		</tr>
+		<tr>
+		<td width="120" align="right" >設計師設定顯示：</td>
+		  <td >
+			  ({$data.web_set.design_button})
+		   </td>
+		</tr>
+		<tr>
+		<td width="120" align="right" >系統設定顯示：</td>
+		  <td >
+			  ({$data.web_set.system_button})
+		   </td>
+		</tr>
+  </table>
+
+</div>
+({/if})
+
+
+</div>
+<div  style="padding:1em 1.4em;">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content" >
+	<tr>
+      <td width="120" align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.list.0.update_name}) 於 ({$data.list.0.update_date}) 維護
+	 </td>
+    </tr>
+
+	<input name="act" type="hidden" value="submit" />
+  </table>
+</div>
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+
+<script>
+$('#tabs').tabs();
+page_initial('table_content');//tr交互顯示顏色
+</script>
+

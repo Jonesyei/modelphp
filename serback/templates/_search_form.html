@@ -1,0 +1,33 @@
+<form action="" method="get" id="search_form" name="search_form">
+
+
+關鍵字查詢<input type="text" name="keyword" id="keyword" value="({$admin_info.tmp.get.keyword})" />
+
+<!--姓名<input type="text" name="searchlike[men_name]" value="({$admin_info.tmp.post.searchlike.men_name})" />
+
+手機<input type="text" name="searchlike[men_cellphone]" value="({$admin_info.tmp.post.searchlike.men_cellphone})" />
+
+居住地電話<input type="text" name="searchlike[men_phone]" value="({$admin_info.tmp.post.searchlike.men_phone})" />-->
+
+
+
+建立日期<input type="text" name="daterange" id="daterange" readonly size="25" value="({$admin_info.tmp.get.daterange})">
+<script>Datepick("#daterange","range");</script>
+
+
+({$admin_info.tmp.search_other})
+
+
+<select name="s_status" id="status" >
+	({$admin_info.tmp.status})
+</select>
+
+({$admin_info.tmp.search_hidden})
+  
+  
+  <img src="images/icon-search.png" width="18" height="18" id="SearchBtn" onclick="search_form.submit();"/>
+
+ </form>
+ 
+ 
+ 

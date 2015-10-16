@@ -1,0 +1,357 @@
+({if $admin_info.view == 'list' })
+<script>
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
+	$('[name="daterange"]').val( Get("daterange") );
+
+	$('#SearchBtn').click(function(){
+		if( $('[name="daterange"]').val().split("-")[1]!=null)
+		{
+			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
+			
+			$('[name="daterange"]').val( daterange );
+		}
+		
+		$('#search_form').submit();
+	});
+
+});
+</script>
+
+<div id="content_bg">
+
+  <div class="title"><span>({$admin_info.title})</span>
+    <ul>
+    <li class="save"><a  onClick="javescript:$('#csv').submit();">匯出</a></li>
+({if $close.edit!=1})<li class="save"><a  onClick="javescript:$('#form').submit();">儲存</a></li>({/if})
+({if $close.add!=1})<li class="add"><a href="({$admin_info.page})&id=0">新增</a></li>({/if})
+({if $close.edit!=1})<li class="edit"><a  onclick="Edit('({$admin_info.page})&id=')">編輯</a></li>({/if})
+({if $close.del!=1})<li class="delete"><a  onclick="Del('({$admin_info.page})&del_id=')">刪除</a></li>({/if})
+    </ul>
+  </div>
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+<form action="csv.php" id="csv" method="post">
+<input type="hidden" name="title" value="資料編號,訂單編號,出貨狀態,付款狀態,訂單金額,運費,收件人,收件人email,收件地址,建立日期">
+<input type="hidden" name="sql" value="({$data.csv_sql})">
+</form>
+<form action="" method="get" id="search_form" name="search_form">
+<div id="search">
+
+
+關鍵字查詢<input type="text" name="keyword" />
+
+
+建立日期<input type="text" name="daterange"  readonly size="25" >
+<script>Datepick('[name="daterange"]',"range","yyyy.mm.dd");</script>
+
+
+
+
+
+	({$admin_info.search.status})
+
+
+  
+  
+  <img src="images/search_btn.jpg" width="50" height="20" id="SearchBtn"/>
+ </div>
+ </form>
+
+<!--SEARCH-->
+
+
+<div id="content_inside">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  	<tr bgcolor="#EEEEEE">
+  		<td align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></td>
+		<!--<td width="5%">編號</td>-->
+  		<td>訂單編號</td>
+        <td>訂單狀態</td>
+        <td>金流狀態</td>
+        <td>付款方式</td>
+        <td>訂單總額</td>
+		({if $close.sort!=1})<td>排序</td>({/if})
+		<td>出貨狀態</td>
+        <td>付款狀態</td>
+        <td>更新時間</td>
+		<td>建立時間</td>
+		
+
+  	</tr>
+	
+	({section name=idex loop=$data.list})
+   <tr >
+      <td align="right" ><input type="checkbox" id="choose_id" value="({$data.list[idex].id})" name="choose_id" /></td>
+	  
+      <!--<td> ({$data.list[idex].id}) </td>-->
+	  
+	  <td ><a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].order_no})</a></td>
+	  
+      <td>({$data.list[idex].status_html})({$data.list[idex].oid_html})</td>
+      
+      <td>({$data.list[idex].paymode_statushtml})</td>
+      
+      <td>({$data.list[idex].paymode_html})({if $data.list[idex].ATMcode!=null}) 回填:<font color="green">({$data.list[idex].ATMcode})</font>({/if})</td>
+      
+      <td>$ ({$data.list[idex].total+$data.list[idex].post_fee})</td>
+      
+({if $close.sort!=1})  
+	<td >
+		  <input type="text" name="sort_({$data.list[idex].id})" id="sort_({$data.list[idex].id})" size="2" value="({$data.list[idex].sort})" 
+		  onblur="Sort_set('({$data.list[idex].id})','({$admin_info.table})','({$admin_info.page})','ajx_sort.php','lang,type','({$admin_info.lang}),({$data.list[idex].type})','({$admin_info.search.post})')" /> ({$data.list[idex].up}) ({$data.list[idex].down})
+		  </td>
+({/if})
+	
+	  
+	  <td >({if $data.list[idex].cargo_status == 0})<font color="#FF0000">未出貨({else})<font color="#0000FF">已出貨({/if})</font></td>
+	  
+      <td >({if $data.list[idex].pay_status == 0})<font color="#FF0000">未付款({else})<font color="#0000FF">已付款({/if})</font></td>
+      
+	  <td >({$data.list[idex].update_name}) 於 ({$data.list[idex].update_date})</td>
+	  
+	  <td >({$data.list[idex].create_name}) 於 ({$data.list[idex].create_date})</td>
+	  
+
+    </tr>
+    ({/section})
+	
+  </table>
+  <br />
+  <input name="act" type="hidden" value="all" />
+</form>
+</div><!--div id="content_inside"-->
+
+
+
+
+
+
+<script>
+page_initial('table_content');
+</script>
+
+
+<!--頁數呈現table-->
+
+({include file=$page_table_html})
+</div><!--div id="content_bg"-->
+
+({/if})
+
+
+
+({if $admin_info.view == 'detail'})
+<div id="content_bg">
+
+  <div class="title"><span>({$admin_info.title})</span>
+    <ul>
+							<li class="back"><a  onClick="window.history.back();">返回</a></li>
+
+
+    </ul>
+  </div>
+  <!--div id="title"-->
+
+
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form" enctype="multipart/form-data">
+
+
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+    
+	<tr>
+	<td width="110" align="right" >訂單編號：</td>
+		  <td >
+		  ({$data.one.order_no})
+		   </td>
+	</tr>
+
+	<tr>
+	<td width="110" align="right" >購買會員：</td>
+		  <td >
+		  <a href="member.php?id=({$data.member.id})">({$data.member.name})</a>
+		   </td>
+	</tr>
+
+
+	<tr >
+	 <td colspan="2">商品清單</td>
+	</tr>
+    
+    <tr>
+    <td colspan="2" style="padding:20px;">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+        <tr><td>編號</td><td>商品名稱</td><td>商品數量</td><!--<td>尺寸顏色</td>--><!--<td width="30%">商品詳細資料</td>--><td>商品單項售價</td><td>小計</td></tr>
+        ({section name=cl loop=$data.carlist})
+        <tr>
+	        <td>({$data.carlist[cl].id})</td>
+             <td>({$data.carlist[cl].name})</td>
+              <td>({$data.carlist[cl].count})</td>
+               <!--<td>({$data.carlist[cl].size})</td>-->
+               <!--<td>({$data.carlist[cl].detail})</td>-->
+               <td>({$data.carlist[cl].price2|number_format:0:".":","})</td>
+               <td>({$data.carlist[cl].price2*$data.carlist[cl].count|number_format:0:".":","})({if $data.carlist[cl].status=='2'})<font color="red">(退貨)</font>({/if})</td>
+        </tr>
+        ({/section})
+        </table>
+    </td>
+    </tr>
+    
+({if $data.one.step!='2'})    
+	 <tr >
+      <td align="right" >退貨總金額：</td>
+      <td >
+	<font color="red">$ ({$data.one.back_total|number_format:0:".":","})</font>
+	 </td>
+    </tr>
+    
+  	 <tr >
+      <td align="right" >已退貨金額：</td>
+      <td >
+	({$data.one.back_money})
+	 </td>
+    </tr>
+({/if})
+	 <tr >
+      <td align="right" >訂單金額：</td>
+      <td >$ 
+	({$data.one.total|number_format:0:".":","})
+	 </td>
+    </tr>
+
+	 <tr >
+      <td align="right" >訂單運費：</td>
+      <td >$ 
+	({$data.one.post_fee|number_format:0:".":","})
+	 </td>
+    </tr>
+    <!--
+	 <tr >
+      <td align="right" >購物金折抵金額：</td>
+      <td><font color="#FF0000">- $ ({$data.one.deshpoint|number_format:0:".":","})</font>
+	 </td>
+    </tr>
+	-->
+	<tr >
+      <td align="right" >訂單實際金額：</td>
+      <td >
+	  <font color="#008000">$ ({$data.one.total+$data.one.post_fee-$data.one.deshpoint|number_format:0:".":","})</font>
+	 </td>
+    </tr>
+
+	<tr >
+      <td align="right" >可獲得紅利：</td>
+      <td >
+	 ({$data.one.addpoint})
+	 </td>
+    </tr>
+
+	 <tr >
+      <td align="right" >付款狀態：</td>
+      <td >
+	 ({if $data.one.pay_status == 0})未付款({/if})
+     ({if $data.one.pay_status == 1})已付款({/if})
+
+	 </td>
+    </tr>
+    
+	 <tr >
+      <td align="right" >出貨狀態：</td>
+      <td >
+({if $data.one.cargo_status == 0})未出貨({/if})
+({if $data.one.cargo_status == 1})已出貨({/if})
+
+	 </td>
+    </tr>
+<!--
+	 <tr >
+      <td align="right" >配送時間：</td>
+      <td >
+      		({if $data.one.contact_time!=null})({$data.one.contact_time})({else})不指定({/if})
+	 </td>
+    </tr>
+-->
+	 <tr >
+      <td align="right" >付款方式：</td>
+      <td >
+      		({$data.one.pay_html})
+	 </td>
+    </tr>
+    
+	 <tr >
+      <td align="right" >收件人：</td>
+      <td >
+      		({$data.one.recive_name})<br>({$data.one.sex_html})<br>({$data.one.recive_address})
+	 </td>
+    </tr>
+    
+    <tr >
+      <td align="right" >收件者電話：</td>
+      <td >
+      		({$data.one.phone})
+	 </td>
+    </tr>
+    
+   <tr >
+      <td align="right" >收件者mail：</td>
+      <td >
+      		({$data.one.recive_email})
+	 </td>
+    </tr>
+    
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	  於 ({$data.one.create_name}) 建立
+	 </td>
+    </tr>
+
+
+
+	
+	
+
+	<input name="act" type="hidden" value="submit" />
+	<input name="id" type="hidden" value="({$data.one.id})"  />
+	
+
+  </table>
+
+ 
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+//$('#tabs').tabs();
+</script>
+
+({/if})
+
+
+
+

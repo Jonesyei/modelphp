@@ -1,0 +1,110 @@
+@charset "utf-8";
+/* CSS Document */
+a{outline:none; hlbr:expression(this.onFocus=this.blur()); text-decoration:none;}
+img{border:0;}
+.clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden;}/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}/* End hide from IE-mac */
+input, textarea{outline:none;}
+textarea{resize:none;}
+.displaynone{display:none;}
+
+body{margin:0; background:url(../images/body-p-bg.jpg) repeat-x top;}
+
+.header{position:relative; width:1000px; height:175px; margin:0 auto;}
+  .logo{position:absolute; left:0; top:115px;}
+  .menu{position:absolute; right:0; top:120px; width:570px; height:17px;}
+    .menu ul{margin:0; padding:0; list-style:none;}
+	.menu li{margin:0; padding:0; float:left;}
+	.menu a{display:block; height:17px; background:url(../images/menu.png);}
+	  .menu a.home:link, .menu a.home:visited{width:72px; background-position:0 0;}
+	  .menu a.home:hover, .menu a.home:active{background-position:0 -17px;}
+	  .menu a.about:link, .menu a.about:visited{width:103px; background-position:-72px 0;}
+	  .menu a.about:hover, .menu a.about:active{background-position:-72px -17px;}
+	  .menu a.service:link, .menu a.service:visited{width:103px; background-position:-175px 0;}
+	  .menu a.service:hover, .menu a.service:active{background-position:-175px -17px;}
+	  .menu a.product:link, .menu a.product:visited{width:102px; background-position:-278px 0;}
+	  .menu a.product:hover, .menu a.product:active{background-position:-278px -17px;}
+	  .menu a.case:link, .menu a.case:visited{width:103px; background-position:-380px 0;}
+	  .menu a.case:hover, .menu a.case:active{background-position:-380px -17px;}
+	  .menu a.faq:link, .menu a.faq:visited{width:87px; background-position:-483px 0;}
+	  .menu a.faq:hover, .menu a.faq:active{background-position:-483px -17px;}
+	  
+.wrapper{width:1000px; margin:0 auto 10px auto;}
+  .maincontent{background:#fff;}
+    .maincontent .sidebar{width:220px; float:left; background:url(../images/sb-bg.jpg) no-repeat right top; min-height:550px;}
+	  .maincontent .sidebar ul{margin:0; padding:0 25px 25px 25px; list-style:none;}
+	  .maincontent .sidebar li{margin:0; padding:0; border-bottom:dotted 1px #575656;}
+	  .maincontent .sidebar a:link, .maincontent .sidebar a:visited{display:block; font:15px/39px "微軟正黑體"; color:#575656; padding-left:43px; background:url(../images/icon.png) no-repeat 7px 15px;}
+	  .maincontent .sidebar a:hover, .maincontent .sidebar a:active, .maincontent .sidebar a.active{background:url(../images/icon-active.png) no-repeat 7px 15px;;}
+	  .maincontent .sidebar ul ul{margin:0; padding:0 0 0 25px; list-style:none;}
+	  .maincontent .sidebar li li{margin:0; padding:0; border-bottom:none;}
+	  .maincontent .sidebar li li a:link, .maincontent .sidebar li li a:visited{display:block; font:13px/39px "微軟正黑體"; color:#575656; padding-left:20px; background:url(../images/icon-sub.png) no-repeat 7px 15px;}
+	  .maincontent .sidebar li li a:hover, .maincontent .sidebar li li a:active, .maincontent .sidebar li li a.active{color:#3a92cc;}
+	  
+	  
+    .maincontent .main{width:720px; float:right; margin:0 30px;}
+	  .maincontent .main .title{font:18px/44px "微軟正黑體"; color:#363b3f; border-top:solid 1px #ccc; border-bottom:solid 1px #ccc; text-align:left;}
+  
+.footer{position:relative; width:1000px; height:115px; background:url(../images/footer-bg.png) no-repeat center top; margin:33px auto 0 auto;}
+  .footer .f-contact{position:absolute; left:3px; top:20px;}
+  .footer .siteinfo{position:absolute; left:132px; top:18px; font:12px/18px Arial; color:#3f4345;}
+  .footer .copyright{position:absolute; right:0; top:30px; font:12px Arial; color:#726262;}
+
+
+/* 連絡我們 */
+.contact-table{width:100%;}
+  .contact-table th{width:28%; text-align:right; font:15px/24px "微軟正黑體"; color:#333; padding:5px;}
+  .contact-table td{width:72%; padding:5px;}
+  .wd_input_01{width:350px; height:25px; border:solid 1px #ccc;}
+  .wd_input_02{width:350px; height:100px; border:solid 1px #ccc;}
+  .wd_input_03{width:120px; height:25px; border:solid 1px #ccc;}
+  .wd_input_bn{font:15px/30px "微軟正黑體"; color:#333; border:solid 1px #ccc; background:url(../images/input-bn-bg.jpg) repeat-x bottom; }
+  
+/* 最新消息 */
+.news{}
+  .news .news-list{margin:10px 0; text-align:left;}
+    .news .news-list ul{margin:0; padding:0; list-style:none;}
+    .news .news-list li{margin:0; padding:0;}
+    .news .news-list a:link, .news .news-list a:visited{display:block; font:13px/18px Arial; color:#575656; padding:8px 0 8px 60px; border-bottom:dotted 1px #575656;}
+    .news .news-list a:hover, .news .news-list a:active{color:#c30;}
+	
+  .main .page{clear:both; text-align:center; font:/*bold*/ 15px/25px Arial,"微軟正黑體"; color:#666;}	
+    .main .page a:link, .main .page a:visited{/*color:#666;*/}
+    .main .page a:hover, .main .page a:active, .main .page a.active{color:#000;}
+	
+.back-bn a:link, .back-bn a:visited{width:80px; font:13px/18px Arial; background:#333; color:#fff; text-align:center; padding:3px 6px; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}
+.back-bn a:hover, .back-bn a:active{background:#ccc; color:#333}	
+	
+/* 產品介紹 */	
+.prodlist{margin:30px 0 0 0;}
+  .prodlist ul{margin:0; padding:0; list-style:none;}
+  .prodlist li a:link, .prodlist li a:visited{width:228px; height:230px; overflow:hidden; margin:0 12px 18px 0; padding:0; float:left; font:15px/32px "微軟正黑體"; color:#0469ac;}
+  .prodlist li a:hover, .prodlist li a:active{color:#c30;}
+  .prodlist li.end a:link, .prodlist li.end a:visited{width:228px; margin:0 0 18px 0; padding:0; float:left; font:15px/32px "微軟正黑體"; color:#0469ac;}
+  .prodlist li.end a:hover, .prodlist li.end a:active{color:#c30;}
+  .prodlist a:link img, .prodlist a:visited img{background:#fff; padding:3px; border:solid 1px #ccc;}
+  .prodlist a:hover img, .prodlist a:active img{background:#fff; padding:3px; border:solid 1px #0469ac;}
+  
+/* 產品介紹-詳細頁 */
+.proddetail{padding-top:6px;}
+  .prod-brief{}
+    .prod-brief img.imgLarge{background:#fff; padding:2px; border:solid 1px #ccc; margin-top:7px;}
+    .prod-brief .prod-name{margin-left:365px; font:18px/33px "微軟正黑體"; color:#c30; border-bottom:solid 1px #ccc;}
+	.prod-brief .prod-brief-desc{padding:10px 0 0 365px;}
+      .prod-brief-title{font:15px/30px "微軟正黑體"; color:#069;}
+		  .prod-brief-subtitle{font:13px/24px Arial; color:#963;}
+		  .prod-brief-txt{font:13px/24px Arial; color:#575656;}
+		  
+  .prod-brief table.download, .prod-brief table.download a:link, .prod-brief table.download a:visited{margin:100px 0 50px 0; font:15px "微軟正黑體"; color:#333;}
+  .prod-brief table.download a:hover, .prod-brief table.download a:active{color:#0469ac;}
+  
+/* 產品介紹 */	
+.caselist{margin:30px 0 0 0;}
+  .caselist ul{margin:0; padding:0; list-style:none;}
+  .caselist li{width:228px; /*height:265px;*/ overflow:hidden; margin:0 12px 18px 0; padding:0; float:left;}
+  .caselist li.end{margin:0 0 18px 0;}
+  .caselist li .case-name{font:15px/20px "微軟正黑體"; color:#0469ac; height:40px; overflow:hidden;}
+  .caselist li .case-desc{font:13px/18px "微軟正黑體"; color:#666;}
+  .caselist a:link img, .caselist a:visited img{background:#fff; padding:3px; border:solid 1px #ccc;}
+  .caselist a:hover img, .caselist a:active img{background:#fff; padding:3px; border:solid 1px #0469ac;}
+  

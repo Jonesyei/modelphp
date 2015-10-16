@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+a{outline:none; hlbr:expression(this.onFocus=this.blur()); text-decoration:none;}
+img{border:0;}
+.clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden;}/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}/* End hide from IE-mac */
+input, textarea{outline:none;}
+textarea{resize:none;}
+.displaynone{display:none;}
+
+body{margin:0; background:url(../images/body-bg.jpg) repeat-x top;}
+
+.header{position:relative; width:1000px; height:175px; margin:0 auto;}
+  .logo{position:absolute; left:0; top:115px;}
+  .menu{position:absolute; right:0; top:120px; width:570px; height:17px;}
+    .menu ul{margin:0; padding:0; list-style:none;}
+	.menu li{margin:0; padding:0; float:left;}
+	.menu a{display:block; height:17px; background:url(../images/menu.png);}
+	  .menu a.home:link, .menu a.home:visited{width:72px; background-position:0 0;}
+	  .menu a.home:hover, .menu a.home:active{background-position:0 -17px;}
+	  .menu a.about:link, .menu a.about:visited{width:103px; background-position:-72px 0;}
+	  .menu a.about:hover, .menu a.about:active{background-position:-72px -17px;}
+	  .menu a.service:link, .menu a.service:visited{width:103px; background-position:-175px 0;}
+	  .menu a.service:hover, .menu a.service:active{background-position:-175px -17px;}
+	  .menu a.product:link, .menu a.product:visited{width:102px; background-position:-278px 0;}
+	  .menu a.product:hover, .menu a.product:active{background-position:-278px -17px;}
+	  .menu a.case:link, .menu a.case:visited{width:103px; background-position:-380px 0;}
+	  .menu a.case:hover, .menu a.case:active{background-position:-380px -17px;}
+	  .menu a.faq:link, .menu a.faq:visited{width:87px; background-position:-483px 0;}
+	  .menu a.faq:hover, .menu a.faq:active{background-position:-483px -17px;}
+	  
+.edm{width:1000px; height:390px; margin:0 auto;}
+
+.wrapper{width:1000px; margin:10px auto;}
+  .inews{float:left; width:755px;}
+    .inews .inews-list{margin:10px 0;}
+	  .inews .inews-list ul{margin:0; padding:0; list-style:none;}
+	  .inews .inews-list li{margin:0; padding:0; display:block; border-bottom:dotted 1px #575656; width:720px; height:30px; overflow:hidden;}
+	  .inews .inews-list a:link, .inews .inews-list a:visited{font:13px/30px Arial; color:#575656;}
+	  .inews .inews-list a:hover, .inews .inews-list a:active{color:#c30;}
+  .upload{float:right;}
+  
+.footer{position:relative; width:1000px; height:115px; background:url(../images/footer-bg.png) no-repeat center top; margin:33px auto 0 auto;}
+  .footer .f-contact{position:absolute; left:3px; top:20px;}
+  .footer .siteinfo{position:absolute; left:132px; top:18px; font:12px/18px Arial; color:#3f4345;}
+  .footer .copyright{position:absolute; right:0; top:30px; font:12px Arial; color:#726262;}
+	

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>網動廣告科技</title>
+
+<script type="text/javascript" src="../includes/js/jquery.js"></script>
+<script type="text/javascript" src="../includes/js/jquery-ui.js"></script>
+
+<script type="text/javascript" src="../includes/js/jquery.validate.js" ></script><!--JQ驗證用套件-->
+<script type="text/javascript" src="../includes/js/cmxforms.js" ></script><!--JQ驗證用套件-->
+
+<script type="text/javascript" src="../includes/js/datepick/jquery.datepick.js"></script><!--datepick-->
+<script type="text/javascript" src="../includes/js/datepick/jquery.datepick-zh-TW.js"></script><!--datepick-->
+<script type="text/javascript" src="../includes/js/ui/ui.core.js"></script><!--tabs分頁用-->
+<script type="text/javascript" src="../includes/js/func_back_js.js" ></script><!--自定後台js-->
+
+
+<link href="style/ui.all.css" rel="stylesheet" type="text/css" /><!--tabs分頁用-->
+<link href="../includes/js/datepick/jquery.datepick.css" rel="stylesheet" type="text/css"><!--datepick-->
+
+<link href="css/main.css" rel="stylesheet" type="text/css" />
+
+
+
+</head>
+
+<body class="login" onload="$('#account').focus();"><!--清除$_SESSION admin_info-->
+
+
+
+<div class="index-warper"> 
+   <div class="login-title">VIPCASE<br />
+   SYSTEM</div>
+   <div class="login-power-by"><a href="http://www.vipcase.net" target="_blank">Power by vipcase</a></div>
+  <div class="login-box">
+     <div style="position:relative;">
+         <form name="form" id="form" method="post" action="index.php" enctype="multipart/form-data">
+     <ul>
+     <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
+     <li><img src="images/login-key.png" width="15" height="15" /> <input name="password" id="password" type="password" class="login-id" placeholder="後台管理密碼" style="width:180px" /></li>
+     <li><img src="images/login-code.png" width="15" height="15" /> 
+     <img src="verifycode.php" onclick="$(this).attr('src',$(this).attr('src'));"> <input name="code" type="text" class="login-id" placeholder="CODE" style="width:60px;" /></li>
+     <li class="fotget" style="padding-left:20px;">
+         <input type="checkbox" name="checkbox" id="checkbox" />
+     記住密碼
+     <img src="images/login-forget.png" width="15" height="15"/><a href="javascript:forgotpw();" class="fotget"> 忘記密碼</a></li>
+     </ul>
+    <script>
+	function forgotpw(){
+		$('#dialog-confirm').dialog('open');
+	}
+	</script>
+     <input type="image" src="images/login-btn.png"  width="50" height="50" class="login-btn" class="login-btn login" />
+     
+     
+({if count($data.list)>1})
+<p class="ps_id"><span style="padding-left:4px; padding-right:4px;">語系選擇</span>
+      <select name="lang" id="lang">
+      ({section name=l loop=$data.list})
+	  <option value="({$data.list[l].detail})">({$data.list[l].name})</option>
+      ({/section})
+	  </select>
+</p>
+({/if})
+     
+	    </form>
+     </div>
+   </div>
+</div>
+
+
+
+({$link})
+
+
+<div id="dialog-confirm" title="忘記密碼">
+  請輸入您的管理者Email<br><br>
+  <input type="text" id="forgot" size="40">
+  <br><font color="#FF0000">填寫完畢後，將重置你的密碼，並郵件於你的信箱中</font>
+</div>
+<script>
+$(function() {
+$( "#dialog-confirm" ).dialog({
+  resizable: false,
+  height:200,
+  width:350,
+  modal: true,
+  buttons: {
+	'取消': function() {
+	  $( this ).dialog( "close" );
+	},
+	"送出": function() {
+	  window.location.href='login.php?forgot='+$('#forgot').val();
+	}
+  }
+});
+$( "#dialog-confirm" ).dialog( "close" );
+});
+</script>
+
+</body>
+
+<script>
+window.name = "serback"; //---幫視窗取名字來判斷是否當個登入頁面
+
+</script>
+
+</html>

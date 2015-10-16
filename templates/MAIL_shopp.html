@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+</head>
+
+<body>
+
+<style>
+* { font:16px "微軟正黑體",Arial, Helvetica, sans-serif; color:#444; font-weight:600;}
+.yellow { #f6ffcc;}
+.wd_font12, .wd_font12 a { font:12px "微軟正黑體",Verdana;}
+</style>
+({$data.msg.top_msg})
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr style="background:#eeeeee;" height="50">
+	<td align="center">({$data.one.name})</td>
+	</tr>
+	</table>
+	
+	
+	<hr style=" float:left;width:100%;" />
+    <BR>
+	訂單編號:({$data.order.order_no})
+	<table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#666666">
+	<tr>
+    	({section name=t loop=$data.pro_title})
+		<td height="20" bgcolor="#747474" class=" wd_font12 yellow">({$data.pro_title[t]})</td>
+        ({/section})
+	</tr>
+	({section name=ideex loop=$data.pro})
+	<tr style="background:#cccccc;">
+	  <td width="60" class="number">ID({$data.pro[ideex].shopping_car_list_id})</td>
+      <td class="number">({$data.pro[ideex].name})</td>
+	  <!--<td width="100">({$data.pro[ideex].img_html})</td>-->
+	  <td class="number">({$data.pro[ideex].count})</td>
+	  <td class="number">({$data.pro[ideex].price2})</td>
+	</tr>
+	({/section})
+    </table>
+    
+    <table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#666666">
+    ({if $data.order.total!=null})
+    <tr>
+    <td width="85%" align="right">商品總額:</td>
+    <td>({$data.order.total})</td>
+    </tr>
+    ({/if})
+    ({if $data.order.post_fee!=null})
+    <tr>
+    <td align="right">運費:</td>
+    <td>({$data.order.post_fee})</td>
+    </tr>
+    ({/if})
+    ({if $data.order.addpoint!=null})
+    <tr>
+    <td align="right">可增加的紅利:</td>
+    <td>({$data.order.addpoint})</td>
+    </tr>
+    ({/if})
+    ({if $data.order.deshpoint!=null})
+    <tr>
+    <td align="right">扣除紅利:</td>
+    <td>({$data.order.deshpoint})</td>
+    </tr>
+    ({/if})
+    <tr>
+    <td align="right">訂單總額:</td>
+    <td>({$data.order.total+$data.order.post_fee-$data.order.deshpoint})</td>
+    </tr>
+    <tr>
+	</table>
+    <br><br>
+    
+    <table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#666666">
+    <tr>
+    <td width="15%" align="right">收件人:</td>
+    <td>({$data.order.recive_name})</td>
+    </tr>
+    <tr>
+    <td align="right">收件人email:</td>
+    <td>({$data.order.recive_email})</td>
+    </tr>
+    <tr>
+    <td align="right">收件人地址:</td>
+    <td>({$data.order.recive_address})</td>
+    </tr>
+    <tr>
+    <td align="right">收件人電話:</td>
+    <td>({$data.order.phone}) ({$data.order.cellphone})</td>
+    </tr>
+    </table>
+    <br><br>
+({$data.msg.foot_msg})
+</body>
+</html>

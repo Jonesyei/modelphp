@@ -1,0 +1,191 @@
+<?php /* Smarty version 2.6.26, created on 2014-04-30 09:25:21
+         compiled from D:/AppServ/www/margi/templates/temp.html */ ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<?php echo $this->_tpl_vars['web_set']['keyword']; ?>
+
+<script type="text/javascript" src="includes/js/jquery.js"></script>
+<script type="text/javascript" src="includes/js/func_js.js"></script>
+<script type="text/javascript" src="includes/js/script.js"></script>
+<link rel="stylesheet" href="style/nivo-slider.css" type="text/css" media="screen">
+<script src="css/jquery.min.js" type="text/javascript"></script>
+<script src="css/jquery.nivo.slider.pack.js" type="text/javascript"></script>
+<script src="includes/js/jquery.corner.js" type="text/javascript"></script>
+<link rel="stylesheet" href="style/default.css" type="text/css" media="screen">
+<link href="style/style.css" rel="stylesheet" type="text/css">
+<link href="style/style-p.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo"><a href="index.html"><img src="images/logo.png" alt="馬基數位印刷有限公司" width="359" height="28" border="0"></a></div>
+  <div class="menu">
+    <ul>
+      <li><a href="index2.php?ban=1" class="home"><span class="displaynone">首頁</span></a></li>
+      <li><a href="index2.php?ban=8" class="about"><span class="displaynone">關於馬基</span></a></li>
+      <li><a href="index2.php?ban=9" class="service"><span class="displaynone">服務項目</span></a></li>
+      <li><a href="index2.php?ban=10" class="product"><span class="displaynone">產品介紹</span></a></li>
+      <li><a href="case.html" class="case"><span class="displaynone">歷史案件</span></a></li>
+      <li><a href="faq.html" class="faq"><span class="displaynone">製作Q&A</span></a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="wrapper">
+<img src="images/title-product.png" alt="產品介紹 Works" width="1000" height="124" border="0">
+  <div class="maincontent">
+    <div class="sidebar">
+      <ul>
+
+<?php unset($this->_sections['category17']);
+$this->_sections['category17']['name'] = 'category17';
+$this->_sections['category17']['loop'] = is_array($_loop=$this->_tpl_vars['data']['category'][1]) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
+$this->_sections['category17']['show'] = true;
+$this->_sections['category17']['max'] = $this->_sections['category17']['loop'];
+$this->_sections['category17']['step'] = 1;
+$this->_sections['category17']['start'] = $this->_sections['category17']['step'] > 0 ? 0 : $this->_sections['category17']['loop']-1;
+if ($this->_sections['category17']['show']) {
+    $this->_sections['category17']['total'] = $this->_sections['category17']['loop'];
+    if ($this->_sections['category17']['total'] == 0)
+        $this->_sections['category17']['show'] = false;
+} else
+    $this->_sections['category17']['total'] = 0;
+if ($this->_sections['category17']['show']):
+
+            for ($this->_sections['category17']['index'] = $this->_sections['category17']['start'], $this->_sections['category17']['iteration'] = 1;
+                 $this->_sections['category17']['iteration'] <= $this->_sections['category17']['total'];
+                 $this->_sections['category17']['index'] += $this->_sections['category17']['step'], $this->_sections['category17']['iteration']++):
+$this->_sections['category17']['rownum'] = $this->_sections['category17']['iteration'];
+$this->_sections['category17']['index_prev'] = $this->_sections['category17']['index'] - $this->_sections['category17']['step'];
+$this->_sections['category17']['index_next'] = $this->_sections['category17']['index'] + $this->_sections['category17']['step'];
+$this->_sections['category17']['first']      = ($this->_sections['category17']['iteration'] == 1);
+$this->_sections['category17']['last']       = ($this->_sections['category17']['iteration'] == $this->_sections['category17']['total']);
+?>
+<?php if ($this->_tpl_vars['data']['category'][1][$this->_sections['category17']['index']]['depth'] == '1'): ?>
+<li><a href="#" class="active"><?php echo $this->_tpl_vars['data']['category'][1][$this->_sections['category17']['index']]['name']; ?>
+</a>
+<ul>
+<?php unset($this->_sections['category46']);
+$this->_sections['category46']['name'] = 'category46';
+$this->_sections['category46']['loop'] = is_array($_loop=$this->_tpl_vars['data']['category'][1][$this->_sections['category17']['index']]['childitem']) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
+$this->_sections['category46']['show'] = true;
+$this->_sections['category46']['max'] = $this->_sections['category46']['loop'];
+$this->_sections['category46']['step'] = 1;
+$this->_sections['category46']['start'] = $this->_sections['category46']['step'] > 0 ? 0 : $this->_sections['category46']['loop']-1;
+if ($this->_sections['category46']['show']) {
+    $this->_sections['category46']['total'] = $this->_sections['category46']['loop'];
+    if ($this->_sections['category46']['total'] == 0)
+        $this->_sections['category46']['show'] = false;
+} else
+    $this->_sections['category46']['total'] = 0;
+if ($this->_sections['category46']['show']):
+
+            for ($this->_sections['category46']['index'] = $this->_sections['category46']['start'], $this->_sections['category46']['iteration'] = 1;
+                 $this->_sections['category46']['iteration'] <= $this->_sections['category46']['total'];
+                 $this->_sections['category46']['index'] += $this->_sections['category46']['step'], $this->_sections['category46']['iteration']++):
+$this->_sections['category46']['rownum'] = $this->_sections['category46']['iteration'];
+$this->_sections['category46']['index_prev'] = $this->_sections['category46']['index'] - $this->_sections['category46']['step'];
+$this->_sections['category46']['index_next'] = $this->_sections['category46']['index'] + $this->_sections['category46']['step'];
+$this->_sections['category46']['first']      = ($this->_sections['category46']['iteration'] == 1);
+$this->_sections['category46']['last']       = ($this->_sections['category46']['iteration'] == $this->_sections['category46']['total']);
+?>
+<?php if ($this->_tpl_vars['data']['category'][1][$this->_sections['category17']['index']]['childitem'][$this->_sections['category46']['index']]['depth'] == 2): ?>
+<li><a href="index2.php?ban=10&class=<?php echo $this->_tpl_vars['data']['category'][1][$this->_sections['category17']['index']]['childitem'][$this->_sections['category46']['index']]['id']; ?>
+"><?php echo $this->_tpl_vars['data']['category'][1][$this->_sections['category17']['index']]['childitem'][$this->_sections['category46']['index']]['name']; ?>
+</a></li>
+<?php endif; ?>
+<?php endfor; endif; ?>
+</ul></li>
+<?php endif; ?>
+<?php endfor; endif; ?>
+      </ul>
+    </div>
+
+
+    <div class="main">
+      <div class="title"><?php echo $this->_tpl_vars['data']['one']['category']['name']; ?>
+</div>
+      <div class="prodlist">
+        <ul>
+<?php unset($this->_sections['product57']);
+$this->_sections['product57']['name'] = 'product57';
+$this->_sections['product57']['loop'] = is_array($_loop=$this->_tpl_vars['data']['product'][1]) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
+$this->_sections['product57']['show'] = true;
+$this->_sections['product57']['max'] = $this->_sections['product57']['loop'];
+$this->_sections['product57']['step'] = 1;
+$this->_sections['product57']['start'] = $this->_sections['product57']['step'] > 0 ? 0 : $this->_sections['product57']['loop']-1;
+if ($this->_sections['product57']['show']) {
+    $this->_sections['product57']['total'] = $this->_sections['product57']['loop'];
+    if ($this->_sections['product57']['total'] == 0)
+        $this->_sections['product57']['show'] = false;
+} else
+    $this->_sections['product57']['total'] = 0;
+if ($this->_sections['product57']['show']):
+
+            for ($this->_sections['product57']['index'] = $this->_sections['product57']['start'], $this->_sections['product57']['iteration'] = 1;
+                 $this->_sections['product57']['iteration'] <= $this->_sections['product57']['total'];
+                 $this->_sections['product57']['index'] += $this->_sections['product57']['step'], $this->_sections['product57']['iteration']++):
+$this->_sections['product57']['rownum'] = $this->_sections['product57']['iteration'];
+$this->_sections['product57']['index_prev'] = $this->_sections['product57']['index'] - $this->_sections['product57']['step'];
+$this->_sections['product57']['index_next'] = $this->_sections['product57']['index'] + $this->_sections['product57']['step'];
+$this->_sections['product57']['first']      = ($this->_sections['product57']['iteration'] == 1);
+$this->_sections['product57']['last']       = ($this->_sections['product57']['iteration'] == $this->_sections['product57']['total']);
+?>
+          <li><a href="index2.php?ban=11<?php echo $this->_tpl_vars['data']['product'][1][$this->_sections['product57']['index']]['url']; ?>
+"><img src="<?php echo $this->_tpl_vars['data']['product'][1][$this->_sections['product57']['index']]['pic']; ?>
+" width="220" height="165"><br>
+            <?php echo $this->_tpl_vars['data']['product'][1][$this->_sections['product57']['index']]['name']; ?>
+</a></li>
+<?php endfor; endif; ?>
+         
+        </ul>
+      </div>
+    <div style="clear:both;"></div>
+
+        <div class="page">
+        <?php unset($this->_sections['product80']);
+$this->_sections['product80']['name'] = 'product80';
+$this->_sections['product80']['loop'] = is_array($_loop=1) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
+$this->_sections['product80']['show'] = true;
+$this->_sections['product80']['max'] = $this->_sections['product80']['loop'];
+$this->_sections['product80']['step'] = 1;
+$this->_sections['product80']['start'] = $this->_sections['product80']['step'] > 0 ? 0 : $this->_sections['product80']['loop']-1;
+if ($this->_sections['product80']['show']) {
+    $this->_sections['product80']['total'] = $this->_sections['product80']['loop'];
+    if ($this->_sections['product80']['total'] == 0)
+        $this->_sections['product80']['show'] = false;
+} else
+    $this->_sections['product80']['total'] = 0;
+if ($this->_sections['product80']['show']):
+
+            for ($this->_sections['product80']['index'] = $this->_sections['product80']['start'], $this->_sections['product80']['iteration'] = 1;
+                 $this->_sections['product80']['iteration'] <= $this->_sections['product80']['total'];
+                 $this->_sections['product80']['index'] += $this->_sections['product80']['step'], $this->_sections['product80']['iteration']++):
+$this->_sections['product80']['rownum'] = $this->_sections['product80']['iteration'];
+$this->_sections['product80']['index_prev'] = $this->_sections['product80']['index'] - $this->_sections['product80']['step'];
+$this->_sections['product80']['index_next'] = $this->_sections['product80']['index'] + $this->_sections['product80']['step'];
+$this->_sections['product80']['first']      = ($this->_sections['product80']['iteration'] == 1);
+$this->_sections['product80']['last']       = ($this->_sections['product80']['iteration'] == $this->_sections['product80']['total']);
+?>
+        <?php echo $this->_tpl_vars['data']['product'][1][$this->_sections['product80']['index']]['page']; ?>
+
+        <?php endfor; endif; ?>
+        </div>
+      
+    </div>
+    <div style="clear:both;"></div>
+  </div>
+</div>
+
+<div style="clear:both;"></div>
+<div class="footer"><span class="f-contact"><a href="contact.html">
+<img src="images/f-contact-bn.png" alt="連絡我們" width="108" height="30" border="0"></a>
+</span><span class="siteinfo">馬基數位印刷有限公司    新北市中和區建康路166號<br>
+  TEL:(02)8228-6969  FAX : (02)2223-8515</span> <span class="copyright">Copyrights © 2013 All Rights Reserved.</span> </div>
+
+</body>
+</html>

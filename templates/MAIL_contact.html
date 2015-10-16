@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+</head>
+
+<body>
+
+<style>
+* { font:16px "微軟正黑體",Arial, Helvetica, sans-serif; color:#444; font-weight:600;}
+.yellow { #f6ffcc;}
+.wd_font12, .wd_font12 a { font:12px "微軟正黑體",Verdana;}
+</style>
+
+
+
+	<table width="60%" border="0" cellpadding="0" cellspacing="0">
+	<tr style="background:#eeeeee;" height="50">
+	<td align="center">({$web_set.title})({$web_set.title_add})</td>
+	</tr>
+	</table>
+	
+	
+	({if $web_set.form_set=='inquiry'})
+	<hr style=" float:left;width:60%;" />
+	
+	<table width="60%" border="0" cellspacing="1" cellpadding="5" bgcolor="#666666">
+	<tr>
+		<td width="60" height="20" bgcolor="#747474" class=" wd_font12 yellow">零件號碼</td>
+		<td width="100" bgcolor="#747474" class=" wd_font12 yellow">圖片</td>
+		<td width="80" bgcolor="#747474" class=" wd_font12 yellow">車系</td>
+		<td width="80" bgcolor="#747474" class=" wd_font12 yellow">車款</td>
+		<td width="80" bgcolor="#747474" class=" wd_font12 yellow">大分類</td>
+		<td width="80" bgcolor="#747474" class=" wd_font12 yellow">次分類</td>
+		<td width="100" bgcolor="#747474" class=" wd_font12 yellow">數量</td>
+	</tr>
+	({section name=idex loop=$inquiry})
+	<tr style="({if $setup.smarty_count[idex]%2==0})background:#dddddd;({else})background:#cccccc;({/if})">
+	  <td width="60" class="number">({$inquiry[idex].no})</td>
+	  <td width="100" ><img src="({$web_set.favorite_url})/upload/products/({$inquiry[idex].pic.0.0})" width="100" height="75" /></td>
+	  <td class="number">({$inquiry[idex].carseries})</td>
+	  <td class="number">({$inquiry[idex].carseries2})</td>
+	  <td class="number">({$inquiry[idex].class})</td>
+	  <td class="number">({$inquiry[idex].class2})</td>
+	  <td class="number">({$inquiry[idex].count})</td>
+	</tr>
+	({/section})
+	</table>
+	
+	({/if})
+	
+	
+	<hr style=" float:left;width:60%;" />
+	
+	<table width="60%" border="0" cellspacing="1" cellpadding="1" class="contact_table">
+	
+      ({section name=idex loop=$data})
+      <tr style="({if $setup.smarty_count[idex]%2==0})background:#dddddd;({else})background:#cccccc;({/if})" height="30">
+        <td width="25%">({$data[idex].title})</td>
+        <td>({$data[idex].value|nl2br})</td>
+      </tr>
+	  ({/section})
+	  
+    </table>
+	
+</body>
+</html>

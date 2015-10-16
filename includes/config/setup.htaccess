@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /%setup%
+	
+	RewriteRule ^(.*).jsx(.*)$ $1.php$2 [L]
+</IfModule>

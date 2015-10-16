@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+<title>網動廣告</title>
+({$web_css})
+<script type="text/javascript" src="../includes/js/jquery.js"></script>
+<script type="text/javascript" src="../includes/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../includes/js/jquery.validate.js" ></script><!--JQ驗證用套件-->
+<script type="text/javascript" src="../includes/js/cmxforms.js" ></script><!--JQ驗證用套件-->
+
+<script type="text/javascript" src="../includes/js/datepick/jquery.datepick.js"></script><!--datepick-->
+<script type="text/javascript" src="../includes/js/datepick/jquery.datepick-zh-TW.js"></script><!--datepick-->
+<script type="text/javascript" src="../includes/js/datepick/jquery.timePicker.js"></script><!--timePicker-->
+
+<script type="text/javascript" src="../includes/js/func_back_js.js" ></script><!--自定後台js-->
+
+
+<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="../ckfinder/ckfinder.js"></script>
+
+<script type="text/javascript" src="../includes/js/edit_in_place/jquery.jeditable.js"></script>
+
+
+<link href="style/ui.all.css" rel="stylesheet" type="text/css" /><!--tabs分頁用-->
+<link href="style/style.css" rel="stylesheet" type="text/css" media="all" /><!--ccs呈現效果-->
+<link href="style/J_autoview.css" rel="stylesheet" type="text/css" media="screen and (max-width:750px)">
+<link href="../includes/js/datepick/jquery.datepick.css" rel="stylesheet" type="text/css"><!--datepick-->
+<link href="../includes/js/datepick/timePicker.css" rel="stylesheet" type="text/css"><!--timePicker-->
+
+
+
+</head>
+
+<body>
+
+<div id="warper">
+
+<div class="header"><!-- head -->
+
+   <div style=" position:relative;">
+        <div class="logo"><a href="index.php" style="color:#CDB964;">({$set.0.detail})</a></div>
+        <div class="logo-slogan">網站後台管理系統</div>
+        <div class="login-person clearfix">
+             <a href="login.php" class="logout">登　　出</a>
+             <a href="../" target="_blank" class="outlay">前端預覽</a>
+             ({if $data.data_temp!=null})
+             <a href="javascript:;" class="outlay" onClick="if (confirm('是否還原先前修改動作?\r\n請注意已刪除的圖片並無法回復!!')) {window.location.href='({$data.data_temp})';}" style="width:30px;">還原</a>
+             ({/if})
+             <div class="person-info">使用者: <span class="person">({$admin_info.name}) (({$admin_info.account}))</span> 登入時間 ({$admin_info.login_date})
+              ({if $admin_info.lang_title!=null})[管理語系:({$admin_info.lang_title})]({/if}) [權限:({$admin_info.control})]
+             </div>
+             <div class="use-space" ({if $admin_info.file_size_bar!='1'})style="display:none;"({/if})>
+                網站使用空間 : <span>({$admin_info.file_size_total})<span>
+                <div class="use-percent-box" title="已使用:({number_format($admin_info.size_bar_width,1)})%">
+                  <div class="use-percent-load" style="width:({$admin_info.size_bar_width})%;"></div><!-- 空間%數 -->
+                </div>
+             </div>
+        </div>
+   </div>
+   </div>
+
+
+
+({$menu})
+
+
+<!--content_bg-->
+
+({include file = $content })
+
+<!--content_bg-->
+
+
+
+<!--MENU-->
+
+
+<!--MENU-->
+
+
+</div><!--div id="content"-->
+</div><!--div id="wrapper"-->
+
+<div class="footer"> <!-- footer -->
+      © 2014 POWER BY  <a href="vipcase.net.tw" target="_blank">WEB POWER ADVERTISING TECHNOLOGY CO.,LTD. </a>
+  </div>
+
+<div id="dialog-overlay"></div> 
+<div id="dialog-box"> 
+  <div class="dialog-content"> 
+    <div id="dialog-message"></div> 
+  </div> 
+</div>
+
+<script>
+///---針對chrom 記憶頁面的修正
+if (window.name!="serback") window.location.reload();
+window.onbeforeunload = function (event){
+if (window.name!="serback")
+	    $.ajax( {
+                url: "ajx.php",
+                data: {logout:"1"},
+                type:"GET",
+                dataType:'JSON',
+				async:false,
+                success: function(msg){
+                },
+
+                 error:function(xhr, ajaxOptions, thrownError){
+                 }
+            });
+}
+</script>
+<script>
+var _menu_tg_px = 240;
+$(document).ready(function (){
+	$('.col-02').prepend('<img src="images/br_prev_icon.png" onclick="tgmenu(this);" style="border:1px #562424 solid; position:absolute;top:80px;">');
+});
+tgmenu = function (obj){
+	if ($('.col-01:visible').length>0){
+		$('.col-02').animate( {left:'0px'} );
+		$('.col-01').animate( {left:(_menu_tg_px*-1)+'px' },function (){$(this).hide();});
+		$(obj)[0].src = "images/br_next_icon.png";
+	}else{
+		$('.col-02').animate( {left:_menu_tg_px+'px'} );
+		$('.col-01').show().animate( {left:'0px' });
+		$(obj)[0].src = "images/br_prev_icon.png";
+	}
+}
+</script>
+</body>
+</html>

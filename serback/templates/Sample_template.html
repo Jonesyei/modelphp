@@ -1,0 +1,337 @@
+({if $record.act=="page"})
+<div class="pagination quotes">
+	<ul>
+	
+	<li style="float:left;">({$record.info})</li>
+	
+	({if $record.now_page!=1})
+	<li><a href="Javascript:location='({$record.url})&page=1'">第一頁</a></li>
+	<li><a href="Javascript:({$record.pre_url})">上一頁</a></li>	
+	({else})
+	<li class="disabled">第一頁</li>
+	<li class="disabled">上一頁</li>
+	({/if})
+	
+	({section name=idx loop=$record.page_num})
+	({$record.page_num[idx].url})
+	({/section})  
+
+	({if $record.now_page!=$record.total_page})
+	<li><a href="Javascript:({$record.next_url})">下一頁</a></li>
+	<li><a href="Javascript:location='({$record.url})&page=({$record.total_page})'">最後一頁</a></li>	
+
+	({else})
+	<li class="disabled">下一頁</li>
+	<li class="disabled">最後一頁</li>		
+	({/if})
+	<li><input type="text" size="2"  onkeydown="jump(event,'({$record.url})',this.value);" /></li>
+	
+	<li style="float:right;">({$record.info2})</li>
+	</ul>
+	
+</div>
+({elseif $record.act=="left_menu" })
+({section name=idx loop=$record.data})
+<li class="global_nav"><a class="menu" href="Javascript:toggle_menu('submenu({$record.data[idx].Level})')">({$record.data[idx].name})</a></li>
+
+<ul class="sub" style="display: none; text-align: left;" id="submenu({$record.data[idx].Level})">
+({section name=idx2 loop=$record.data[idx].sub_menu})
+<li><a class="menu" href="({$record.data[idx].sub_menu[idx2].url})">({$record.data[idx].sub_menu[idx2].name})</a></li>
+({/section})
+</ul>
+({/section})
+({elseif $record.act=="upload_file_page"})
+<div id="({$record.file_queue})" class="({$record.queue_class})" ></div> 
+<input type="file" name="({$record.name})" id="({$record.name})" />
+<p>
+<input type="button" name="upload_btn" id="upload_btn" value="上傳" onclick="$('#({$record.name})').uploadifyUpload();" style="width:50px;" class="selfbtn" />
+&nbsp;&nbsp;&nbsp;
+<input type="button" name="cancel_btn" id="cancel_btn" value="取消" onclick="$('#({$record.name})').uploadifyClearQueue();"  style="width:50px;" class="selfbtn"/>
+<input type="hidden" name="edit_({$record.name})" id="edit_({$record.name})" value="({$record.value})" />
+<input type="hidden" name="({$record.name})_count" id="({$record.name})_count" value="({$record.current_file_count})" />
+</p>
+<div id="file_gelley_({$record.name})">
+
+({section name=idx loop=$record.exist_file})
+<div id="({$record.name})_({$record.exist_file[idx].idx})" class="upload_file_div">
+	<div class="({$record.exist_file[idx].class})">
+	({$record.exist_file[idx].upload_item})
+	</div>
+	<a href="Javascript:del_file('({$record.exist_file[idx].file})','({$record.name})_({$record.exist_file[idx].idx})','({$record.name})')" \>刪除</a>	
+</div>
+({/section})
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#({$record.name})").uploadify( {
+		"uploader"       : "({$record.path})includes/js/uploadify/uploadify.swf",
+		"script"         : "({$record.path})includes/js/uploadify/uploadify.php",
+		"cancelImg"      : "images/cancel.png",
+		"folder"         : "({$record.path})upload/({$record.floder})",
+		"buttonImg"		 : "({$record.path})includes/js/uploadify/browse.jpg",
+		"queueID"        : "({$record.file_queue})",
+		"fileDesc"       : "({$record.file_type})",
+		"fileExt"        : "({$record.file_type})",	
+		"auto"           : false,
+		"multi"          : ({$record.multi}),
+		"queueSizeLimit" : 99, 
+		"sizeLimit" 	 : ({$record.maxSize}),
+		"onSelectOnce"   : function(e,data){
+								
+								if("({$record.multi})"=="false")
+								{
+									if($("#({$record.name})_count").val()>=1)
+									{
+										alert("您上傳的檔案數量已達上限，請確認。");
+										$('#({$record.name})').uploadifyClearQueue();
+									}
+								}
+								else
+								{
+									if($("#({$record.name})_count").val()>=99)
+									{
+										alert("您上傳的檔案數量已達上限，請確認。");
+										$('#({$record.name})').uploadifyClearQueue();
+									}								
+								}
+						   },		
+		"onComplete"     : function(e,queueId,fileObj,response,data){
+						   
+						   		if(response=="error")
+								{
+									alert("上傳失敗，檔案超過限制(({$record.maxSize})KB)，請確認。");
+								}
+								else if(response!="")
+								{
+									var file_name=response;
+									var img_div="<div id=\"file_div"+queueId+"\" class=\"upload_file_div\">"; 
+									
+									//單筆上傳時呈現
+									if("({$record.multi})"=="false")
+									{
+										var file_ext=file_name.split(".")[1];
+										img_div+="<div class=\"single\">";
+										if(file_ext=="mp4" || file_ext=="flv")
+										{
+											img_div+="<object id=\"player\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" name=\"player\" width=\"253\" height=\"240\" wmode=\"opaque\"><param name=\"wmode\" value=\"opaque\" /><param name=\"movie\" value=\"({$record.path})includes/js/jwplayer/player.swf\" /> <param name=\"allowfullscreen\" value=\"true\" /> <param name=\"allowscriptaccess\" value=\"always\" /><param name=\"flashvars\" value=\"file=({$record.url})"+file_name+"\" /><embed type=\"application/x-shockwave-flash\" id=\"player2\" name=\"player2\" src=\"({$record.path})includes/js/jwplayer/player.swf\" width=\"253\" height=\"240\" allowscriptaccess=\"always\" allowfullscreen=\"true\" flashvars=\"file=({$record.url})"+file_name+"\" /></object>";
+										}
+										else if(file_ext=="wmv")
+										{
+												img_div +="<div name=\"player"+queueId+"\" id=\"player"+queueId+"\"></div>";
+												img_div +="<script>";
+												img_div +="var cnt = document.getElementById(\"player"+queueId+"\");";
+												img_div +="var src = \"({$record.path})includes/js/jwplayer/wmvplayer.xaml\";";
+												img_div +="var cfg = {file:\"({$record.url})"+file_name+"\",height:\"240\",width:\"253\"};";
+												img_div +="var ply = new jeroenwijering.Player(cnt,src,cfg);";
+												img_div +="<\/script>";
+										
+										}
+										else if(file_ext=="jpg" || file_ext=="jpeg" || file_ext=="png" || file_ext=="gif")
+										{
+											img_div+="<a href=\"({$record.path})upload/({$record.floder})/"+file_name+"\" target=\"_blank\"><img src=\"({$record.path})upload/({$record.floder})/"+file_name+"\" style=\"max-width: 400px;\" border=\"0\"  ></a>";												
+											
+										}
+										else
+										{
+											img_div+="<a href=\"({$record.path})upload/({$record.floder})/"+file_name+"\" target=\"_blank\">下載檔案</a>";										
+										}
+										//end 檔案格式判斷
+
+										img_div+="<br><a href=\"Javascript:del_file('({$record.path})upload/({$record.floder})/"+file_name+"','file_div"+queueId+"','({$record.name})')\">刪除</a></div>";										
+										
+									}//end 單筆上傳
+									else	//多筆上傳呈現
+									{
+										img_div+="<div class=\"multi\">";
+											img_div+="<a href=\"({$record.path})upload/({$record.floder})/"+file_name+"\" target=\"_blank\"><img src=\"({$record.path})upload/({$record.floder})/"+file_name+"\"  width=\"80\" border=\"0\"  ></a></div>";
+
+											img_div+="<br><a href=\"Javascript:del_file('({$record.path})upload/({$record.floder})/"+file_name+"','file_div"+queueId+"','({$record.name})')\">刪除</a></div>";										
+											
+									}
+									
+									
+									$("#file_gelley_({$record.name})").append(img_div);
+									$("#"+queueId).hide().fadeIn();
+									$("#edit_({$record.name})").attr("value",$("#edit_({$record.name})").val()+","+file_name+",");
+									
+									
+									$("#({$record.name})_count").attr("value",parseInt($("#({$record.name})_count").val())+1);
+									
+									
+								}//end response不為空
+						   
+						   }//end onComplete function
+
+	} );//end  uploadify
+});//end document ready
+
+
+</script>	
+({elseif $record.act=="customer_list"})
+      <tr id="daily_({$record.data.customer_type})_({$record.data.id})">
+		<td bgcolor="#FFFFFF">({$record.data.tel})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.name})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.visiter})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.detail|nl2br})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.upload_file})</td>
+	    <td align="center" bgcolor="#FFFFFF">&nbsp;</td>
+        <td align="center" bgcolor="#FFFFFF">
+		<input name="edit_btn" type="button" class="wd_01" id="edit_btn" value="修改" onclick="fill_data('({$record.data.customer_type})',({$record.data.id}));" />
+        <input name="del_btn" type="button" class="wd_01" id="del_btn" value="刪除" onclick="edit_data('({$record.data.customer_type})','del',({$record.data.id}))" /> 
+        </td>
+	  </tr>
+({elseif $record.act=="customer_event_list"})
+      <tr id="daily_({$record.data.customer_type})_({$record.data.id})">
+		<td bgcolor="#FFFFFF">({$record.data.name})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.price})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.reason})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.detail})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.upload_file})</td>
+	    <td align="center" bgcolor="#FFFFFF">&nbsp;</td>
+        <td align="center" bgcolor="#FFFFFF">
+		<input name="edit_btn" type="button" class="wd_01" id="edit_btn" value="修改" onclick="fill_data('({$record.data.customer_type})',({$record.data.id}));" />
+        <input name="del_btn" type="button" class="wd_01" id="del_btn" value="刪除" onclick="edit_data('({$record.data.customer_type})','del',({$record.data.id}))" /> 
+        </td>
+	  </tr>	
+({elseif $record.act=="customer_problem_list"})
+      <tr id="daily_({$record.data.customer_type})_({$record.data.id})">
+		<td bgcolor="#FFFFFF">({$record.data.detail|nl2br})</td>
+		<td align="center" bgcolor="#FFFFFF">({$record.data.upload_file})</td>
+	    <td align="center" bgcolor="#FFFFFF">&nbsp;</td>
+        <td align="center" bgcolor="#FFFFFF">
+		<input name="edit_btn" type="button" class="wd_01" id="edit_btn" value="修改" onclick="fill_data('({$record.data.customer_type})',({$record.data.id}));" />
+        <input name="del_btn" type="button" class="wd_01" id="del_btn" value="刪除" onclick="edit_data('({$record.data.customer_type})','del',({$record.data.id}))" /> 
+        </td>
+	  </tr>	  	    
+({elseif $record.act=="create_mail_page"})
+
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="white">
+		<tr>
+			<td colspan="2" class="deta_list_02">發送E-Mail <span style="float:right; cursor:pointer;" onclick="Cancel_BlockUI();">&nbsp;&nbsp;X&nbsp;&nbsp;</span></td>
+		</tr>
+		<tr>
+		  <td width="21%" class="deta_list_01">發送給</td>
+	      <td width="79%" class="deta_list_01" align="left" style="word-break:break-all">({$record.data.email})</td>
+	  </tr>
+		<tr>
+		  <td class="deta_list_01">內容</td>
+		  <td class="deta_list_01" align="left"><label>
+		    <textarea name="mail_content" cols="40" rows="5" id="mail_content"></textarea>
+		  </label></td>
+	  </tr>
+		<tr>
+		  <td class="deta_list_01">&nbsp;</td>
+		  <td class="deta_list_01" align="left"><label>
+		    <input type="button" name="send_mail_btn" id="send_mail_btn" value="發送" onclick="sending();" />
+		    <input name="mail_to" type="hidden" id="mail_to" value="({$record.data.email})" />
+		  </label></td>
+	  </tr>
+	</table>
+<script>
+function sending()
+{
+	if($("#mail_content").val()=="")
+	{
+		alert("請輸入內容");
+		return;
+	}
+	else
+	{
+			$("#mail_content").attr("disabled","disabled");
+			$("#send_mail_btn").attr("disabled","disabled").attr("value","發送中...請勿重新整理頁面");
+			$.getJSON("ajax_get_data.php", {act:"send_mail" , email:"({$record.data.email})", content:$("#mail_content").val()}, 
+				function(json){
+					if(json.isPass==1)
+					{
+						alert("發送完成");
+						Cancel_BlockUI();
+					}				
+					else
+					{
+						alert(json.msg);
+					}
+				}
+			);		
+	}
+}
+</script>
+({elseif $record.act=="create_export_page"})
+<style>
+.each{
+	width:110px;
+	float:left;
+	text-align:left;
+}
+</style>
+<form action="" method="post" enctype="multipart/form-data" name="edit_form" id="edit_form" > 
+<table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="white">
+		<tr>
+			<td colspan="2" class="deta_list_02">匯出報表<span style="float:right; cursor:pointer;" onclick="Cancel_BlockUI();">&nbsp;&nbsp;X&nbsp;&nbsp;</span></td>
+		</tr>
+		<tr>
+		  <td width="21%" class="deta_list_01">時間</td>
+	      <td width="79%" class="deta_list_01" align="left" style="word-break:break-all">({$record.data.date_menu})</td>
+	  </tr>
+		<tr>
+		  <td class="deta_list_01">匯出欄位</td>
+		  <td class="deta_list_01" align="left">
+		  ({if $record.data.type=="member"})
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="帳號" /> 帳號</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="密碼" /> 密碼</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="姓名" /> 姓名</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="性別" /> 性別</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="出生日期" /> 出生日期</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="子女人數" /> 子女人數</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="收入" /> 收入</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="偏好商品" /> 偏好商品</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="地址" /> 地址</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="手機" /> 手機</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="電話(日)" /> 電話(日)</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="電話(夜)" /> 電話(夜)</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="累積紅利" /> 累積紅利</div> 
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="消費筆數" /> 消費筆數</div> 
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="消費金額" /> 消費金額</div> 
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="退貨筆數" /> 退貨筆數</div> 
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="狀態" /> 狀態</div> 
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="備註" /> 備註</div> 
+		  ({else})
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="訂單編號" /> 訂單編號</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="訂單日期" /> 訂單日期</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="會員姓名" /> 會員姓名</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="帳號" /> 帳號</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="訂單狀態" /> 訂單狀態</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="付款方式" /> 付款方式</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="運送方式" /> 運送方式</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="發票樣式" /> 發票樣式</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="金額" /> 金額</div>
+
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="寄件姓名" /> 寄件姓名</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="寄件手機" /> 寄件手機</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="寄件電話(日)" /> 寄件電話(日)</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="寄件電話(夜)" /> 寄件電話(夜)</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="寄件地址" /> 寄件地址</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="寄件E-Mail" /> 寄件E-Mail</div>
+		  
+		  		  
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="收件姓名" /> 收件姓名</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="收件手機" /> 收件手機</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="收件電話(日)" /> 收件電話(日)</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="收件電話(夜)" /> 收件電話(夜)</div>
+		  <div class="each"><input type="checkbox" name="field[]" id="field[]" value="收件地址" /> 收件地址</div>
+		  		  
+		  ({/if})
+		  </td>
+	  </tr>
+		<tr>
+		  <td class="deta_list_01">&nbsp;</td>
+		  <td class="deta_list_01" align="left">
+		    <input type="submit" name="export_btn" id="export_btn" value="匯出" />
+			 <input name="act" type="hidden" id="act" value="export_xls">
+		    
+		  </td>
+	  </tr>
+	</table>
+</form>
+({/if})

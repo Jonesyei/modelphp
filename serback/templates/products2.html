@@ -1,0 +1,804 @@
+<script src="../includes/js/load-image.all.min.js"></script><!--onchange load-->
+({if $admin_info.view == 'list'})
+<script>
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
+	$('[name="daterange"]').val( Get("daterange") );
+
+	$('#SearchBtn').click(function(){
+		if( $('[name="daterange"]').val().split("-")[1]!=null)
+		{
+			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
+			
+			$('[name="daterange"]').val( daterange );
+		}
+		
+		$('#search_form').submit();
+	});
+
+});
+</script>
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+    
+    <a  onClick="javescript:$('#csv_div2').dialog('open');"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>匯入</a>
+    <a  onClick="javescript:$('#csv_div').dialog('open');"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>匯出</a>
+    
+        ({if $close.insert!=1})<a href="({$admin_info.page})&id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+        ({if $close.edit!=1})<a onclick="Edit('({$admin_info.page})&id=')"><img src="images/icon14.png" width="32" height="32" alt=""/>編輯</a>({/if})<!-- 模組新增修改刪除列 -->
+        ({if $close.edit!=1})<a onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+         <a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
+         </div>
+         
+
+<div id="csv_div" title="匯出資料進階設定">
+<form action="csv.php" method="post" id="csv" style="display:none;">
+	<input type="text" name="title" value="({$data.csv_title})">
+    <input type="text" name="sql" value="({$data.csv_sql})">
+</form>
+	({section name=output loop=$data.output_title})
+    <div style="background-color:#EEE;">
+    <input type="checkbox" value="({$data.output_row[output]})" class="outrow" checked="checked" alt="({$data.output_title[output]})">({$data.output_title[output]})
+    </div>
+    ({/section})
+    <font color="red">(項目可拖曳變換匯出順序)</font>
+</div>
+<script>
+	//---匯出
+    $( "#csv_div" ).dialog( {
+	  height:300,
+      modal: true,
+      buttons: {
+        '取消': function() {$( this ).dialog( "close" );}
+		,'匯出': function() {
+			output_title = ''; output_sql = '';
+			$('.outrow').each(function (idx,obj){
+				if ($(obj).attr('checked')!=''&&$(obj).attr('checked')!=null){
+					if (output_title!='') output_title +=',';
+					if (output_sql!='') output_sql +=',';
+					output_title += $(obj).attr('alt');
+					output_sql += $(obj).val();
+				}
+			})
+			$('#csv [name="title"]').val(output_title);
+			$('#csv [name="sql"]').val('select ' + output_sql + ' from ({$data.cpos.table}) ({$data.cpos.tablejoin}) ({$data.cpos.tablelistwhere}) ({str_replace("'","\\'",$data.cpos.search_output)})');
+			$('#csv').submit();
+			$( this ).dialog( "close" );
+		}
+      }
+    });
+	$( "#csv_div" ).dialog("close");
+	$('#csv_div').parent().css('position','absolute');
+	
+    $('#csv_div').sortable( {items: 'div'} );
+    $('#csv_div').disableSelection();
+</script>
+<div id="csv_div2" title="匯入資料進階設定">
+<form action="csv.php" method="post" id="csv2" style="" enctype="multipart/form-data">
+	<input type="hidden" name="title" value="({$data.csv_sql})">
+    <input type="hidden" name="defrow" value="lang:({$admin_info.lang}),type:products">
+    <input type="hidden" name="act" value="insert">
+    <input type="hidden" name="data_table" value="({$data_table})">
+    <font color="blue">步驟一:</font>選擇檔案 <input type="file" name="file">
+</form>
+<br>
+	<font color="blue">步驟二:</font>請對應你的檔案內容排序位置<font color="red">(可拖曳)</font>
+	({section name=input loop=$data.input_title})
+    <div style="background-color:#EEE;">
+    <input type="checkbox" value="({$data.input_row[input]})" class="outrow2" checked="checked" alt="({$data.input_title[input]})">({$data.input_title[input]})
+    </div>
+    ({/section})
+</div>
+<script>
+	//----匯入
+    $( "#csv_div2" ).dialog( {
+	  height:300,
+      modal: true,
+      buttons: {
+        '取消': function() {$( this ).dialog( "close" );}
+		,'匯入': function() {
+			output_title = ''; output_sql = '';
+			$('.outrow2').each(function (idx,obj){
+				if ($(obj).attr('checked')!=''&&$(obj).attr('checked')!=null){
+					if (output_title!='') output_title +=',';
+					output_title += $(obj).val();
+				}
+			})
+			$('#csv2 [name="title"]').val(output_title);
+			$('#csv2').submit();
+			$( this ).dialog( "close" );
+		}
+      }
+    });
+	$( "#csv_div2" ).dialog("close");
+	$('#csv_div2').parent().css('position','absolute');
+	
+    $('#csv_div2').sortable( {items: 'div'} );
+    $('#csv_div2').disableSelection();
+</script>
+
+
+
+
+<!--SEARCH-->
+
+
+<div class="search-tool" id="search"><!-- 搜尋模組 -->
+<form action="" method="get" id="search_form" name="search_form">
+
+
+
+關鍵字查詢<input type="text" name="keyword" value="({$data.pageget.keyword})" />
+
+
+建立日期<input type="text" name="daterange"  readonly size="25" >
+<script>Datepick('[name="daterange"]',"range","yyyy.mm.dd");</script>
+
+
+
+	({$admin_info.tmp.search_other})
+
+    <select name="s_status" >
+        ({$admin_info.search.status})
+    </select>
+
+  
+  
+   <img src="images/icon-search.png" width="18" height="18" id="SearchBtn">
+
+ </form>
+</div>
+<!--SEARCH-->
+
+
+
+
+
+<div id="content_inside" style="clear:both;">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+  	<tr>
+  		<th align="center" width="60">刪除 <input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></th>
+
+  		<th width="10%">名稱</th>
+		<th width="10%">商品分類</th>
+		({if $close.sort!=1})<th>排序</th>({/if})
+		<th>狀態</td>
+		<th width="20%">建立時間</th>
+		<th width="20%">維護時間</th>
+		
+
+  	</tr>
+	
+	({section name=idex loop=$data.list})
+   <tr class="tr_sort" title="可拖曳進行排序">
+      <td align="center" ><input type="checkbox" id="choose_id" value="({$data.list[idex].id})" name="choose_id" /></td>
+	  
+	   <td ><a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name|nl2br})</a></td>
+
+	   <td>({$data.list[idex].class_html})</td>
+       
+({if $close.sort!=1})  
+	<td align="center">
+		  <input type="text" name="sort_({$data.list[idex].id})" id="sort_({$data.list[idex].id})" size="2" value="({$data.list[idex].sort})" 
+		  onmouseup="sort_act=2" onmousedown="sort_act=2"/> ({$data.list[idex].up}) ({$data.list[idex].down})
+		  </td>
+({/if})
+	
+	  
+	  <td >({$data.list[idex].status_html})</td>
+	  
+	  <td >({$data.list[idex].create_name}) 於 ({$data.list[idex].create_date})</td>
+	  
+	  <td >({$data.list[idex].update_name}) 於 ({$data.list[idex].update_date})</td>
+	  
+	  
+
+  </tr>
+    ({/section})
+	
+  </table>
+({include file=$page_table_html})
+  <input name="act" type="hidden" value="all" />
+  </form>
+</div>
+
+
+
+
+
+<script>
+page_initial('table_content');
+</script>
+
+
+<!--頁數呈現table-->
+</div>
+({/if})
+
+
+
+({if $admin_info.view == 'detail'})
+<script src='../includes/js/color/spectrum.js'></script>
+<link rel='stylesheet' href='../includes/js/color/spectrum.css' />
+
+
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        <a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>
+
+        ({if $data.one.id!=null})
+          ({if $close.edit!=1})<a  onClick="submitpose();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+          ({if $close.copy!=1})<a  onClick="Copy_data();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>複製</a>({/if})
+         ({else})
+          ({if $close.add!=1})<a onClick="submitpose();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+        ({/if})
+         </div>
+
+  <!--div id="title"-->
+
+
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form" enctype="multipart/form-data">
+<div id="tabs">
+<ul>
+	<li><a href="#tabs-1">基本資料</a></li>
+	({if $data.pageget.mode==null || $data.check_button.2=='1'})<li><a href="#tabs-2">尺寸顏色</a></li>({/if})
+    <li><a href="#tabs-3">售價設定</a></li>
+    ({if $data.pageget.mode==null || $data.check_button.5=='1'})<li><a href="#tabs-4">加購設定</a></li>({/if})
+</ul>
+
+<div id="tabs-1">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+
+	<tr>
+	<td width="120" align="right" >商品名稱：</td>
+	  <td >
+	  <input type="text" name="name" id="name" value="({$data.one.name})" size="40" />
+	  </td>
+	</tr>
+	<tr>
+	<td width="120" align="right" >商品貨號(別名)：</td>
+	  <td >
+	  <input type="text" name="alies" id="alies" value="({$data.one.alies})" size="40" />
+	  </td>
+	</tr>
+	<tr>
+	<td align="right" >產品分類：</td>
+	  <td id="class_list" >
+      <input type="button" value=" 增加一個分類別 " onclick="add_class();"><br><br>
+      ({section name=m loop=$data.one.cate_menu})
+      ({$data.one.cate_menu[m]})
+      ({/section})
+      <script>
+	  function del_class(id){
+		if (confirm('確定刪除此分類?')){
+			$('div#class_'+id).remove();
+		}
+	  }
+	  function add_class(){
+		  var s_time = new Date().getTime();
+		$('#class_list').append('<div id="class_'+s_time+'">'+$('#hide_class').html()+' <input type="button" value=" 刪除 " onclick="del_class('+s_time+')"></div>');
+	  }
+	  </script>
+	   </td>
+	</tr>
+<!--
+    <tr>
+	<td align="right" >品牌分類：</td>
+	  <td >
+      ({$data.one.probrand_menu})
+	   </td>
+	</tr>
+    -->
+
+	<tr>
+	<td align="right" >是否為新品：</td>
+	  <td >
+      <input type="radio" name="isnew" value="1" ({if $data.one.isnew == 1})checked({/if})>是
+      <input type="radio" name="isnew" value="0" ({if $data.one.isnew == 0})checked({/if})>否
+	   </td>
+	</tr>
+
+
+({if $data.pageget.mode==null || $data.check_button.3=='1'})
+	<tr>
+	<td align="right" >商品圖片：</td>
+	  <td >
+
+	 
+<link href="../includes/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../includes/Uploadify/swfobject.js"></script>
+<script type="text/javascript" src="../includes/Uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+<script type="text/javascript">
+var Pic;
+var max_count = '({if $data.pageget.mode==null || $data.check_button.4!=null})({$data.check_button.4})({else})5({/if})';
+$(document).ready(
+	function()
+	{	
+		 $("#uploadify").uploadify
+		 (
+			 {
+				'uploader'		: '../includes/Uploadify/uploadify.swf', 
+				'script'		: '../includes/Uploadify/uploadify.php', 
+				'cancelImg'		: '../includes/Uploadify/cancel.png', 
+				'folder'		: '({$data.file_url})', 
+				'queueID'		: 'fileQueue_list',
+				'queueSizeLimit': max_count,
+				'auto'			: false,
+				'multi'			: true,
+				'onSelectOnce'	:function(event,data)
+				{
+					//--全部選擇完之後
+					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
+						alert("圖片選擇超出數量");
+						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
+						this.uploadifyCancel(ID);
+					}else if (max_count=='1'){
+						setTimeout("$('#uploadify').uploadifyUpload()",1);
+					}
+				},
+				'onAllComplete'	:function(event,data) 
+				{
+					//$('form').submit();
+				},
+				'onComplete'  : function(event, ID, fileObj, response, data)
+				{
+						upload_one(response);
+						$('[name="pic"]').remove();
+				},
+				'onSelect'    : function(event,ID,fileObj)
+				{
+					var type = fileObj.type.toLowerCase();
+					if(type!=".jpg" && type!=".jpeg" && type!=".gif" && type!=".png")
+					{					
+						alert("圖片格式不符\n只允許jpg,jpeg,gif,png");
+						setTimeout("$('#uploadify').uploadifyCancel('"+ID+"')",1);
+						this.uploadifyCancel(ID);
+
+					}
+				}
+			}
+			
+		)// $("#uploadify").uploadify
+		
+	}//function()
+);
+
+function upload_one(response){
+					var filename = response.split('/');
+					if (filename.length<=1) return alert(response);
+					filename = filename[filename.length-1];div_file = filename.split('.')[0];
+					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"></div>');//--增加一個選項
+					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
+				 	$('#picspan_'+div_file).append('<input type="hidden" name="pic[]" value="'+filename+'">');
+					$('#picspan_'+div_file).append('<input type="button" onclick="picdel('+div_file+')" value="刪除'+filename+'圖片"><br><br>');
+					
+					//--縮圖程式 記憶欄位
+					$('#picspan_'+div_file).append('<input type="hidden" name="small_pic[]" value="">');
+}
+function picdel(d){
+	$('#picspan_'+d).remove();
+	if ($('#piclist').find("div").html()==null) {
+	 	$('#fileQueue_list').append('<input type="hidden" name="pic" value="">');
+	}
+}
+  $(function() {
+    $( "#piclist" ).sortable();
+    $( "#piclist" ).disableSelection();
+  });
+</script>
+<style>
+.UploadPicList img {cursor:pointer;}
+</style>
+<ul class="UploadPicList">
+</ul>
+<div id="fileQueue_list"></div>
+
+
+<div id="piclist">
+({section name=picidx loop=$data.one.pic})
+({if $data.one.pic[picidx]!=null||$data.one.pic[picidx]!=''})
+<div class="ui-state-default" id="picspan_({$smarty.section.picidx.index})">
+<img src="({$data.file_url})({$data.one.pic[picidx]})" height="150px">
+<input type="hidden" name="pic[]" value="({$data.one.pic[picidx]})">
+<input type="hidden" name="small_pic[]" value="({$data.one.small_pic[picidx]})">
+<br>
+<input type="button" onclick="picdel(({$smarty.section.picidx.index}))" value="刪除({$data.one.pic[picidx]})圖片"><br><br>
+</div>
+({/if})
+({/section})
+</div>
+
+<input type="file" name="uploadify" id="uploadify"/>
+<BR /><a href="javascript:$('#uploadify').uploadifyUpload()">批次上傳圖片</a>&nbsp;|&nbsp;<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;建議比例:XXX*XXX
+<BR />
+	 
+	  </td>
+	</tr>
+({/if})
+
+	<tr>
+	<td align="right" >列表文字：</td>
+	  <td >
+      <textarea name="memo_1" rows="2" cols="50">
+      ({$data.one.memo_1})
+      </textarea>
+	   </td>
+	</tr>
+
+	<tr>
+	<td align="right" >商品內容：</td>
+	  <td >
+      <textarea name="memo" rows="10" cols="50">
+      ({$data.one.memo})
+      </textarea>
+	   </td>
+	</tr>
+
+
+	<tr>
+	<td align="right" >商品內容：</td>
+	  <td >
+      ({$data.one.detail_fck})
+	   </td>
+	</tr>
+
+</table>
+</div>
+
+
+
+({if $data.pageget.mode==null || $data.check_button.1=='1'})
+<div id="tabs-2">
+<style>
+#size_td div.zlist{
+	 border:1px solid #AAA;
+	 margin-top:2px;
+}
+</style>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content" style="border-bottom:none;">
+ <tr>
+	<td align="right" width="120">尺寸分類：</td>
+	  <td id="size_td">尺寸模組
+      <select id="pro_size" style="width:200px" onblur="change_size_menu();">
+      ({$data.one.pro_size})
+      </select><input type="button" value="匯入尺寸模組" style="width:100px;" onclick="change_size_menu('nosing');">
+      新增尺寸分類 <input type="text" id="size_add_box">
+      <input type="button" value=" 新增 " onclick="addtolist();"/>
+      <br><br>
+      ({section name=size loop=$data.one.size})
+  		<div class="zlist">規格: <input type="text" name="size[]" value="({if $data.one.size[size]==null})基本({else})({$data.one.size[size]})({/if})"> 
+        顏色:<input type="text" class="color_list" name="color[]" value="({$data.one.color[size]})">
+        圖片:<img src="({$data.file_url})({$data.one.stock_pic[size]})" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]" value="({$data.one.stock_pic[size]})">
+        現貨:<input type="text" name="stock[]" value="({if $data.one.stock[size]!=null})({$data.one.stock[size]})({else})0({/if})" onkeyup="this.value=this.value.replace(/\D/g,\'\');">
+        貨號:<input type="text" name="stock_no[]" value="({$data.one.stock_no[size]})" />
+        顯示:<input type="radio" name="stock_status[({$smarty.section.size.index})]" value="1" ({if $data.one.stock_status[size]!=='0'})checked({/if})>開啟
+        <input type="radio" name="stock_status[({$smarty.section.size.index})]" value="0" ({if $data.one.stock_status[size]==='0'})checked({/if})>關閉
+        <input type="button" value=" 刪除 " onclick="$(this).parent().remove();" /></div>
+      ({/section})
+	   </td>
+	</tr>
+    <script>
+	$(document).ready(function (){
+		create_color_select('.color_list');
+		$('#size_td').sortable( {items: 'div.zlist'} );
+	})
+	function addtolist(){
+		var temp_time = new Date().getTime();
+		$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+$('#size_add_box').val()+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value="">  圖片:<img src="" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]">現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');"> 貨號:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"><font color="red">(未存檔)</font></div>');
+		$('.zlist:last input[type="file"]')[0].onchange = fileuploadstockpic;
+		create_color_select('#c'+temp_time);
+	}
+	function dellist(){
+		if (confirm('確認您要刪除 '+$('#size option:selected').html()+' 尺寸資訊?')){
+			$('#size option:selected()').remove();
+		}
+	}
+	function change_size_menu(d){
+		if (d=='nosing'){
+		}else{
+			if (!confirm('你要將目前商品尺寸資訊改換為 [ '+$('#pro_size option:selected').html()+' ] 尺寸模組嗎?')) return;
+		}
+			//$('#size_td div').remove();//原先全部清空
+			am = $('#pro_size option:selected').val().split('|__|');
+			for(aa in am) {
+				var temp_time = new Date().getTime();
+			$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+am[aa]+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value=""> 現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');">  貨號:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"></div>');
+				create_color_select('#c'+temp_time);
+			}
+	}
+	function create_color_select(obj){
+	   	$(obj).spectrum( {
+			preferredFormat: "hex",
+		    showInput: true,
+			allowEmpty:true,
+			showInitial: true,
+			chooseText: "確定",
+			cancelText: "取消"
+		});
+   }
+   
+   //-檔案儲存
+	$(document).ready(function (){
+		$('.zlist input[type="file"]').each(function (idx,obj){
+			$(obj)[0].onchange = fileuploadstockpic;
+		})
+	});
+	fileuploadstockpic = function (e){
+				_stock_obj = e.target;
+				loadImage(
+					e.target.files[0],
+					function (img) {
+						$('body').append(img.toDataURL());
+						$.ajax( {
+							url: "ajx.php",
+							data: {data_img:img.toDataURL(),file_url:'({$data.file_url})'},
+							type:"post",
+							dataType:'text',
+							async: false,
+							success: function(msg){
+								$(_stock_obj).parent().find('[name="stock_pic[]"]').val(msg);
+								$(_stock_obj).parent().find('img:eq(0)')[0].src = '({$data.file_url})'+msg;
+							}
+						});
+					},
+					{
+						canvas: true
+					} // Options
+				);
+				this.value = null;
+			}
+	</script>
+    
+</table>
+</div>
+({/if})
+
+
+
+
+
+<div id="tabs-3">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content" style="border-bottom:none;">
+ 	<tr >
+      <td  align="right" width="120">商品售價：</td>
+      <td > 
+	  <input type="text" name="price1" id="price1" value="({$data.one.price1})" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
+	  </td>
+    </tr>
+	({if $data.pageget.mode==null || $data.check_button.2=='1'})
+    <tr >
+      <td  align="right" >商品折扣：</td>
+      <td > 
+	  - <input type="text" name="price_desh" id="price_desh" value="({if $data.one.price_desh==null})0({else})({$data.one.price_desh})({/if})" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');" maxlength="2"> % (此值為 <font color="red">負</font> 值，如設定 20% 即 8 折的意思)
+	  </td>
+    </tr>
+    
+	<tr >
+      <td  align="right" >商品折扣後價格：</td>
+      <td > 
+	  <input type="text" id="price2" value="({$data.one.price2})" disabled="disabled" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
+	  </td>
+    </tr>
+	({/if})
+    ({if $data.pageget.mode==null || $data.check_button.0=='1'})
+	<tr >
+      <td  align="right" >所獲得紅利：</td>
+      <td > 
+	  <input type="text" name="point" id="point" value="({$data.one.point})" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
+	  </td>
+    </tr>
+    ({/if})
+<!--
+	<tr >
+      <td  align="right" >可折抵購物金：</td>
+      <td > 
+	  <input type="text" name="depoint" id="depoint" value="({$data.one.depoint})" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
+	  </td>
+    </tr>
+-->
+</table>
+</div>
+
+
+
+
+
+
+
+({if $data.pageget.mode==null || $data.check_button.5=='1'})
+<div id="tabs-4">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content" style="border-bottom:none;">
+ 	<tr>
+	<td align="right" width="120">加價購：</td>
+	  <td >
+      ({$data.one.prolist})
+      <select id="adtolist" onchange="cpic();">
+      <option>請選擇加價購商品</option>
+      </select>
+      <img id="pez" src="">
+      <input type="button" value="增加到加價購" onclick="todiv()">
+      <div id="addlist">
+      </div>
+	   </td>
+	</tr>	
+	<script>
+	//--先寫入頁面
+	var objid=0;//---頁面加價購筆數暫存
+	var reponse = JSON.parse('({$data.one.add_all})');
+	 	for(ee in reponse)
+			todiv(ee);
+	$('#prolist').on("change",function (){
+            $.ajax( {
+                url: "ajx.php",
+                data: {pidlist:$('#prolist').val()},
+                type:"GET",
+                dataType:'JSON',
+                success: function(_return){
+					$('#adtolist').html('<option>請選擇加價購商品</option>');
+					for (apro in _return){
+					 $('#adtolist').append('<option value="'+apro+'">'+_return[apro]["name"]+'</option>')
+					}
+					reponse = _return;
+                },
+                 error:function(xhr, ajaxOptions, thrownError){ 
+                    //alert(xhr.status); 
+                    //alert(thrownError); 
+                 }
+            });
+	});
+	function cpic(){ //-----選擇加價購商品動作 (顯示商品圖片)
+		var avl = $('#adtolist').val();
+		$('#pez').attr("width","80");
+		$('#pez').attr("src","../upload/products/"+reponse[avl]["pic"]);
+	}
+	function todiv(d){ //----按鈕加入加價購商品動作
+		if (d!=null)
+		var avl = d;
+		else
+		var avl = $('#adtolist').val();
+		objid ++;
+		$('#addlist').append('<div id="adclass_'+objid+'"><div>');
+		$('#adclass_'+objid).append('<img id="img_'+objid+'" src="../upload/products/'+reponse[avl]["pic"]+'" width="150"><br>');
+		$('#adclass_'+objid).append('<input type="hidden" name="add_pic['+objid+']" value="'+reponse[avl]["pic"]+'">');
+		$('#adclass_'+objid).append('<input type="hidden" name="add_pro['+objid+']" value="'+reponse[avl]["id"]+'">');
+		if (reponse[avl]["price"]!=null) ad_price = reponse[avl]["price"]; else ad_price = '9999';
+		if (reponse[avl]["count"]!=null) ad_count = reponse[avl]["count"]; else ad_count = '1';
+		$('#adclass_'+objid).append('加購價:<input type="text" name="add_price['+objid+']" value="'+ad_price+'"><br>');
+		$('#adclass_'+objid).append('限購數量:<input type="text" name="add_count['+objid+']" value="'+ad_count+'"><br>');
+		$('#adclass_'+objid).append('<input type="button" id="btn_'+objid+'" value="  刪除商品  " onclick="removeaddpro('+objid+')"><br><br>');
+	}
+	function removeaddpro(d){
+		$('[name="add_pic['+d+']"]').remove();
+		$('[name="add_pro['+d+']"]').remove();
+		$('[name="add_price['+d+']"]').remove();
+		$('[name="add_count['+d+']"]').remove();
+		$('#img_'+d).remove();
+		$('#btn_'+d).remove();
+		if ($('#addlist').find('img').html() == null){
+					$('#addlist').append('<input type="hidden" name="add_pic" value="">');
+					$('#addlist').append('<input type="hidden" name="add_pro" value="">');
+					$('#addlist').append('加購價:<input type="hidden" name="add_price" value=""><br>');
+					$('#addlist').append('限購數量:<input type="hidden" name="add_count" value="">');
+					$('form').submit();
+		}
+	}
+	</script>
+</table>
+</div>
+({/if})
+
+ 
+</div>
+ <br />
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content" >
+	<tr>
+      <td width="120" align="right" >狀態：</td>
+      <td >
+	({$data.one.status_html})
+	 </td>
+    </tr>
+
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	 ({$data.one.create_name}) 於 ({$data.one.create_date}) 建立
+	 </td>
+    </tr>
+
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.one.update_name}) 於 ({$data.one.update_date}) 維護
+	 </td>
+    </tr>
+
+
+	<input name="act" type="hidden" value="submit" />
+	<input name="id" type="hidden" value="({$data.one.id})" />
+  </table>
+
+</form>
+
+
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+<div id="hide_class" style="display:none;">({$data.one.def_cate_menu})</div><!--預設的分類-->
+<script>
+page_initial('table_content');//tr交互顯示顏色
+$('#tabs').tabs();
+
+
+function Copy_data()
+{
+	javascript:document.getElementById("form").action = '({$admin_info.page_get_url.id})&id=0';
+	$('#form').submit();	
+}
+
+
+function submitpose(){
+	var errostr = '';
+	
+	//--小圖縮圖處理
+	$('#piclist div[class="ui-state-default"][id]').each(function (idx,obj){
+		var _temp_small_pic = resizeImage($(obj).find('img')[0], 200, 200);
+		$(obj).find('[name="small_pic[]"]').val(_temp_small_pic);
+	});
+	
+	
+	$('form [name="class[]"]').each(function (idx,obj){
+		if ($(obj).val()!=null && $(obj).val()!=''){
+		$.ajax( {
+			url: "ajx.php",
+			data: {pro_class:$(obj).val()},
+			type:"GET",
+			dataType:'text',
+			async: false,
+			success: function(msg){
+				if (msg=='false'){
+					errostr ='分類必須選擇非目錄之下\n';
+				}
+			}
+		});
+		}else{
+			return errostr = '分類不可為跟目錄';
+		}
+	});
+	if (errostr!=''){
+		return alert(errostr);
+	}else{
+		$('form').submit();
+	}
+}
+</script>
+
+({/if})

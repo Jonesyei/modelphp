@@ -1,0 +1,31 @@
+@charset "utf-8";
+
+
+/*上板*/
+
+/*帳戶資訊*/
+.header .login-person .person-info{ display:none;}
+
+
+
+
+
+
+/*左側*/
+.col-01 { position:fixed; z-index:99;}
+
+
+
+
+
+
+/*右側*/
+
+/*內文調整*/
+#content_inside,#form { overflow:auto;}
+.ui-tabs-panel.ui-widget-content.ui-corner-bottom { overflow:auto;}
+
+
+
+/*字碼*/
+.wd_num_01{ display:none;}

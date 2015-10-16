@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>({$web_set.title})</title>
+({$web_set.keyword})
+<script type="text/javascript" src="includes/js/jquery.js"></script>
+<!--
+<script type="text/javascript" src="includes/js/func_js.js"></script>
+<script type="text/javascript" src="includes/js/script.js"></script>
+<script type="text/javascript" src="includes/js/data.js"></script>
+-->
+<script type="text/javascript" src="includes/js/script.js"></script>
+({if $data.pageget.class=='product' && $data.pageget.id!=null})
+<meta property="og:title" content="({$data.one.name})"/>
+<meta property="og:url" content="index.php?class=product&id=({$data.pageget.id})"/>
+<meta property="og:image" content="({$data.one.pic})"/>
+<meta property="og:site_name" content="({$web_set.title})"/>
+<meta property="og:description" content="({$data.one.memo})"/>
+({/if})
+<link href="style/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="({if $data.pageget.class==null&&$data.pagename=='index'})index({else})inside({/if})">
+<div class="header">
+
+<a href="index.php"><img src="images/logo.png" width="258" height="76" class="logo" /></a>
+<div class="top-tool">
+	搜尋<input type="text" id="seach_word" value="({$data.pageget.seach_word})"  placeholder="請輸入產品關鍵字詞"><input type="button" value="搜索" onclick="search_pro();">
+  ({$data.login_html})
+  <a href="shopping.php?list=1">購 物 車</a>
+  <select name="select" id="langobj" onchange="change_lang()">
+        <option>--Language--</option>
+        <option value="ch">繁體中文</option>
+        <option value="cn">簡体中文</option>
+        <option value="jp">日本語</option>
+        <option value="en">English</option>
+  </select>
+  <script>
+  function change_lang(){
+	  switch (document.getElementById('langobj').value){
+		  case "ch":
+		  		window.location.href = '/';
+		  break;
+		  case "cn":
+		  		window.location.href = 'lang/simplified.html';
+		  break;
+		  case "jp":
+		  		window.location.href = 'lang/jp.html';
+		  break;
+		  case "en":
+		  		window.location.href = 'lang/en.html';
+		  break;
+	  }
+  }
+  </script>
+  <script>
+  function search_pro(){
+	  window.location.href= 'index.php?class=product&seach_word=' + $('#seach_word').val();
+  }
+  </script>
+</div>
+	<div class="menu">
+    <ul>
+      <li><a href="index.php?class=news" class="menu01"></a></li>
+      <li><a href="index.php?class=ac" class="menu02"></a></li>
+      <li><a href="index.php?class=product" class="menu03"></a></li>
+      <li><a href="index.php?class=Customization" class="menu04"></a></li>
+      <li><a href="index.php?class=work" class="menu05"></a></li>
+      <li><a href="index.php?class=contact" class="menu06"></a></li>
+    </ul>
+  </div>
+</div>
+
+
+({include file=$content})
+    
+
+
+<div class="footer">
+ <div class="foot-box">
+       <div><img src="images/footer-rd-bg.jpg" width="1000" height="50" class="copygight"></div>
+   </div>
+</div>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-M67VGH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push( {'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M67VGH');</script>
+<!-- End Google Tag Manager -->
+<script>
+function MM_jumpMenu(text,obj,act){
+	
+}
+</script>
+</body>
+</html>

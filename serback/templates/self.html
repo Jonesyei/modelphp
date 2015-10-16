@@ -1,0 +1,96 @@
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+     <h2 class="funtion-title">使用者管理<!-- 頁面標題 -->         </h2>
+     <div class="page-tool">
+     <a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>
+     </div>
+
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="({$admin_info.page})" method="post" id="form" name="form">
+
+
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+    <tr >
+      <td width="90" align="right" >帳號：</td>
+      <td >
+	  <input type="text" name="account" id="account" value="({$data.account})" disabled="disabled"  />
+        </td>
+    </tr>
+	
+	
+	
+	
+	 <tr >
+      <td align="right" >姓名：</td>
+      <td >
+	  <input type="text" name="name" id="name" value="({$data.name})"  />
+        </td>
+    </tr>
+	
+	
+
+	 <td align="right" >密碼：</td>
+      <td >
+	  <input type="password" name="password" id="password" /> 不修改密碼空白即可
+       </td>
+    </tr>
+
+	<tr>
+	<td  align="right" >密碼確認：</td>
+      <td >
+	  <input type="password" name="password_2" id="password_2" />
+        </td>
+    </tr>
+	
+	 <tr >
+      <td align="right" >狀態：</td>
+      <td >
+	({$data.status_html})
+	 </td>
+    </tr>
+	
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.update_name}) 於 ({$data.update_date}) 維護
+	 </td>
+    </tr>
+
+	<input name="act" type="hidden" value="detail" />
+
+
+  </table>
+
+ 
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+//$('#tabs').tabs();
+</script>

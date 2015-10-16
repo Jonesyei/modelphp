@@ -1,0 +1,73 @@
+<div class="col-01">
+     <!-- 左邊選單 -->
+     <div class="left-menu">
+       <h3 class="architecture">管理功能選單</h3>
+       <ul id="menu_1">
+       
+         <li><a href="javascript:menu_button_change('menu_1',0);" class="active">店家管理</a>
+           <ul class="sub-menu">
+             <li><a href="object.php">店家設定</a></li>
+             <li><a href="order_seat.php">預約列表</a></li>
+           </ul>
+         </li>
+         
+         <li><a href="javascript:menu_button_change('menu_1',1);">會員管理</a>
+           <ul class="sub-menu">
+             <li><a href="member.php">本站會員</a></li>
+           </ul>
+         </li>
+
+       </ul>
+     </div>
+     <!--
+     <div class="left-menu">
+       <div class="interval"></div>
+       <h3 class="member">會員資料設定</h3>
+       <ul>
+         <li><a href="#">會員資料設定</a></li>
+         <li><a href="#">會員權限設定</a></li>
+         <li><a href="#">功能設定</a></li>
+       </ul>
+     </div>
+
+     <div class="left-menu">
+       <div class="interval"></div>
+       <h3 class="cart">購物車設定</h3>
+       <ul>
+         <li><a href="#">購物車功能設定</a></li>
+         <li><a href="#">金流設定</a></li>
+         <li><a href="order.html">訂單管理</a></li>
+       </ul>
+     </div>
+     -->
+     <div class="left-menu">
+       <div class="interval"></div>
+       <h3 class="set">網站設資料設定</h3>
+       <ul>
+         <li><a href="admin_self.php">帳戶資料設定</a></li>
+         <li><a href="about.php?class=login_page&id=lang">會員登入頁面設定</a></li>
+         <li><a href="about.php?class=join_page&id=lang">會員加入頁面設定</a></li>
+       </ul>
+     </div>
+     <!--
+     <div class="left-menu-design">
+       <div class="interval"></div>
+       <h3 class="design">設計師編輯功能</h3>
+       <ul>
+         <li><a href="mail-set.html" class="clearfix">信箱設定<img src="images/icon01-01.png" width="36" height="39"></a></li>
+         <li><a href="page-template.html" class="clearfix">頁面編輯<img src="images/icon01-02.png" width="36" height="39"></a></li>
+         <li><a href="file-management.html" class="clearfix">檔案管理<img src="images/icon01-03.png" width="36" height="39"></a></li>
+       </ul>
+     </div>
+     -->
+   </div>
+   
+   
+   <script>
+   function menu_button_change(ulc,idx){
+	   $('ul#'+ulc).find('ul').hide();
+	   $('ul#'+ulc).find('a:eq(0)').removeClass('active')
+	   $('ul#'+ulc).find('ul:eq('+idx+')').show();
+	   $('ul#'+ulc).find('a:eq('+idx+')').addClass('active');
+   }
+   </script>

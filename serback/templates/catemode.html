@@ -1,0 +1,215 @@
+({if $admin_info.view == 'list' })
+<script>
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
+	$('[name="daterange"]').val( Get("daterange") );
+
+	$('#SearchBtn').click(function(){
+		if( $('[name="daterange"]').val().split("-")[1]!=null)
+		{
+			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
+			
+			$('[name="daterange"]').val( daterange );
+		}
+		
+		$('#search_form').submit();
+	});
+
+});
+</script>
+
+
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+	<h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+  <div class="page-tool">
+	  ({if $close.edit!=1})<a href="#" onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+	  ({if $close.add!=1})<a href="?id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+      ({if $close.edit!=1})<a href="#" onclick="Edit('({$admin_info.page})&id=')"><img src="images/icon14.png" width="32" height="32" alt=""/>編輯</a>({/if})
+      ({if $close.del!=1})<a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>({/if})
+  </div>
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+         <div class="search-tool" id="search"><!-- 搜尋模組 -->
+<form action="" method="get" id="search_form" name="search_form">
+
+
+
+關鍵字查詢<input type="text" name="keyword" />
+
+
+建立日期<input type="text" name="daterange"  readonly size="25" >
+<script>Datepick('[name="daterange"]',"range","yyyy.mm.dd");</script>
+  
+  
+   <img src="images/icon-search.png" width="18" height="18" id="SearchBtn" onclick="search_form.submit();"/>
+ </form>
+  </div>
+
+<!--SEARCH-->
+
+
+<div id="content_inside">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  	<tr bgcolor="#EEEEEE">
+  		<th align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></th>
+		<!--<td width="5%">編號</td>-->
+  		<th>大分類名稱</th>
+        <th>狀態</th>
+        <th>更新時間</th>
+		<th>建立時間</th>
+		
+
+  	</tr>
+	
+	({section name=idex loop=$data.list})
+   <tr >
+      <td align="right" ><input type="checkbox" id="choose_id" value="({$data.list[idex].id})" name="choose_id" /></td>
+	  
+      <!--<td> ({$data.list[idex].id}) </td>-->
+	  
+	  <td ><a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name})</a></td>
+	  
+      <td>({$data.list[idex].status_html})</td>
+      
+	  <td >({$data.list[idex].update_name}) 於 ({$data.list[idex].update_date})</td>
+	  
+	  <td >({$data.list[idex].create_name}) 於 ({$data.list[idex].create_date})</td>
+	  
+
+    </tr>
+    ({/section})
+	
+  </table>
+  <br />
+  <input name="act" type="hidden" value="all" />
+</form>
+({include file=$page_table_html})
+</div><!--div id="content_inside"-->
+
+
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+<script>
+page_initial('table_content');
+</script>
+
+
+<!--頁數呈現table-->
+
+
+
+
+({/if})
+
+
+
+({if $admin_info.view == 'detail'})
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        <a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>
+
+        ({if $data.one.id!=null})
+          ({if $close.edit!=1})<a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+         ({else})
+          ({if $close.add!=1})<a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+        ({/if})
+         </div>
+  <!--div id="title"-->
+
+
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form" enctype="multipart/form-data">
+
+
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+    
+	<tr>
+	<td width="110" align="right" >分類名稱：</td>
+		  <td >
+		  <input type="text" name="name" value="({$data.one.name})">
+		   </td>
+	</tr>
+
+	<tr>
+	<td width="110" align="right" >最大層數設定：</td>
+		  <td >
+		  <input type="text" name="max_count" value="({if $data.one.max_count})({$data.one.max_count})({else})1({/if})" size="2">
+		   </td>
+	</tr>
+
+	 <tr >
+      <td align="right" >訂單狀態：</td>
+      <td >
+		({$data.one.status_html})
+	 </td>
+    </tr>
+
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	  於 ({$data.one.create_date}) 建立
+	 </td>
+    </tr>
+
+
+
+	
+	
+
+	<input name="act" type="hidden" value="submit" />
+	<input name="id" type="hidden" value="({$data.one.id})"  />
+	
+
+  </table>
+
+ 
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+//$('#tabs').tabs();
+</script>
+
+({/if})
+
+
+
+

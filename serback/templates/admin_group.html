@@ -1,0 +1,261 @@
+({if $admin_info.view == 'list'})
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+	<h2 class="funtion-title">後台帳號清單<!-- 頁面標題 -->         </h2>
+  <div class="page-tool">
+	  <a href="#" onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>
+	  <a href="?id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>
+      <a href="#" onclick="Edit('({$admin_info.page})&id=')"><img src="images/icon14.png" width="32" height="32" alt=""/>編輯</a>
+      <a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
+  </div>
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+         <div class="search-tool" id="search"><!-- 搜尋模組 -->
+({include file=$search_form})
+		</div>
+<!--SEARCH-->
+
+
+<div id="content_inside">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  	<tr bgcolor="#EEEEEE">
+  		<th align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></td>
+  		<th>名稱</th>
+		<th>狀態</th>
+		<th>建立時間</th>
+		<th>維護時間</th>
+
+  	</tr>
+	
+	({section name=idex loop=$data})
+   <tr >
+      <td align="right" ><input type="checkbox" id="choose_id" value="({$data[idex].id})" name="choose_id"  /></td>
+      <td ><a href="({$admin_info.page})&id=({$data[idex].id})">({$data[idex].name})</a></td>
+	  <td >({$data[idex].status_html})</td>
+	  <td >({$data[idex].create_name}) 於 ({$data[idex].create_date})</td>
+	  <td >({$data[idex].update_name}) 於 ({$data[idex].update_date})</td>
+
+    </tr>
+    ({/section})
+	
+  </table>
+  <br />
+  <input name="act" type="hidden" value="all" />
+</form>
+({include file=$page_table_html})
+</div><!--div id="content_inside"-->
+
+
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+
+<script>
+page_initial('table_content');
+</script>
+
+
+<!--頁數呈現table-->
+
+({include file=$page_table_html})
+
+({/if})
+
+
+({if $admin_info.view == 'detail'})
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        <a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>
+
+        ({if $data.id!=null})
+          <a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>
+         ({else})
+          <a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>
+        ({/if})
+         </div>
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form">
+
+
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+    <tr >
+      <td width="90" align="right" >名稱：</td>
+      <td >
+	  <input type="text" name="name" id="name" value="({$data.name})"  />
+        </td>
+    </tr>
+	
+	<tr>
+      <td width="90" align="right" >權限等級：</td>
+      <td >
+	  <input type="text" name="control" id="control" value="({$data.control})" maxlength="3" size="3"/>(數值越小權力越大)
+      </td>
+    </tr>
+    
+	 <tr >
+      <td align="right" >權限：</td>
+      <td >
+	({$data.auth_html})
+	
+	<script>
+	function Check(lv)
+	{
+		if( $('#auth_'+lv).attr("checked")=="checked" || $('#auth_'+lv).attr("checked")==true )
+		{
+			$('.auth_'+lv).attr("checked","checked");
+		}
+		else
+		{
+			$('.auth_'+lv).removeAttr("checked");
+		}
+	
+		//if($('#'+parents).attr("checked")==true)
+		//alert(lv);
+		/*
+		$.ajax( {
+			//傳遞目標頁面檔案
+			url: "ajx.php?lv="+lv+"&call=admin_group",
+			type: 'GET',
+			data: {
+				//傳遞 變數名稱:值
+			},
+			error: function(xhr) {
+				alert('Ajax request 發生錯誤');
+			},
+			success: function(response) {
+				//回傳物件名稱
+				//alert(response);
+				for(i=0;i<response.split(",").length;i++)
+				{	
+					if($('#auth_'+lv).attr("checked")==true)
+						$('#auth_'+response.split(",")[i]).attr("checked",true);
+					else
+						$('#auth_'+response.split(",")[i]).attr("checked",false);
+				
+					
+					//if($('#auth_'+response.split(",")[i]).attr("checked")==true)
+					//	$('#auth_'+response.split(",")[i]).attr("checked",false)
+					//else
+					//	$('#auth_'+response.split(",")[i]).attr("checked",true)
+					
+				}
+					
+			}
+			
+			} );*/
+	}
+	</script>
+	 </td>
+    </tr>
+	
+	
+	
+	 <tr >
+      <td align="right" >狀態：</td>
+      <td >
+	({$data.status_html})
+	 </td>
+    </tr>
+	
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	 ({$data.create_name}) 於 ({$data.create_date}) 建立
+	 </td>
+    </tr>
+	
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.update_name}) 於 ({$data.update_date}) 維護
+	 </td>
+    </tr>
+
+	<input name="act" type="hidden" value="submit" />
+
+
+  </table>
+
+ 
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+//$('#tabs').tabs();
+</script>
+
+
+	({if $data.account == NULL }) 
+	<script>
+	var sumbit=false;
+		$(document).ready(function() {
+		
+			var validator=$('#form').validate( {  
+				event: "keyup",
+				debug:  false,   
+				rules:{
+					name:{required:true},
+					password:{required:true},
+					password_2:{equalTo:'#password',minlength: 4,maxlength: 12},
+				},
+				messages:{
+					name:{required:"* 不可空白"},	
+					password:{required:"* 不可空白"},
+					password_2:{equalTo:"* 密碼確認不符",minlength:"密碼不可少於4位",maxlength:"密碼不可超過12位"},
+				},        
+				submitHandler:function(form){	//送出前的自訂處理
+					if(sumbit==false)
+					{	
+						form.submit();
+						sumbit=true;
+					}
+				}
+			} );	
+		} );
+		
+	
+		
+	</script>
+	({/if})
+
+
+
+
+({/if})

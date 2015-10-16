@@ -1,0 +1,328 @@
+({if $admin_info.view == 'list'})
+
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+	<h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+    
+  <div class="page-tool">
+	  <div style="float:left">結構複製至 ({$langselect})<input type="button" value="複製" onclick="lselect();"></div>
+	  <a href="#" onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>
+	  <a href="?id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>
+      <a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
+  </div>
+  <script>
+  function lselect(){
+	  if ($('[name="class"]').val()==null || $('[name="class"]').val()=='') return alert('請選擇一個語系');
+	  if (!confirm('確認要把整個結構複製至 '+$('[name="class"] option[value="'+$('[name="class"]').val()+'"]').text()+' 語系目錄麻?')) return;
+		window.location.href='?copy='+$('[name="class"]').val();
+  }
+  </script>
+  <!--div id="title"-->
+
+
+
+
+
+<div id="content_inside">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  	<tr bgcolor="#EEEEEE">
+  		<th align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></th>
+  		<th>名稱</th>
+		<!--<td>排序</td>-->
+		<th>網址</th>
+		<th>狀態</th>
+	
+
+  	</tr>
+	
+	<script>
+	function Tr_Move(id)
+	{
+		$('.tr_list td').removeAttr("bgcolor");
+		$('.tr_list td a').css("color","#666666");
+		
+		$('#tr_'+id+' td').attr("bgcolor","#aaaaaa");
+		$('#tr_'+id+' td:eq(1) a').css("color","#ff0000");
+	}
+	</script>
+	
+	({section name=idex loop=$data})
+   <tr id="tr_({$data[idex].id})" class="tr_list" onmouseover="Tr_Move(({$data[idex].id}));" onmouseout="Tr_Move(({$data[idex].id}));">
+      <td align="right" ><input type="checkbox" id="choose_id" value="({$data[idex].id})" name="choose_id" /></td>
+	  
+	  <td width="30%">
+	  <a href="?id=({$data[idex].id})">({$data[idex].name})</a>
+	  <input type="text" value="({$data[idex].old_name})" name="name_({$data[idex].id})" />
+	  </td>
+	  
+	  <!--
+	  <td >
+	  <input name="sort_({$data[idex].id})" id="sort_({$data[idex].id})" type="text" 
+	  value="({$data[idex].sort})" size="3" maxlength="3" onblur="Sort_set('({$data[idex].id})','class_demo_sysmenu','({$admin_info.page})','ajx_sort.php','floor,parents','({$data[idex].floor}),({$data[idex].parents})')"/>
+			 </td>
+	  -->
+	  <td><input type="text" id="url_({$data[idex].id})" value="({$data[idex].url})" name="url_({$data[idex].id})" size="50" /></td>
+	  
+	  <td>({$data[idex].ifview})</td>
+	  
+	  
+	  
+	  <!--
+      <td >
+	  ({if $data[idex].url != '0'})&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({/if})
+
+	   <input name="name_({$data[idex].id})" 
+	   		  id="name_({$data[idex].id})" type="text" value="({$data[idex].name})" size="20" maxlength="20" 
+			 onblur="Menu_set('({$data[idex].id})');"/>
+	  
+	  </td>
+
+	  <td width="5">
+	  <input name="lv_({$data[idex].id})"
+	  		 id="lv_({$data[idex].id})" type="text" value="({$data[idex].lv})" size="3" maxlength="3" 
+			 onblur="Menu_set('({$data[idex].id})');"/>
+	  </td>
+	  
+	  <td width="5">
+	  <input name="floor_({$data[idex].id})"
+	  		 id="floor_({$data[idex].id})" type="text" value="({$data[idex].floor})" size="3" maxlength="3" 
+			 onblur="Menu_set('({$data[idex].floor})');"/>
+	  </td>
+	  
+	  <td ><input name="url_({$data[idex].id})"
+	  			  id="url_({$data[idex].id})" type="text" value="({$data[idex].url})" size="20" maxlength="20" 
+			 onblur="Menu_set('({$data[idex].id})');"/></td>
+	  
+	  <td width="30">
+	  <input name="ifview_({$data[idex].id})" 
+	  		 id="ifview_({$data[idex].id})" type="text" value="({$data[idex].ifview})" size="1" maxlength="1" 
+			 onblur="Menu_set('({$data[idex].id})');"/></td>
+			 
+	  <td >
+	  <input name="parents_({$data[idex].id})"
+	  		 id="parents_({$data[idex].id})" type="text" value="({$data[idex].parents})" size="3" maxlength="3" 
+			 onblur="Menu_set('({$data[idex].id})');"/>
+	  </td>
+	  
+    </tr>
+	-->
+
+    ({/section})
+	
+	
+	<!-- 未美化架構圖
+	<tr>
+		<td colspan="7">
+		
+		
+		&nbsp;&nbsp;<BR />
+		({$class_list})
+		
+		</td>
+  		
+	</tr>
+	-->
+	
+<script>
+function Menu_set(id)
+{/*
+	$.ajax( {
+		//傳遞目標頁面檔案
+		url: "_sysmenu_ajx.php",
+		type: 'GET',
+		data: {
+			//傳遞 變數名稱:值
+			lv : $('#lv_'+id).val(),
+			parents : $('#parents_'+id).val(),
+			ifview : $('#ifview_'+id).val(),
+			url : $('#url_'+id).val(),
+			name : $('#name_'+id).val(),
+			id : id
+		},
+		error: function(xhr) {
+			alert('Ajax request 發生錯誤');
+		},
+		success: function(response) {
+			//回傳物件名稱
+			location='';
+			
+		}
+	} );
+	*/
+}
+</script>
+  </table>
+  <br />
+  <input name="act" type="hidden" value="all" />
+</form>
+</div><!--div id="content_inside"-->
+
+
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+<script>
+page_initial('table_content');
+</script>
+
+
+<!--頁數呈現table-->
+
+<!--
+({include file=$page_table_html})
+-->
+
+({/if})
+
+
+({if $admin_info.view == 'detail'})
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+	<h2 class="funtion-title">後台帳號明細<!-- 頁面標題 -->         </h2>
+    <div class="page-tool">
+    <a onclick="javascript:location='_sysmenu_set.php';"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回列表</a>
+
+    ({if $data.id})
+      ({if $close.edit!=1})<a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+     ({else})
+      ({if $close.add!=1})<a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+    ({/if})
+     </div>
+  <!--div id="title"-->
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form">
+
+
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  
+	
+	 <tr >
+      <td  align="right" >名稱：</td>
+      <td >
+	  <input type="text" name="name" id="name" value="({$data.name})"  />
+        </td>
+    </tr>
+	
+	
+	<tr >
+      <td  align="right" >網址：</td>
+      <td >
+	  <input type="text" name="url" id="url" value="({$data.url})"  />
+        </td>
+    </tr>
+	
+
+	<!--
+	<tr >
+      <td  align="right" >階層：</td>
+      <td >
+	  <input type="text" name="floor" id="floor" value="({$data.floor})"  />
+        </td>
+    </tr>
+	
+	
+	 <tr >
+      <td  align="right" >lv：</td>
+      <td >
+	  <input type="text" name="lv" id="lv" value="({$data.lv})"  />
+        </td>
+    </tr>
+	-->
+	
+	<tr >
+      <td  align="right" >上層：</td>
+      <td >
+	  <!--<input type="text" name="parents" id="parents" value="({$data.parents})"  />-->
+	
+	  ({$data.parents_list})
+
+        </td>
+    </tr>
+
+	
+	 <tr >
+      <td align="right" >狀態：</td>
+      <td >
+	({$data.ifview})
+	 </td>
+    </tr>
+	
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	 ({$data.create_name}) 於 ({$data.create_date}) 建立
+	 </td>
+    </tr>
+	
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.update_name}) 於 ({$data.update_date}) 維護
+	 </td>
+    </tr>
+
+	<input name="act" type="hidden" value="submit" />
+
+
+  </table>
+  
+   <table width="20%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  <tr>
+  <td>排序</td>
+  <td>分類名稱</td>
+  </tr>
+  
+  ({section name=idex loop=$data.floor_list})
+   <tr >
+	  <td width="10">
+	  <input type="text" size="2" 
+	  value="({$data.floor_list[idex].sort})" 
+	  onblur="Sort_set('({$data.floor_list[idex].id})',this.value);" />
+	  </td>
+	  <td><a href="?id=({$data.floor_list[idex].id})">({$data.floor_list[idex].name})</a></td>
+  <tr>
+  ({/section})
+ 
+  </table>
+
+ 
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+//$('#tabs').tabs();
+</script>
+
+
+({/if})

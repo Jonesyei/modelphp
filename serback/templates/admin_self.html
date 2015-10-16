@@ -1,0 +1,654 @@
+({if $admin_info.view == 'list'})
+<script>
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
+	$('[name="daterange"]').val( Get("daterange") );
+
+	$('#SearchBtn').click(function(){
+		if( $('[name="daterange"]').val().split("-")[1]!=null)
+		{
+			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
+			
+			$('[name="daterange"]').val( daterange );
+		}
+		
+		$('#search_form').submit();
+	});
+
+});
+</script>
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        ({if $close.insert!=1})<a href="({$admin_info.page})&id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/></a>({/if})
+        ({if $close.edit!=1})<a onclick="Edit('({$admin_info.page})&id=')"><img src="images/icon14.png" width="32" height="32" alt=""/></a>({/if})<!-- 模組新增修改刪除列 -->
+        ({if $close.edit!=1})<a onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/></a>({/if})
+         </div>
+         
+
+
+<!--SEARCH-->
+         <div class="search-tool" id="search"><!-- 搜尋模組 -->
+         <form action="" method="get" id="search_form" name="search_form">
+
+            <table height="19px">
+            <tr>
+            <td>關鍵字查詢</td>
+            <td width="200">
+            <input type="text" name="keyword" value="({$data.pageget.keyword})" />
+            </td>
+            <td>
+            建立日期<input type="text" name="daterange"  readonly size="25" >
+            <script>Datepick('[name="daterange"]',"range","yyyy.mm.dd");</script>
+            
+            
+            
+            
+            <select name="s_status" >
+                ({$admin_info.search.status})
+            </select>
+            
+              
+              ({if $data.pageget.class!=null})<input type="hidden" name="class" value="({$data.pageget.class})">({/if})
+              ({if $data.pageget.mode!=null})<input type="hidden" name="mode" value="({$data.pageget.mode})">({/if})
+              ({if $data.pageget.type!=null})<input type="hidden" name="type" value="({$data.pageget.type})">({/if})
+              <img src="images/icon-search.png" width="18" height="18" id="SearchBtn"/>
+              </td></tr></table>
+         </form>
+         </div>
+<!--SEARCH-->
+
+
+<div id="content_inside" style="clear:both;">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+  	<tr>
+  		<th align="center" width="60">刪除 <input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></th>
+
+  		<th>標題</th>
+		({if $close.sort!=1})<th>排序</th>({/if})
+		<th>狀態</th>
+		<th>建立時間</th>
+		<th>維護時間</th>
+		
+
+  	</tr>
+	
+	({section name=idex loop=$data.list})
+   <tr class="tr_sort" title="可拖曳進行排序">
+      <td align="center" ><input type="checkbox" id="choose_id" value="({$data.list[idex].id})" name="choose_id" /></td>
+	  
+	  
+	  <td ><a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name})</a></td>
+	  
+({if $close.sort!=1})  
+	<td align="center">
+		  <input type="text" name="sort_({$data.list[idex].id})" id="sort_({$data.list[idex].id})" size="2" value="({$data.list[idex].sort})" 
+		  onmouseup="sort_act=2" onmousedown="sort_act=2"/> ({$data.list[idex].up}) ({$data.list[idex].down})
+		  </td>
+({/if})
+	
+	  
+	  <td >({$data.list[idex].status_html})</td>
+	  
+	  <td >({$data.list[idex].create_name}) 於 ({$data.list[idex].create_date})</td>
+	  
+	  <td >({$data.list[idex].update_name}) 於 ({$data.list[idex].update_date})</td>
+	  
+	  
+
+  </tr>
+    ({/section})
+	
+  </table>
+  <div style="padding:10px;"><a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt=""></a></div>
+({include file=$page_table_html})
+  <div class="page-tool-note">排序規則：數字由小字大順序排序1.2.3.4.5 &nbsp;<br>
+         更新排序：拖曳該欄位進行排序，或者在排序輸入框中填入位置後存檔</div>
+  <input name="act" type="hidden" value="all" />
+  </form>
+</div><!--div id="content_inside"-->
+
+
+
+<script>
+var sortnow = '({$data.list.0.sort})'*1;//--本頁排序起始值
+var sortcount = '({$smarty.section.idex.index})'*1;//--項目數量
+var sortmain = ".table-style01"; //-列表主體
+var sortrow = ".tr_sort:not(.ui-sortable-placeholder)"; //--可以移動的項目
+var sort_act = 0;
+  $(function() {
+    $( sortmain ).sortable( {items: sortrow} );
+    //$( sortmain ).disableSelection();
+  });
+  
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	  $(obj).on("mouseup",function (){
+		if (sort_act!=2){
+			window.setTimeout("cps()",50);
+		}
+		sort_act=0;
+	  });
+	  $(obj).on("mousedown",function (){
+		if (sort_act!=2) {sort_act=1;}
+	  });
+	  $(obj).on("mouseover",function (){ //--滑鼠移入加入顯示黑色方框式樣
+			_td_style = "border-bottom:1px solid #000000;border-top:1px solid #000000;";
+	 		$(obj).find('td').attr("style",_td_style);
+			$(obj).find('td:first').attr("style",_td_style+"border-left:1px solid #000000;");
+			$(obj).find('td:last').attr("style",_td_style+"border-right:1px solid #000000;");
+	  });
+	  $(obj).on("mouseout",function (){ //--滑鼠移出移除所有式樣
+			$(obj).find('td').removeAttr("style");
+	  });
+  });
+  function cps(){
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	$(obj).find('input[type="text"]').val(sortnow+idx);
+  });
+  }
+</script>
+
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+<script>
+page_initial('table-style01');
+</script>
+
+
+<!--頁數呈現table-->
+
+
+
+</div>
+({/if})
+
+
+
+({if $admin_info.view == 'detail'})
+<script language="javascript" src="../includes/js/jquery-ui.js"></script>
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        <!--<a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/></a>-->
+
+        ({if $data.one.id!=null})
+          ({if $close.edit!=1})<a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+         ({else})
+          ({if $close.add!=1})<a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+        ({/if})
+         </div>
+         
+ <!--div id="title"-->
+
+
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form" enctype="multipart/form-data" onsubmit="checkform();">
+<div id="tabs">
+<ul>
+	<li><a href="#tabs-1">詳細內容</a></li>
+    <li><a href="#tabs-2">其他設定</a></li>
+</ul>
+
+<div id="tabs-1">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+
+	<tr>
+	<td width="110" align="right" >帳戶：</td>
+		  <td >
+		  ({$data.one.account})
+		   </td>
+	</tr>
+	<tr>
+	<td width="110" align="right" >帳戶名稱：</td>
+		  <td >
+		  <input type="text" name="name"  value="({if $data.one.name!=null})({$data.one.name})({else})({$data.name_default})({/if})" size="48" />
+		   </td>
+	</tr>
+	<tr>
+	<td width="110" align="right" >email：</td>
+		  <td >
+		  <input type="text" name="email"  value="({$data.one.email})" size="100" />
+		   </td>
+	</tr>
+	<tr>
+	<td width="110" align="right" >電話：</td>
+		  <td >
+		  <input type="text" name="phone"  value="({$data.one.phone})" size="100" />
+		   </td>
+	</tr>
+	<tr>
+	<td width="110" align="right" >使用到期時間：</td>
+		  <td >
+		  ({$data.one.free_date}) (剩餘({$data.one.free_date_lay})天)
+		   </td>
+	</tr>
+
+	<tr>
+	<td width="110" align="right" >廠商用戶專屬域名：</td>
+		  <td >
+		  <a href="http://({$admin_info.member.account}).({$setup.webDNS})">[點這裡預覽]<a><BR>
+          <input type="text" value="http://({$admin_info.member.account}).({$setup.webDNS})" size="100">
+		   </td>
+	</tr>
+
+({if $data.close.pic==null})
+<tr>
+	<td align="right" >圖片：</td>
+	  <td >
+
+	 
+	 
+<link href="../includes/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../includes/Uploadify/swfobject.js"></script>
+<script type="text/javascript" src="../includes/Uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+<script type="text/javascript">
+var Pic;
+var max_count = '({$data.uploadfilemax})';
+$(document).ready(
+	function()
+	{
+		Pic = '({$data.one.pic})';
+		$(Pic.split("|__|")).each(function(idx,data){
+			if(data=="") return true;
+			UPLAppend('({$admin_info.file_url})'+data);
+		});
+	
+		 $("#uploadify").uploadify
+		 (
+			 {
+				'uploader'		: '../includes/Uploadify/uploadify.swf', 
+				'script'		: '../includes/Uploadify/uploadify.php', 
+				'cancelImg'		: '../includes/Uploadify/cancel.png', 
+				'folder'		: '({$data.file_url})', 
+				'queueID'		: 'fileQueue_list',
+				'queueSizeLimit': ({if $data.uploadfilemax != null})({$data.uploadfilemax})({else})0({/if}),
+				'auto'			: false,
+				'multi'			: true,
+				'onSelectOnce'	:function(event,data)
+				{
+					//--全部選擇完之後
+					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
+						alert("圖片選擇超出數量");
+						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
+						this.uploadifyCancel(ID);
+					}else if (max_count=='1'){
+						setTimeout("$('#uploadify').uploadifyUpload()",1);
+					}
+				},
+				'onAllComplete'	:function(event,data) 
+				{
+					//$('form').submit();
+				},
+				'onComplete'  : function(event, ID, fileObj, response, data)
+				{
+						upload_one(response);
+				},
+				'onSelect'    : function(event,ID,fileObj)
+				{
+					var type = fileObj.type.toLowerCase();
+					if(type!=".jpg" && type!=".jpeg" && type!=".gif" && type!=".png")
+					{					
+						alert("圖片格式不符\n只允許jpg,jpeg,gif,png");
+						setTimeout("$('#uploadify').uploadifyCancel('"+ID+"')",1);
+						this.uploadifyCancel(ID);
+
+					}
+				}
+			}
+			
+		)// $("#uploadify").uploadify
+		
+	}//function()
+);
+function valcheck(obj){
+	if ($(obj).val().indexOf('在此輸入')>-1) $(obj).val('');
+}
+function upload_one(response){
+					var filename = response.split('/');
+					filename = filename[filename.length-1];div_file = filename.split('.')[0];
+					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"><div style="float:right;">此圖片尚未存檔</div></div>');//--增加一個選項
+					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
+				 	$('#picspan_'+div_file).append('<input type="hidden" name="pic[]" value="'+filename+'">');
+					({if $data.button.other!=null})
+						({section name=other loop=$data.button.other})
+						$('#picspan_'+div_file).append('({$data.button.other[other].other_name}):<input type="text" name="({$data.button.other[other].other_obj})[]" placeholder="在此輸入({$data.button.other[other].other_name}))" onclick="valcheck(this)"><br>');
+						({/section})
+					({/if})
+					({if $data.button.name!=null})$('#picspan_'+div_file).append('({$data.button.name}):<input type="text" name="name[]" placeholder="在此輸入({$data.button.name})" onclick="valcheck(this)">');({/if})
+				 	({if $data.button.href=='1'})$('#picspan_'+div_file).append('連結:<input type="text" name="href[]" placeholder="在此輸入連結"  onclick="valcheck(this)">');({/if})
+					({if $data.button.change_detail!=null})$('#picspan_'+div_file).append('({$data.button.change_detail}):<input type="text" name="detail[]" placeholder="在此輸入({$data.button.change_detail})"  onclick="valcheck(this)">');({/if})
+					$('#picspan_'+div_file).append('<input type="button" onclick="picdel('+div_file+')" value="刪除'+filename+'圖片"><br><br>');
+}
+</script>
+<script>
+
+  $(function() {
+    $( "#piclist" ).sortable( {items: 'div[id]'} );
+    //$( "#piclist" ).disableSelection(); 讓可拖曳物件的無法編輯以及選取
+  });
+
+
+function picdel(d){
+	$('#picspan_'+d).remove();
+	re_sort();
+	if ($('#piclist').find("div").html()==null) {
+ 	$('#fileQueue_list').append('<input type="hidden" name="pic[]" value="">');
+	({if $data.button.name!=null})$('#fileQueue_list').append('<input type="hidden" name="name[]" value="">');({/if})
+ 	({if $data.button.href=='1'})$('#fileQueue_list').append('<input type="hidden" name="href[]" value="">');({/if})
+	}
+}
+</script>
+
+<div id="piclist">
+({section name=picidx loop=$data.one.pic})
+({if $data.one.pic[picidx]!=null||$data.one.pic[picidx]!=''})
+<div class="ui-state-default" id="picspan_({$smarty.section.picidx.index})">
+<div style="float:right;">
+排序到<input type="text" id="pic_sort_({$smarty.section.picidx.index})" value="({$smarty.section.picidx.index+1})" size="2" style="text-align:center;">
+<input type="button" value="移動" onclick="pic_sort('({$smarty.section.picidx.index})',$('#pic_sort_({$smarty.section.picidx.index})').val());">
+<input type="button" value=" 刪除 " onclick="if (confirm('確定要移除這張圖片嘛?')) picdel(({$smarty.section.picidx.index}));">
+</div>
+<img src="({$data.file_url})({$data.one.pic[picidx]})" height="150px">
+<input type="hidden" name="pic[]" value="({$data.one.pic[picidx]})"><br>
+
+({if $data.button.other!=null})
+({section name=lo loop=$data.button.other})
+({$data.button.other[lo].other_name}):<input type="text" name="({$data.button.other[lo].other_obj})[]" value="({$data.button.other[lo].other_data[picidx]})" style="width:300px;"><br>
+({/section})
+({/if})
+({if $data.button.name!=null})({$data.button.name}):<input type="text" name="name[]" value="({$data.one.name[picidx]})" style="width:300px;"><br>({/if})
+({if $data.button.change_detail!=null})({$data.button.change_detail}):<input type="text" name="detail[]" value="({$data.one.detail[picidx]})" style="width:300px;"><br>({/if})
+({if $data.button.href=='1'})連結:<input type="text" name="href[]" value="({$data.one.href[picidx]})" style="width:300px;"><br>({/if})
+<input type="button" onclick="picdel(({$smarty.section.picidx.index}))" value="刪除({$data.one.pic[picidx]})圖片"><br><br>
+</div>
+({/if})
+({/section})
+</div>
+<font color="red">(上列圖片可拖曳排序位置)</font>
+
+
+    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;">
+    拖曳圖片到此處上傳 <BR>( IE瀏覽器不支援 請使用上傳套件上傳 )
+    <div id="up_progress" ></div> <script></script>
+    
+    <div style="text-align:left;">
+    <div id="fileQueue_list"></div>
+    ({$data.edmpic}) <BR>
+<input type="file" name="uploadify" id="uploadify"/>
+	<BR />
+	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyUpload()">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
+	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
+    </div>
+    
+    </div>
+    <script>var file_upload = '?upload=({$data.file_url})';var drag_count = ({$data.uploadfilemax});</script>
+    <script src="../includes/project/js/drag_file.js"></script>
+    
+	</td>
+	</tr>
+({/if})
+
+({if $data.button.file==1})
+	<tr>
+	<td width="110" align="right" >夾帶檔案：</td>
+		  <td id="file">
+          ({if $data.one.file!=null})已含有檔案 ({$data.one.file}) 檔案<br> <a href="javascript:del_file();">刪除請點此</a><br>({/if})
+		  <input type="file" name="file" onchange="file_change()" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
+		   </td>
+	</tr>
+    <script>
+	function del_file(){
+		if (!confirm('確定刪除檔案')) return;
+		$('#file').append('<input type="hidden" name="file" value="">');
+		$('form').submit();
+	}
+	function file_change(){
+		$('#file input[type="hidden"]').remove();
+	}
+	</script>
+({/if})
+    
+    ({$data.order_html})
+   
+    ({if $data.button.detail=='1'})
+	<tr >
+	  <td  align="right" >內容：</td>
+	  <td > 
+      ({if $data.button.fck=='1'})
+      ({$data.one.detail_fck})
+      ({else})
+		<textarea rows="5" name="detail" style="width:300px;"> ({$data.one.detail})</textarea>
+	  ({/if})
+	  </td>
+	</tr>
+	({/if})
+    
+    
+    
+    
+    ({if $data.button.size!=null})
+    <tr >
+      <td align="right" >({if $data.button.title!=null})({$data.button.title})({else})尺寸規格設定({/if})：</td>
+      <td ><input type="button" value=" 新增 " onclick="size_div_add()">
+		<div id="size_div">
+        
+        </div>
+	 </td>
+    </tr>
+    <script>
+	var obj_name_data = '({$data.one.size_name})';//--資料來源
+	var obj_value_data = '({$data.one.size_value})';//--資料來源
+	var obj_name = '({$data.button.size.name})';//--物件名稱
+	var obj_value = '({$data.button.size.value})';//--物件名稱
+	var pro_obj = '#size_div';//--容器
+	
+	$(function() {
+    $(pro_obj).sortable();
+    $(pro_obj).disableSelection();
+	});
+	
+	
+	$(document).ready(function(){
+		obj_name_data = obj_name_data.split('|__|');
+		obj_value_data = obj_value_data.split('|__|');
+		for (aa in obj_name_data)
+			if (obj_name_data[aa]!=''&&obj_name_data[aa]!=null)
+			$(pro_obj).append('<div id="class_'+aa+'"><input type="text" name="'+obj_name+'[]" value="'+obj_name_data[aa]+'"({$data.button.width})> : <input type="text" name="'+obj_value+'[]" value="'+obj_value_data[aa]+'"({$data.button.width})><input type="button" value="刪除" onclick="$(this).parent().remove();"></div>')
+	});
+	
+	function size_div_add(){
+		obj_rang = Math.ceil(Math.random()*9999+1); //--1~9999
+		for (obji = 0 ;obji<9999;obji++)
+			if ($('#size_div #class_'+obj_rang).length<=0) { //--判斷物件是否存在
+				$(pro_obj).append('<div id="class_'+obj_rang+'"><input type="text" name="'+obj_name+'[]"({$data.button.width})> : <input type="text" name="'+obj_value+'[]"({$data.button.width})><input type="button" value="刪除" onclick="$(this).parent().remove();"></div>');
+				break;
+			}
+	}
+	</script>
+    ({/if})
+    
+    
+    
+  </table>
+	</div><!-- tabs-1 -->
+    
+    
+    <div id="tabs-2">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+
+	<tr>
+	<td width="110" align="right" >網站名稱：</td>
+		  <td >
+		  <input type="text" name="web_name" value="({$data.one.web_name})">
+		   </td>
+	</tr>
+    
+    <tr>
+	<td width="110" align="right" >優化關鍵字：</td>
+		  <td >
+		  <textarea name="web_keywords" rows="10" cols="50">({$data.one.web_keywords})</textarea><br><font color="red">(此處請由SEO工程師設定，用戶管理者請勿自行設定)</font>
+		   </td>
+	</tr>
+    
+    
+    <tr>
+	<td width="110" align="right" >首頁返回位置：</td>
+		  <td >
+		  <input type="btn" name="index_btn" value="({$data.one.index_btn})" style="width:80%"> 
+		   </td>
+	</tr>
+    
+    <tr>
+	<td width="110" align="right" >首頁fb icon<BR>連結：</td>
+		  <td >
+		  <input type="btn" name="fb_link" value="({$data.one.fb_link})" style="width:80%"> 
+		   </td>
+	</tr>
+    
+    <tr>
+	<td width="110" align="right" >首頁google icon<BR>連結：</td>
+		  <td >
+		  <input type="btn" name="google_link" value="({$data.one.google_link})" style="width:80%"> 
+		   </td>
+	</tr>
+    
+    <tr>
+	<td width="110" align="right" >首頁twitte icon<BR>連結：</td>
+		  <td >
+		  <input type="btn" name="twitte_link" value="({$data.one.twitte_link})" style="width:80%"> 
+		   </td>
+	</tr>
+    
+    <tr>
+	<td width="110" align="right" >首頁yahoo icon<BR>連結：</td>
+		  <td >
+		  <input type="btn" name="yahoo_link" value="({$data.one.yahoo_link})" style="width:80%"> 
+		   </td>
+	</tr>
+    
+    </table>
+    </div>
+    
+    
+</div>
+
+<br>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+	 <tr >
+      <td align="right" width="150">狀態：</td>
+      <td >
+	({$data.one.status_html})
+	 </td>
+    </tr>
+
+
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	 ({$data.one.create_name}) 於 ({$data.one.create_date}) 建立
+	 </td>
+    </tr>
+
+
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.one.update_name}) 於 ({$data.one.update_date}) 維護
+	 </td>
+    </tr>
+	
+	
+	({if $data.pageget.class!=null})<input name="type" type="hidden" value="({$data.pageget.class})({$data.pageget.design})" />({/if})
+	<input name="act" type="hidden" value="submit" />
+	<input name="id" type="hidden" value="({$data.one.id})" />
+	({$data.tages})
+    </table>
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+$('#tabs').tabs();
+
+function checkform(){
+	//--絕對路徑連結
+	if ($('[name="href[]"]').length>0){
+		$('[name="href[]"]').each(function (idx,obj){
+			if ($(obj).val()!=null && $(obj).val()!=''){
+				if ($(obj).val().split('//').length != 2){
+					$(obj).val('//'+$(obj).val());
+				}
+			}
+		});
+	}
+	if ($('[name="href"]').length>0 && $('[name="href"]').val()!=null && $('[name="href"]').val()!=''){
+		if ($('[name="href"]').val().split('//').length != 2){
+			$('[name="href"]').val('//'+$('[name="href"]').val());
+		}
+	}
+}
+
+$('#piclist div[class="ui-state-default"][id]').on("mouseup",function(event){
+	sort_event = event;
+	if (event.srcElement.className!='')
+	window.setTimeout("re_sort()",50);
+})
+
+
+//-指定排序 於多少後面
+function pic_sort(obj_id,moveto){
+	if (moveto*1==1){
+		if ($('#piclist div[id] div input[type="text"][id]:eq(0)')[0]==$('#picspan_'+obj_id).find('div input[type="text"][id]')[0])
+		return alert('目前已位於最上方');
+	}
+	if ($('#picspan_'+obj_id)[0]==$('#piclist div[id]:eq('+(moveto-1)+')')[0]) return alert('無法移動跟目前一樣的位置');
+	$('#picspan_'+obj_id).insertBefore($('#piclist div[id]:eq('+(moveto-1)+')'));
+	re_sort();
+}
+function re_sort(){
+	$('#piclist div[id]').each(function (idx,obj){
+		$(obj).find('div input[type="text"][id]').val(idx+1);
+	})
+}
+</script>
+
+
+
+({/if})
+
+
+
+
