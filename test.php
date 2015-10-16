@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 new test001
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> origin/Chao
 test99999999
 >>>>>>> origin/Chao
 
