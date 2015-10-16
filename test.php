@@ -1,3 +1,5 @@
+test1234
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,11 +18,11 @@
             <tbody>
                 <tr>
                     <td><label for="licenseName">License Name</label>:</td>
-                    <td><input type="text" id="licenseName" placeholder="License Name" /></td>
+                    <td><input type="hidden" id="licenseName" placeholder="License Name" /></td>
                 </tr>
                 <tr>
                     <td><label for="licenseKey">License Name</label>:</td>
-                    <td><input type="text" id="licenseKey" onClick="this.select();" readonly /></td>
+                    <td><input type="hidden" id="licenseKey" onClick="this.select();" readonly /></td>
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: center">
