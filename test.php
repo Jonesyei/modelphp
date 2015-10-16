@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-test99999999
-
-=======
->>>>>>> refs/remotes/origin/master
-<!DOCTYPE html>
+aaa
 <html>
     <head>
         <meta charset="UTF-8">
