@@ -43,7 +43,7 @@ if ($_POST["price1"]!=NULL){
 	//實際價錢0元啟動金額保護
 	if ($_POST["price2"]==0 && $_POST["price1"]*1==0) {
 		//$_POST["price_1"] = $_POST["price_2"] = '9999999';
-		alert('警告，您所設定的商品價格設定為 0 將可能被大量訂購產品造成虧損，如設定錯誤請回商品 ['.$_POST["name"].'] 內頁中重新設定');
+		alert('警告，您所設定的商品價格設定為 0 將可能被大量訂購產品造成虧損，如設定錯誤請回商品 ['.$_POST["name"].'] 內頁中重新設定',-1);
 	}
 }
 /*
@@ -114,6 +114,9 @@ if ($_GET["mode"]){
 	$tree_data_type=display_tree($_GET["type"],$conn,PREFIX.'category');	//-分類資料
 }
 
+
+//-圖片上傳最大數
+$data["uploadfilemax"] = 20;
 
 if($_GET["id"] || $_GET["id"]=='0')
 {

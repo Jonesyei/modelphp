@@ -326,8 +326,6 @@ function upload_one(response){
 						if (event.srcElement.className!='')	window.setTimeout("re_sort()",50);
 					})
 					
-					//--縮圖程式 記憶欄位
-					$('#picspan_'+div_file).append('<input type="hidden" name="small_pic[]" value="">');
 }
 </script>
 <script>
@@ -374,29 +372,56 @@ function picdel(d){
 ({/if})
 ({/section})
 </div>
+
 <font color="red">(上列圖片可拖曳排序位置)</font>
 
 
-    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;">
+    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;" onclick="if ($(event.target)[0]==$(this)[0]) aes('ff');">
     拖曳圖片到此處上傳 <BR>( IE瀏覽器不支援 請使用上傳套件上傳 )
-    <div id="up_progress" ></div> <script></script>
+    <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
     <div id="fileQueue_list"></div>
     ({$data.edmpic}) <BR>
 <input type="file" name="uploadify" id="uploadify"/>
 	<BR />
-	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyUpload()">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
+	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyUpload();ajxupload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
     </div>
     
     </div>
     <script>var file_upload = '?upload=({$data.file_url})';var drag_count = ({$data.uploadfilemax});</script>
     <script src="../includes/project/js/drag_file.js"></script>
-    
+    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
+    <script>
+	function ajxupload(){
+		if ($('#ff')[0].files.length>0)
+		 $.ajaxFileUpload
+            (
+                {
+                    url: '../includes/project/js/Jones_upload.php'+file_upload,
+                    secureuri: false, //加密
+                    fileElementId: 'ff', //objid
+                    dataType: 'json', 
+                    success: function (data, status)  
+                    {
+						$('#ff').val(null);
+                        for (ee in data)
+							upload_one(data[ee]);
+                    }
+                }
+            );
+	}
+	function aes (dname){
+		$('[name="'+dname+'[]"]').click();
+	}
+	</script>
+    <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
 	</td>
 	</tr>
+    
 ({/if})
+
 
 ({if $data.button.file==1})
 	<tr>
@@ -548,11 +573,7 @@ function checkform(){
 			$('[name="href"]').val('//'+$('[name="href"]').val());
 		}
 	}
-	//--小圖縮圖處理
-	$('#piclist div[class="ui-state-default"][id]').each(function (idx,obj){
-		var _temp_small_pic = resizeImage($(obj).find('img')[0], 400, 400);
-		$(obj).find('[name="small_pic[]"]').val(_temp_small_pic);
-	});
+
 }
 
 $('#piclist div[class="ui-state-default"][id]').on("mouseup",function(event){

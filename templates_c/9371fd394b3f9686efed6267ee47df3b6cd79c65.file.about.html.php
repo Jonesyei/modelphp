@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-07-07 21:05:52
+<?php /* Smarty version Smarty-3.1.18, created on 2015-10-19 13:07:14
          compiled from "D:\AppServ\www\modelphp\serback\templates\about.html" */ ?>
 <?php /*%%SmartyHeaderCode:16614559b5c1240a491-63214556%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '9371fd394b3f9686efed6267ee47df3b6cd79c65' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\about.html',
-      1 => 1436274350,
+      1 => 1445231225,
       2 => 'file',
     ),
   ),
@@ -442,8 +442,6 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['other']['last']       = ($_s
 						if (event.srcElement.className!='')	window.setTimeout("re_sort()",50);
 					})
 					
-					//--縮圖程式 記憶欄位
-					$('#picspan_'+div_file).append('<input type="hidden" name="small_pic[]" value="">');
 }
 </script>
 <script>
@@ -555,12 +553,13 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
 <?php }?>
 <?php endfor; endif; ?>
 </div>
+
 <font color="red">(上列圖片可拖曳排序位置)</font>
 
 
-    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;">
+    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;" onclick="if ($(event.target)[0]==$(this)[0]) aes('ff');">
     拖曳圖片到此處上傳 <BR>( IE瀏覽器不支援 請使用上傳套件上傳 )
-    <div id="up_progress" ></div> <script></script>
+    <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
     <div id="fileQueue_list"></div>
@@ -568,7 +567,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
  <BR>
 <input type="file" name="uploadify" id="uploadify"/>
 	<BR />
-	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyUpload()">批次上傳圖片</a>&nbsp;|&nbsp;<?php }?>
+	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyUpload();ajxupload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;<?php }?>
 	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;<?php }?>建議比例:<?php echo $_smarty_tpl->tpl_vars['data']->value['pic_size_title'];?>
 <BR />
     </div>
@@ -578,10 +577,36 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
 ';var drag_count = <?php echo $_smarty_tpl->tpl_vars['data']->value['uploadfilemax'];?>
 ;</script>
     <script src="../includes/project/js/drag_file.js"></script>
-    
+    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
+    <script>
+	function ajxupload(){
+		if ($('#ff')[0].files.length>0)
+		 $.ajaxFileUpload
+            (
+                {
+                    url: '../includes/project/js/Jones_upload.php'+file_upload,
+                    secureuri: false, //加密
+                    fileElementId: 'ff', //objid
+                    dataType: 'json', 
+                    success: function (data, status)  
+                    {
+						$('#ff').val(null);
+                        for (ee in data)
+							upload_one(data[ee]);
+                    }
+                }
+            );
+	}
+	function aes (dname){
+		$('[name="'+dname+'[]"]').click();
+	}
+	</script>
+    <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
 	</td>
 	</tr>
+    
 <?php }?>
+
 
 <?php if ($_smarty_tpl->tpl_vars['data']->value['button']['file']==1) {?>
 	<tr>
@@ -756,11 +781,7 @@ function checkform(){
 			$('[name="href"]').val('//'+$('[name="href"]').val());
 		}
 	}
-	//--小圖縮圖處理
-	$('#piclist div[class="ui-state-default"][id]').each(function (idx,obj){
-		var _temp_small_pic = resizeImage($(obj).find('img')[0], 400, 400);
-		$(obj).find('[name="small_pic[]"]').val(_temp_small_pic);
-	});
+
 }
 
 $('#piclist div[class="ui-state-default"][id]').on("mouseup",function(event){

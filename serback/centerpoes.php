@@ -231,6 +231,8 @@ if ($_POST["act"] =="all") {
 
 
 
+
+
 //---修改、新增資料 表單資料 導入陣列存入
 if ($close["edit"] != '1' || $close["add"] != '1'){
 if ($_POST && $_POST["act"] !="all") {
@@ -291,11 +293,7 @@ if ($_POST && $_POST["act"] !="all") {
 		$row_def = array('act','search','searchlike','daterange','date_rang','mode','del_pic');//例外不新增的鍵值
 		if( in_array($k,$row_def) ) continue;
 		if (!in_array($k,$row_colum)) {
-			if ($k=='small_pic'){
-				$conn->Execute("ALTER TABLE ".quotes($cpos["table"])." ADD ".quotes($k)." LONGTEXT NULL COMMENT '程式生成欄位'");
-			}else{
-				$conn->Execute("ALTER TABLE ".quotes($cpos["table"])." ADD ".quotes($k)." TEXT NULL COMMENT '程式生成欄位'");
-			}
+			$conn->Execute("ALTER TABLE ".quotes($cpos["table"])." ADD ".quotes($k)." TEXT NULL COMMENT '程式生成欄位'");
 		}
 	}
 
@@ -393,7 +391,7 @@ if ($_POST && $_POST["act"] !="all") {
 		
 		
 		system_temp($conn);
-		//unset($upd['small_pic']);
+
 		$avalue = $conn->AutoExecute($cpos["table"],$upd,"UPDATE",$where);
 		if ($avalue) {
 		if ($cpos["update_callback"]!=NULL){
@@ -570,7 +568,6 @@ function system_temp($conn){
 	$sys_data["account"] = $_SESSION["admin_info"]["account"];
 	if (count($_POST)>0){
 		foreach ($_POST as $k=>$v){
-			if ($k=='small_pic') continue;
 			if ($sys_data["POST_DATA"]!=''&&$sys_data["POST_DATA"]!=NULL)
 				$sys_data["POST_DATA"] .= '~****~';
 				
@@ -585,7 +582,6 @@ function system_temp($conn){
 		}
 	}else if($_SESSION["admin_info"]["data_temp"]){
 		foreach ($_SESSION["admin_info"]["data_temp"] as $k=>$v){
-			if ($k=='small_pic') continue;
 			$sys_data["POST_DATA"][$k] = $v["id"].' '.$v["name"];
 		}
 		if (count($sys_data["POST_DATA"])>1)
