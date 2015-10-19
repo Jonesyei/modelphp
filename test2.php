@@ -1,4 +1,15 @@
-<form  action="includes/project/js/Jones_upload.php?upload=<?php echo urlencode('../upload/EDM');?>" method="POST" name="ajxform" id="ajxform" enctype="multipart/form-data">
-<input type="file" id="ff[]" name="ff[]" multiple>
-<input type="submit" value="send">
-</form>
+<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="ckfinder/ckfinder.js"></script>
+<textarea id="test"></textarea>
+<script>
+website_css='';
+CKEDITOR.replace( 'test',
+	{
+		filebrowserBrowseUrl : 'ckfinder/ckfinder.html',
+		filebrowserImageBrowseUrl : 'ckfinder/ckfinder.html?type=Images',
+		filebrowserFlashBrowseUrl : 'ckfinder/ckfinder.html?type=Flash',
+		filebrowserUploadUrl : 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+		filebrowserImageUploadUrl : 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+		filebrowserFlashUploadUrl : 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+	});
+</script>

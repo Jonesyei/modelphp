@@ -1,6 +1,6 @@
 /**
- * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.html or http://ckeditor.com/license
+ * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
 CKEDITOR.stylesSet.add('vipcase',[
@@ -13,6 +13,7 @@ CKEDITOR.stylesSet.add('vipcase',[
     // Inline styles
     { name : '最新消息標題' , element : 'div', attributes : { 'class' : 'title' } }*/
 ]);
+
 
 CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:

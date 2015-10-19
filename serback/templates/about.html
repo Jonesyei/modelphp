@@ -385,7 +385,7 @@ function picdel(d){
     ({$data.edmpic}) <BR>
 <input type="file" name="uploadify" id="uploadify"/>
 	<BR />
-	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyUpload();ajxupload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
+	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();$('#uploadify').uploadifyUpload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
     </div>
     

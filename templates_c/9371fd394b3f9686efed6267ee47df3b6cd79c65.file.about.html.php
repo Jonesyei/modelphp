@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-19 13:07:14
+<?php /* Smarty version Smarty-3.1.18, created on 2015-10-19 14:36:08
          compiled from "D:\AppServ\www\modelphp\serback\templates\about.html" */ ?>
 <?php /*%%SmartyHeaderCode:16614559b5c1240a491-63214556%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '9371fd394b3f9686efed6267ee47df3b6cd79c65' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\about.html',
-      1 => 1445231225,
+      1 => 1445236555,
       2 => 'file',
     ),
   ),
@@ -567,7 +567,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
  <BR>
 <input type="file" name="uploadify" id="uploadify"/>
 	<BR />
-	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyUpload();ajxupload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;<?php }?>
+	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:ajxupload();$('#uploadify').uploadifyUpload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;<?php }?>
 	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;<?php }?>建議比例:<?php echo $_smarty_tpl->tpl_vars['data']->value['pic_size_title'];?>
 <BR />
     </div>
