@@ -16,6 +16,7 @@
 <script type="text/javascript" src="../includes/js/func_back_js.js" ></script><!--自定後台js-->
 
 
+
 <link href="style/ui.all.css" rel="stylesheet" type="text/css" /><!--tabs分頁用-->
 <link href="../includes/js/datepick/jquery.datepick.css" rel="stylesheet" type="text/css"><!--datepick-->
 
@@ -34,8 +35,12 @@
    SYSTEM</div>
    <div class="login-power-by"><a href="http://www.vipcase.net" target="_blank">Power by vipcase</a></div>
   <div class="login-box">
+  
+  
+  
+  
      <div style="position:relative;">
-         <form name="form" id="form" method="post" action="index.php" enctype="multipart/form-data">
+         <form name="form" id="form" method="post" action="index.php" enctype="multipart/form-data" >
      <ul>
      <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
      <li><img src="images/login-key.png" width="15" height="15" /> <input name="password" id="password" type="password" class="login-id" placeholder="後台管理密碼" style="width:180px" /></li>
@@ -43,7 +48,7 @@
      <img src="verifycode.php" onclick="$(this).attr('src',$(this).attr('src'));"> <input name="code" type="text" class="login-id" placeholder="CODE" style="width:60px;" /></li>
      <li class="fotget" style="padding-left:20px;">
          <input type="checkbox" name="checkbox" id="checkbox" />
-     記住密碼
+     記住登入訊息
      <img src="images/login-forget.png" width="15" height="15"/><a href="javascript:forgotpw();" class="fotget"> 忘記密碼</a></li>
      </ul>
     <script>
@@ -104,6 +109,28 @@ $( "#dialog-confirm" ).dialog( "close" );
 <script>
 window.name = "serback"; //---幫視窗取名字來判斷是否當個登入頁面
 
+//--表單記憶功能
+$(window).bind('load',function (){
+	$('#form').bind('submit',function (){
+		if ($('#checkbox:checked').length>0){
+			localStorage.setItem('serback_account',$('[name="account"]').val());
+			localStorage.setItem('serback_password',$('[name="password"]').val());
+			localStorage.setItem('serback_lang',$('[name="lang"]').val());
+			localStorage.setItem('serback_saveaccount','checked');
+		}else{
+			localStorage.removeItem("serback_account");
+			localStorage.removeItem("serback_password");
+			localStorage.removeItem("serback_lang");
+			localStorage.removeItem("serback_saveaccount")
+		}
+	});
+	$('[name="account"]').val(localStorage.getItem('serback_account'));
+	$('[name="password"]').val(localStorage.getItem('serback_password'));
+	$('[name="lang"]').val(localStorage.getItem('serback_lang'));
+	if (localStorage.getItem('serback_saveaccount')!=null){
+		$('#checkbox')[0].checked=true;
+	}
+});
 </script>
 
 </html>
