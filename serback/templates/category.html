@@ -82,11 +82,17 @@ $(document).ready(function(){
   	</tr>
 	({section name=idex loop=$data.list})
     
-   <tr class="tr_sort" listid="({$data.list[idex].id})" parent_id="({$data.list[idex].parent_id})" depth="({$data.list[idex].depth})" title="可拖曳進行排序" onmouseover="changesortitem(this,({$data.list[idex].parent_id}))">
+   <tr class="tr_sort" listid="({$data.list[idex].id})" parent_id="({$data.list[idex].parent_id})" depth="({$data.list[idex].depth})" title="可拖曳進行排序" onmouseover="changesortitem(this,({$data.list[idex].parent_id}))" dir-role="open">
       <td align="center" ><input type="checkbox" id="choose_id" value="({$data.list[idex].id})" name="choose_id" /></td>
 	  
 	  
-	  <td ><a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name})</a></td>
+	  <td >
+      ({if $data.list[idex].lft*1+1 < $data.list[idex].rgt*1})
+      <img src="images/closedir.png" width="20" onclick="toggdir(({$data.list[idex].id}));" dir>
+      ({else})
+      <img src="images/wdir.png" width="20">
+      ({/if})
+      <a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name})</a></td>
 	  
 ({if $close.sort!=1})  
 	<td align="center">
@@ -143,7 +149,11 @@ var sortrow = '.tr_sort[parent_id="1"]:not(.ui-sortable-placeholder)'; //--可�
 var sort_act = 0;
 var sortlastobj;
 $(function() {
-	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();} } );
+	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();},
+		change: function (e,ui){
+		  $(ui.placeholder).hide().slideDown();
+		}
+	 } );
 	//$( sortmain ).disableSelection();
 });
 
@@ -213,6 +223,41 @@ changesort = function (type){
 	$('#form').submit();
 }
 sortbutton();
+
+
+//-開闔目錄
+var dir_status = null;
+function toggdir(parent_id){
+	toggdir2(parent_id)
+	dir_status = null;
+}
+function toggdir2(parent_id){
+	if (dir_status==null) {
+		dir_status = $('tr[listid="'+parent_id+'"]').attr('dir-role');
+		switch (dir_status){
+				case "open":
+					$('tr[listid="'+parent_id+'"]').attr('dir-role','close').find('img[dir]').attr('src','images/moredir.png');
+				break;
+				case "close":
+					$('tr[listid="'+parent_id+'"]').attr('dir-role','open').find('img[dir]').attr('src','images/closedir.png');
+				break;
+		}
+	}
+		
+	if ($('tr[parent_id="'+parent_id+'"]').length>0){
+		$('tr[parent_id="'+parent_id+'"]').each(function (idx,obj){			
+			switch (dir_status){
+				case "open":
+					$(obj).attr('dir-role','close').hide().find('img[dir]').attr('src','images/moredir.png');
+				break;
+				case "close":
+					$(obj).attr('dir-role','open').show().find('img[dir]').attr('src','images/closedir.png');
+				break;
+			}
+			toggdir2($(obj).attr('listid'));
+		});
+	}
+}
 </script>
 
 
@@ -226,10 +271,10 @@ function color_button(toobj){
 	if ($(toobj)[0].checked == true){
 		$(sortmain).find('tr').each(function (idx,obj){
 			var color_data = (255-($(obj).attr('depth')-1)*20);
-		  $(obj).attr("style",'background-color:rgb('+color_data+','+color_data+','+color_data+')');  
+		  $(obj).css("background",'rgb('+color_data+','+color_data+','+color_data+')');  
 		})
 	}else{
-		$(sortmain).find('tr').removeAttr('style');
+		$(sortmain).find('tr').css('background','none');
 	}
 }
 </script>
