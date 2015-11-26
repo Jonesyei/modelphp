@@ -220,7 +220,7 @@ if ($_POST["act"] =="all") {
 				$temp_value = (($v*1)-0.1); //使用倍精確型別 -0.1 來取得為前值項
 				$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET ".$jkin." = ".$temp_value.$where);
 			}else{
-				$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET ".$jkin." = ".$v.$where);
+				$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET ".$jkin." = '".$v."' ".$where);
 			}
 		}
 	}

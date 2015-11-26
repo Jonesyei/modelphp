@@ -8,7 +8,7 @@ include_once("../includes/main_back_inc.php");
 if (1){ //判斷是否啟用後台權限判斷
 
 	//判斷權限
-	$menu_list_data = array('_sysmenu_set','system_temp');
+	$menu_list_data = array('_sysmenu_set','system_temp','index');
 
 	if(Auth_check($conn)==false && !in_array(Now_file(),$menu_list_data))
 	{

@@ -129,7 +129,7 @@
 	
 
 	$data["wd_page"] = '全部共 '.$data["row_count"].' 筆(每頁 '.$mount.' 筆)　　'.$data["page1"].'　'.$data["page2"].'　'.$data["page3"].'　　'.$data["select_page"];
-	
+	$data["wd_rwd_page"] = '全部共 '.$data["row_count"].' 筆(每頁 '.$mount.' 筆)　　'.$data["page1"].'　'.$data["page3"].'　　'.$data["select_page"];
 	return $data;
 	}
 ?>

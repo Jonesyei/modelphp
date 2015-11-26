@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-21 13:16:29
+<?php /* Smarty version Smarty-3.1.18, created on 2015-10-22 17:31:18
          compiled from "D:\AppServ\www\modelphp\serback\templates\category.html" */ ?>
 <?php /*%%SmartyHeaderCode:10748559b5c0ceeacc9-86442669%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'ff7e788a133a9dd84adb49eb39298cda6d34cf8b' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\category.html',
-      1 => 1445404270,
+      1 => 1445506269,
       2 => 'file',
     ),
   ),
@@ -146,12 +146,19 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['last']       = ($_sm
 " parent_id="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['parent_id'];?>
 " depth="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['depth'];?>
 " title="可拖曳進行排序" onmouseover="changesortitem(this,<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['parent_id'];?>
-)">
+)" dir-role="open">
       <td align="center" ><input type="checkbox" id="choose_id" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
 " name="choose_id" /></td>
 	  
 	  
-	  <td ><a href="<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['page'];?>
+	  <td >
+      <?php if ($_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['lft']*1+1<$_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['rgt']*1) {?>
+      <img src="images/closedir.png" width="20" onclick="toggdir(<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+);" dir>
+      <?php } else { ?>
+      <img src="images/wdir.png" width="20">
+      <?php }?>
+      <a href="<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['page'];?>
 &id=<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
 "><?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['name'];?>
 </a></td>
@@ -224,7 +231,11 @@ var sortrow = '.tr_sort[parent_id="1"]:not(.ui-sortable-placeholder)'; //--可�
 var sort_act = 0;
 var sortlastobj;
 $(function() {
-	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();} } );
+	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();},
+		change: function (e,ui){
+		  $(ui.placeholder).hide().slideDown();
+		}
+	 } );
 	//$( sortmain ).disableSelection();
 });
 
@@ -294,6 +305,41 @@ changesort = function (type){
 	$('#form').submit();
 }
 sortbutton();
+
+
+//-開闔目錄
+var dir_status = null;
+function toggdir(parent_id){
+	toggdir2(parent_id)
+	dir_status = null;
+}
+function toggdir2(parent_id){
+	if (dir_status==null) {
+		dir_status = $('tr[listid="'+parent_id+'"]').attr('dir-role');
+		switch (dir_status){
+				case "open":
+					$('tr[listid="'+parent_id+'"]').attr('dir-role','close').find('img[dir]').attr('src','images/moredir.png');
+				break;
+				case "close":
+					$('tr[listid="'+parent_id+'"]').attr('dir-role','open').find('img[dir]').attr('src','images/closedir.png');
+				break;
+		}
+	}
+		
+	if ($('tr[parent_id="'+parent_id+'"]').length>0){
+		$('tr[parent_id="'+parent_id+'"]').each(function (idx,obj){			
+			switch (dir_status){
+				case "open":
+					$(obj).attr('dir-role','close').hide().find('img[dir]').attr('src','images/moredir.png');
+				break;
+				case "close":
+					$(obj).attr('dir-role','open').show().find('img[dir]').attr('src','images/closedir.png');
+				break;
+			}
+			toggdir2($(obj).attr('listid'));
+		});
+	}
+}
 </script>
 
 
@@ -307,10 +353,10 @@ function color_button(toobj){
 	if ($(toobj)[0].checked == true){
 		$(sortmain).find('tr').each(function (idx,obj){
 			var color_data = (255-($(obj).attr('depth')-1)*20);
-		  $(obj).attr("style",'background-color:rgb('+color_data+','+color_data+','+color_data+')');  
+		  $(obj).css("background",'rgb('+color_data+','+color_data+','+color_data+')');  
 		})
 	}else{
-		$(sortmain).find('tr').removeAttr('style');
+		$(sortmain).find('tr').css('background','none');
 	}
 }
 </script>

@@ -206,6 +206,7 @@ class order extends order_center{
 		//**  $data  form 參數
 		function form_submit($data=array(),$url=NULL,$medthod="POST"){
 			$temp_out = '
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 			<form id="form1" action="'.$url.'" method="'.$medthod.'">';
 			if ($data)
 			foreach ($data as $k=>$v){

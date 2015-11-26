@@ -13,7 +13,7 @@ $member = new member($conn,PREFIX."member");
 //--設定認證信功能
 //$member->check_mail = 1;
 //--信箱title設定 (不使用SMTP也要設定)
-$member->set_mail('拼點子',$web_set["send_email"]);
+$member->set_mail($web_set['title'],$web_set["send_email"]);
 //$member->smtp_setting('smtp.gmail.com','jones@vipcase.net','28484688',465,$type='ssl');
 
 //## 購物車

@@ -59,7 +59,11 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	}
 	
 	$data["one"]["parent_id_html"] = $data["one"]["prolist"]=create_select("parent_id",$tree_array,$data["one"]["parent_id"],$mode,"根目錄");//--加價購選單
-
+	switch($mode){
+		case "1":
+			$data["order_html"] .= '<tr><td align="right">分類折扣:</td><td><input type="text" name="desh" value="'.$data["one"]["desh"].'" maxlength="7"></td></tr>';
+		break;
+	}
 	
 }
 else//列表頁

@@ -240,7 +240,7 @@ INSERT INTO `datasetup_setting` VALUES (54, 'ch', 'web_css', '編輯器前台式
 CREATE TABLE `datasetup_shopping_car` (
   `id` int(20) NOT NULL auto_increment,
   `step` tinyint(1) default '1' COMMENT '購物流程指標',
-  `order_no` bigint(30) NOT NULL COMMENT '定單序號',
+  `order_no` VARCHAR( 30 ) NOT NULL COMMENT '定單序號',
   `total` int(20) default '0' COMMENT '總價(不含折價 不含運費)',
   `deshpoint` int(11) default NULL COMMENT '扣除紅利點',
   `addpoint` int(11) default NULL COMMENT '新增紅利點',
@@ -492,6 +492,7 @@ CREATE TABLE `datasetup_products` (
 CREATE TABLE `datasetup_shopping_car_groups` (
   `id` int(11) NOT NULL auto_increment,
   `shopping_car_id` int(11) NOT NULL,
+  `shopping_car_list_id` int(11) default NULL,
   `active_name` text NOT NULL,
   `price` int(11) NOT NULL,
   `groupcount` int(11) NOT NULL default '0' COMMENT '活動組合數量',

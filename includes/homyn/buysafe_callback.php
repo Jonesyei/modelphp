@@ -1,6 +1,6 @@
 <?php
-include_once("../includes/main_inc.php");
-include_once("../member_class.php");
+include_once("../../includes/main_inc.php");
+include_once("../../member_class.php");
 
 $member_key = 'Aa10270601'; //--商家密碼
 /*
