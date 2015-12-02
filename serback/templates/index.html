@@ -52,11 +52,17 @@
               ({if $admin_info.lang_title!=null})[管理語系:({$admin_info.lang_title})]({/if}) [權限:({$admin_info.control})]
              </div>
              <div class="use-space" ({if $admin_info.file_size_bar!='1'})style="display:none;"({/if})>
-                網站使用空間 : <span>({$admin_info.file_size_total})<span>
+                網站使用空間 : <span>({$admin_info.file_size_total})</span>
                 <div class="use-percent-box" title="已使用:({number_format($admin_info.size_bar_width,1)})%">
                   <div class="use-percent-load" style="width:({$admin_info.size_bar_width})%;"></div><!-- 空間%數 -->
                 </div>
+                
+                資料庫空間 : <span>({$admin_info.db_size_total})</span>
+                <div class="use-percent-box" title="已使用:({number_format($admin_info.db_bar_width,1)})%">
+                  <div class="use-percent-load" style="width:({$admin_info.db_bar_width})%;"></div><!-- 空間%數 -->
+                </div>
              </div>
+
         </div>
    </div>
    </div>

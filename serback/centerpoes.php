@@ -195,9 +195,25 @@ if ($_SESSION["admin_info"]["view"]=="list"){
 
 
 
+/** 資料庫空間檢測*/
+if ($_POST && $ini_webset["web_set"]["upload_check_status"]=='1'){
+	$db_total_disk = 0;
+	$db_disk = $conn->GetArray("SHOW TABLE STATUS");
+	if ($db_disk)
+		foreach ($db_disk as $k=>$v){
+			$db_total_disk += $v["Data_length"]*1+$v["Index_length"]*1;
+		}
+	if ($db_total_disk*1>=($ini_webset["web_set"]["db_max_size"])){
+		$db_full_check = true;
+	}
+}
+
+
+
+
 
 ///-------------排序
-if ($_POST["act"] =="all") {
+if ($_POST["act"] =="all" && !$db_full_check) {
 	//-- 找尋是否有_
 	foreach ($_POST as $k => $v)
 	{
@@ -235,7 +251,7 @@ if ($_POST["act"] =="all") {
 
 //---修改、新增資料 表單資料 導入陣列存入
 if ($close["edit"] != '1' || $close["add"] != '1'){
-if ($_POST && $_POST["act"] !="all") {
+if ($_POST && $_POST["act"] !="all" && !$db_full_check) {
 	
 	//------判斷是否有這個資料夾 沒有就創建一個
 	if ($cpos["file_url"] && !is_dir($cpos["file_url"])){
@@ -456,6 +472,12 @@ if ($_SESSION["upload_temp"] && $_SESSION["upload_url"]){
 	unset($_SESSION["upload_temp"]);
 }
 $_SESSION["upload_url"] = $cpos["file_url"];
+
+/**資料庫大小判斷訊息*/
+if ($db_full_check){
+	alert($ini_webset["web_set"]["db_full_msg"],-1);
+}
+
 
 
 //-----------頁面資料擷取
