@@ -42,8 +42,9 @@ $tpl->cache_dir = APP_PATH . "cache/";
 $_SESSION["admin_info"]["tmp"] = "";
 
 
+$no_check_array = array('login','ajax');
 //func.php 檢查是否登入
-if(Check_Admin($conn,$_POST["account"],$_POST["password"],strtoupper($_POST["code"]),$_POST["lang"]) == false && Now_file()!='login')
+if(Check_Admin($conn,$_POST["account"],$_POST["password"],strtoupper($_POST["code"]),$_POST["lang"]) == false && in_array(Now_file(),$no_check_array))
 {
 	if ($_SESSION["re_url"]==NULL) $_SESSION["re_url"] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	LinkTo("login.php");

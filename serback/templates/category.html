@@ -543,7 +543,6 @@ function picdel(d){
 	</tr>
     
 ({/if})
-
 ({if $data.button.file!=null})
 <tr>
 	<td width="110" align="right" >夾帶檔案：</td>
@@ -553,7 +552,8 @@ function picdel(d){
           
           <div id="file_list">
           ({if is_array($data.one.file)})
-          ({section name=c1 loop=$data.one.file})              
+          ({section name=c1 loop=$data.one.file})
+          ({if $data.one.file[c1]!=null && trim($data.one.file[c1])!=''})            
           <div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;margin:5px;" id="({$smarty.section.c1.index})_file_name">
               檔案名稱：<input type="text" name="file_name[]" value="({$data.one.file_name[c1]})" /><br>
               
@@ -565,7 +565,8 @@ function picdel(d){
               ({/if})
               
               <input type="file" name="file[]" onchange="file_change(({$smarty.section.c1.index}))" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
-          </div>         
+          </div>
+          ({/if})
           ({/section})
           ({else})
           	請設定參數 $data["one"]["file"] 轉型陣列 explode('|__|',$data["one"]["file"])
