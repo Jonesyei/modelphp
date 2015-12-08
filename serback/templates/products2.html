@@ -358,7 +358,7 @@ $(document).ready(
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){

@@ -20,6 +20,8 @@ if($_POST)
 	if(md5((strtoupper($_POST["code"])))!=($_SESSION["__validate_code"]))
 	{
 		alert("驗證碼錯誤",-1);
+	}else{
+		unset($_POST["code"]);
 	}
 	
 	
@@ -49,7 +51,7 @@ if($_POST)
 				$post_contact[] = array('value'=>$v,'title'=>$form[$k]);
 			}
 		}else{
-			$post_contact[] = array('value'=>$v,'title'=>$$k);
+			$post_contact[] = array('value'=>$v,'title'=>$k);
 		}
 	}
 	//--額外追加特殊多填欄位

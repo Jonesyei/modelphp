@@ -129,6 +129,11 @@ if($_SESSION["admin_info"]["view"]=="detail")
 		case "EDM":
 				$data["one"]["name"] = "首頁EDM";
 				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
+				
+				$data["one"]["file"] = explode('|__|',$data["one"]["file"]);
+				$data["one"]["file_name"] = explode('|__|',$data["one"]["file_name"]);
+				$data["button"]["file"]='10';
+				
 				//$data["button"]["href"]='1';				
 				//$data["uploadfilemax"] = 3-$data_pic_count;//圖檔上傳上限
 		break;

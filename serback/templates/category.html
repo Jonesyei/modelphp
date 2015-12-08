@@ -385,7 +385,7 @@ $(document).ready(
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){
@@ -544,25 +544,59 @@ function picdel(d){
     
 ({/if})
 
-
-({if $data.button.file==1})
-	<tr>
+({if $data.button.file!=null})
+<tr>
 	<td width="110" align="right" >夾帶檔案：</td>
-		  <td id="file">
-          ({if $data.one.file!=null})已含有檔案 ({$data.one.file}) 檔案<br> <a href="javascript:del_file();">刪除請點此</a><br>({/if})
-		  <input type="file" name="file" onchange="file_change()" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
-		   </td>
+	   <td>
+          
+       	  <input type="button" value=" 增加一個夾帶檔案 " onclick="add_file();"><br><br>
+          
+          <div id="file_list">
+          ({if is_array($data.one.file)})
+          ({section name=c1 loop=$data.one.file})              
+          <div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;margin:5px;" id="({$smarty.section.c1.index})_file_name">
+              檔案名稱：<input type="text" name="file_name[]" value="({$data.one.file_name[c1]})" /><br>
+              
+              ({if $data.one.file[c1]!=null})
+              <span id="({$smarty.section.c1.index})_file">
+                <input type="hidden" name="file[]" value="({$data.one.file[c1]})">已含有檔案 ({$data.one.file[c1]}) 檔案<br> 
+                <a href="javascript:del_file(({$smarty.section.c1.index}));"><font color="#FF0000">刪除請點此</font></a><br>
+              </span>
+              ({/if})
+              
+              <input type="file" name="file[]" onchange="file_change(({$smarty.section.c1.index}))" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
+          </div>         
+          ({/section})
+          ({else})
+          	請設定參數 $data["one"]["file"] 轉型陣列 explode('|__|',$data["one"]["file"])
+            請設定參數 $data["one"]["file_name"] 轉型陣列 explode('|__|',$data["one"]["file_name"])
+          ({/if})
+          </div>
+         
+	   </td>
 	</tr>
     <script>
-	function del_file(){
-		if (!confirm('確定刪除檔案')) return;
-		$('#file').append('<input type="hidden" name="file" value="">');
-		$('form').submit();
+    function del_file(file_type){
+        $('#'+file_type+'_file_name').remove();
+		if($('#file_list >div').length == 0){
+			$('#file_list').append('<input type="hidden" name="file_name[]" value="" /><input type="hidden" name="file[]" value="" />');
+		}
+    }
+	function file_change(file_type){
+		$('#'+file_type+'_file').remove();
 	}
-	function file_change(){
-		$('#file input[type="hidden"]').remove();
+	function add_file(){
+		if($('#file_list >div').length > '({$data.button.file})'*1){
+			alert('附加檔案超過({$data.button.file})個!!');
+		}else{
+			$('#file_list').append('<div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;">檔案名稱：<input type="text" name="file_name[]" /><br><input type="file" name="file[]" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)</div><br>')
+		}
 	}
-	</script>
+	$(function() {
+		$( "#file_list" ).sortable();
+		$( "#file_list" ).disableSelection();
+	});
+    </script>
 ({/if})
     
     ({$data.order_html})

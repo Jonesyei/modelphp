@@ -1,16 +1,14 @@
 // JavaScript Document Create By Jones 
 /*
-if (document.addEventListener){
-  document.addEventListener("DOMContentLoaded", function(event) {
-  });
-  
-} else {
-	document.attachEvent("onreadystatechange", function(event) {
-		if(document.readyState=="complete");
-	});
-}
+	前端畫面優化處理JS
+	目前功能
+	
+	1.驗證碼事件賦予
+	2.圖片加載失敗時 使用tsrc屬性置換
+	3.帳號欄位自動轉換英數
+	4.
 */
-
+/*
 if (document.addEventListener){
   document.addEventListener("DOMContentLoaded", function(event) {
 	  domready();
@@ -25,22 +23,18 @@ if (document.addEventListener){
 		}
 	});
 }
+*/
 
-
-
-
-
-//-其他JS加載
-domload = function (){
-	var js = document.createElement("script");
-	js.type = "text/javascript";
-	js.src = 'includes/js/func_js.js';
-	document.body.appendChild(js);
-}
+$(document).ready(function (){
+	domready();
+	$(window).bind('load',function(){
+		windowload();
+	});
+});
 
 //document ready
 domready = 	function(){
-		domload();
+		//domload();
 		if (typeof(VerifyCode)!="undefined") VerifyCode(); //驗證碼賦予 事件
 		
 		//--base64圖片 onload 錯誤時讀取
@@ -86,4 +80,10 @@ windowload = function (){
 			$(obj).on('keydown',function (){$(obj).keyup();});
 		});
 	}
+	
+	//--編輯器圖片 自動最大全屏寬度
+	var detail_obj = '*[detail]';
+	$(detail_obj).each(function (idx,obj){
+		
+	})
 }

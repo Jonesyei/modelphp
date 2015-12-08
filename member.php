@@ -153,7 +153,7 @@ switch ($act){
 			if ($_SESSION["__validate_code"]!=md5($_POST["code"])){
 				alert('驗證碼錯誤!!',-1);exit;
 			}
-			$_POST["account"] = $_POST["email"];
+			if (!$_POST["account"]) $_POST["account"] = $_POST["email"];
 			$backdata = $member->newjoin($_POST);
 			if (is_array($backdata)){
 				alert('帳號申請成功',"?act=detail");exit;
