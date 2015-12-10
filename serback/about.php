@@ -18,6 +18,8 @@ $cpos["listorderby"] = "sort";
 $cpos["tablesearch"] = 'name';//搜尋關聯欄位
 $cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
 
+$cpos["file_check"] = array('pic','file');
+
 $close["insert"] =0;
 $close["add"]	= 0;
 $close["del"]	= 0;

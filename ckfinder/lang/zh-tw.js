@@ -2,7 +2,7 @@
  * CKFinder
  * ========
  * http://cksource.com/ckfinder
- * Copyright (C) 2007-2013, CKSource - Frederico Knabben. All rights reserved.
+ * Copyright (C) 2007-2015, CKSource - Frederico Knabben. All rights reserved.
  *
  * The software, this file, and its contents are subject to the CKFinder
  * License. Please read the license.txt file before using, installing, copying,
@@ -28,19 +28,19 @@ CKFinder.lang['zh-tw'] =
 	common :
 	{
 		// Put the voice-only part of the label in the span.
-		unavailable		: '%1<span class="cke_accessibility">, 無法使用</span>', // MISSING
-		confirmCancel	: '部分選項已變更。你確定要關閉對話視窗？', // MISSING
-		ok				: '確定', // MISSING
-		cancel			: '取消', // MISSING
-		confirmationTitle	: '確認', // MISSING
-		messageTitle	: '訊息', // MISSING
-		inputTitle		: '詢問', // MISSING
-		undo			: '復原', // MISSING
-		redo			: '重做', // MISSING
-		skip			: '略過', // MISSING
-		skipAll			: '略過全部', // MISSING
-		makeDecision	: '想採取怎樣的動作呢？', // MISSING
-		rememberDecision: '記住我的設定' // MISSING
+		unavailable		: '%1<span class="cke_accessibility">, unavailable</span>', // MISSING
+		confirmCancel	: 'Some of the options were changed. Are you sure you want to close the dialog window?', // MISSING
+		ok				: 'OK', // MISSING
+		cancel			: 'Cancel', // MISSING
+		confirmationTitle	: 'Confirmation', // MISSING
+		messageTitle	: 'Information', // MISSING
+		inputTitle		: 'Question', // MISSING
+		undo			: 'Undo', // MISSING
+		redo			: 'Redo', // MISSING
+		skip			: 'Skip', // MISSING
+		skipAll			: 'Skip all', // MISSING
+		makeDecision	: 'What action should be taken?', // MISSING
+		rememberDecision: 'Remember my decision' // MISSING
 	},
 
 
@@ -82,9 +82,9 @@ CKFinder.lang['zh-tw'] =
 	FileRenameExt	: '確定變更這個檔案的副檔名嗎? 變更後 , 此檔案可能會無法使用 !',
 	FileRenaming	: '修改檔案名稱...',
 	FileDelete		: '確定要刪除這個檔案 "%1"?',
-	FilesDelete	: '你確定要刪除 %1 等檔案?', // MISSING
+	FilesDelete	: 'Are you sure you want to delete %1 files?', // MISSING
 	FilesLoading	: '載入中...',
-	FilesEmpty		: '這資料夾是空的.', // MISSING
+	FilesEmpty		: 'The folder is empty.', // MISSING
 	DestinationFile	: 'Destination File', // MISSING
 	SkippedFiles	: 'List of skipped files:', // MISSING
 
@@ -305,5 +305,10 @@ CKFinder.lang['zh-tw'] =
 		removeAndExtract	: 'Remove existing and extract', // MISSING
 		extractAndOverwrite	: 'Extract overwriting existing files', // MISSING
 		extractSuccess		: 'File extracted successfully.' // MISSING
+	},
+
+	Search :
+	{
+		searchPlaceholder : '搜尋'
 	}
 };

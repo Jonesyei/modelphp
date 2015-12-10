@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-11-25 15:52:00
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-09 20:56:42
          compiled from "D:\AppServ\www\modelphp\serback\templates\about.html" */ ?>
 <?php /*%%SmartyHeaderCode:16614559b5c1240a491-63214556%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '9371fd394b3f9686efed6267ee47df3b6cd79c65' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\about.html',
-      1 => 1447988114,
+      1 => 1449640285,
       2 => 'file',
     ),
   ),
@@ -348,7 +348,7 @@ $(document).ready(
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){
@@ -608,27 +608,102 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
 <?php }?>
 
 
-<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['file']==1) {?>
-	<tr>
+
+
+
+
+
+<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['file']!=null) {?>
+<tr>
 	<td width="110" align="right" >夾帶檔案：</td>
-		  <td id="file">
-          <?php if ($_smarty_tpl->tpl_vars['data']->value['one']['file']!=null) {?>已含有檔案 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file'];?>
- 檔案<br> <a href="javascript:del_file();">刪除請點此</a><br><?php }?>
-		  <input type="file" name="file" onchange="file_change()" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
-		   </td>
+	   <td>
+          
+       	  <input type="button" value=" 增加一個夾帶檔案 " onclick="add_file();"><br><br>
+          
+          <div id="file_list">
+          <?php if (is_array($_smarty_tpl->tpl_vars['data']->value['one']['file'])) {?>
+          <?php if (isset($_smarty_tpl->tpl_vars['smarty']->value['section']['c1'])) unset($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['name'] = 'c1';
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop'] = is_array($_loop=$_smarty_tpl->tpl_vars['data']->value['one']['file']) ? count($_loop) : max(0, (int) $_loop); unset($_loop);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show'] = true;
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['max'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'] = 1;
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['start'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'] > 0 ? 0 : $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop']-1;
+if ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show']) {
+    $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop'];
+    if ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'] == 0)
+        $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show'] = false;
+} else
+    $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'] = 0;
+if ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show']):
+
+            for ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['start'], $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] = 1;
+                 $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] <= $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'];
+                 $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] += $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'], $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration']++):
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['rownum'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index_prev'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] - $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index_next'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] + $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['first']      = ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] == 1);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['last']       = ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] == $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total']);
+?>
+          <?php if ($_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']]!=null&&trim($_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']])!='') {?>            
+          <div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;margin:5px;" id="<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+_file_name">
+              檔案名稱：<input type="text" name="file_name[]" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file_name'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']];?>
+" /><br>
+              
+              <?php if ($_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']]!=null) {?>
+              <span id="<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+_file">
+                <input type="hidden" name="file[]" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']];?>
+">已含有檔案 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']];?>
+ 檔案<br> 
+                <a href="javascript:del_file(<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+);"><font color="#FF0000">刪除請點此</font></a><br>
+              </span>
+              <?php }?>
+              
+              <input type="file" name="file[]" onchange="file_change(<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+)" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
+          </div>
+          <?php }?>
+          <?php endfor; endif; ?>
+          <?php } else { ?>
+          	請設定參數 $data["one"]["file"] 轉型陣列 explode('|__|',$data["one"]["file"])
+            請設定參數 $data["one"]["file_name"] 轉型陣列 explode('|__|',$data["one"]["file_name"])
+          <?php }?>
+          </div>
+         
+	   </td>
 	</tr>
     <script>
-	function del_file(){
-		if (!confirm('確定刪除檔案')) return;
-		$('#file').append('<input type="hidden" name="file" value="">');
-		$('form').submit();
+    function del_file(file_type){
+        $('#'+file_type+'_file_name').remove();
+		if($('#file_list >div').length == 0){
+			$('#file_list').append('<input type="hidden" name="file_name[]" value="" /><input type="hidden" name="file[]" value="" />');
+		}
+    }
+	function file_change(file_type){
+		$('#'+file_type+'_file').remove();
 	}
-	function file_change(){
-		$('#file input[type="hidden"]').remove();
+	function add_file(){
+		if($('#file_list >div').length >= '<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['file'];?>
+'*1){
+			alert('附加檔案超過<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['file'];?>
+個!!');
+		}else{
+			$('#file_list').append('<div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;">檔案名稱：<input type="text" name="file_name[]" /><br><input type="file" name="file[]" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)</div><br>')
+		}
 	}
-	</script>
+	$(function() {
+		$( "#file_list" ).sortable();
+		$( "#file_list" ).disableSelection();
+	});
+    </script>
 <?php }?>
-    
+
+
+
     <?php echo $_smarty_tpl->tpl_vars['data']->value['order_html'];?>
 
    

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-21 11:32:18
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-09 14:06:57
          compiled from "D:\AppServ\www\modelphp\serback\templates\index.html" */ ?>
 <?php /*%%SmartyHeaderCode:3214559b5bf1cf8466-57938604%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f806576792ed8b26e20c6a9e0f15e0f5c84ca38b' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\index.html',
-      1 => 1445398332,
+      1 => 1449640647,
       2 => 'file',
     ),
   ),
@@ -19,8 +19,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_559b5bf1d909b6_26608696',
   'variables' => 
   array (
-    'web_css' => 0,
     'set' => 0,
+    'web_css' => 0,
     'data' => 0,
     'admin_info' => 0,
     'menu' => 0,
@@ -33,7 +33,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
-<title>網動廣告</title>
+<title><?php echo $_smarty_tpl->tpl_vars['set']->value[0]['detail'];?>
+::後台管理系統</title>
 <?php echo $_smarty_tpl->tpl_vars['web_css']->value;?>
 
 <script type="text/javascript" src="../includes/js/jquery.js"></script>
@@ -91,13 +92,22 @@ $_valid = $_smarty_tpl->decodeProperties(array (
              </div>
              <div class="use-space" <?php if ($_smarty_tpl->tpl_vars['admin_info']->value['file_size_bar']!='1') {?>style="display:none;"<?php }?>>
                 網站使用空間 : <span><?php echo $_smarty_tpl->tpl_vars['admin_info']->value['file_size_total'];?>
-<span>
+</span>
                 <div class="use-percent-box" title="已使用:<?php echo number_format($_smarty_tpl->tpl_vars['admin_info']->value['size_bar_width'],1);?>
 %">
                   <div class="use-percent-load" style="width:<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['size_bar_width'];?>
 %;"></div><!-- 空間%數 -->
                 </div>
+                
+                資料庫空間 : <span><?php echo $_smarty_tpl->tpl_vars['admin_info']->value['db_size_total'];?>
+</span>
+                <div class="use-percent-box" title="已使用:<?php echo number_format($_smarty_tpl->tpl_vars['admin_info']->value['db_bar_width'],1);?>
+%">
+                  <div class="use-percent-load" style="width:<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['db_bar_width'];?>
+%;"></div><!-- 空間%數 -->
+                </div>
              </div>
+
         </div>
    </div>
    </div>

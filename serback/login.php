@@ -57,12 +57,16 @@ if (!(@ $link=mysql_connect($dbHost, $dbUser, $dbPass))){
 	$link = '<div class="fOoT" style="background-color: #AAffAA;">POWER BY WEB POWER ADVERTISING TECHNOLOGY CO.,LTD.</div>';
 }
 
+//網站設定
+$sql = " select * from ".PREFIX."setting WHERE lang='".quotes($record["lang"])."'";
+$set = $conn->GetArray($sql);
+
 
 $tpl->assign("link",$link);
 $tpl->assign("admin_info",@$_SESSION["admin_info"]);//admin_info所有設定
 $tpl->assign("setup", $_SETUP);//config設定檔
 $tpl->assign("data",@$data); //別的頁面傳送來的data
-
+$tpl->assign("set",$set); //網站設定
 
 
 $tpl->display(ROOT_PATH.$admin_path."templates/login.html");

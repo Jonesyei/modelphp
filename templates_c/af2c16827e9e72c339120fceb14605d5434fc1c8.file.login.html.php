@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-20 16:01:16
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-09 14:01:58
          compiled from "D:\AppServ\www\modelphp\serback\templates\login.html" */ ?>
 <?php /*%%SmartyHeaderCode:10876559b5be9455e41-29983648%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'af2c16827e9e72c339120fceb14605d5434fc1c8' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\login.html',
-      1 => 1445328074,
+      1 => 1449640900,
       2 => 'file',
     ),
   ),
@@ -19,6 +19,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_559b5be94d1032_82077653',
   'variables' => 
   array (
+    'set' => 0,
     'data' => 0,
     'link' => 0,
   ),
@@ -28,7 +29,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>網動廣告科技</title>
+<title><?php echo $_smarty_tpl->tpl_vars['set']->value[0]['detail'];?>
+::後台管理系統</title>
 
 <script type="text/javascript" src="../includes/js/jquery.js"></script>
 <script type="text/javascript" src="../includes/js/jquery-ui.js"></script>

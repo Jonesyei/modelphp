@@ -3,7 +3,7 @@
  * CKFinder
  * ========
  * http://cksource.com/ckfinder
- * Copyright (C) 2007-2013, CKSource - Frederico Knabben. All rights reserved.
+ * Copyright (C) 2007-2015, CKSource - Frederico Knabben. All rights reserved.
  *
  * The software, this file and its contents are subject to the CKFinder
  * License. Please read the license.txt file before using, installing, copying,
@@ -55,7 +55,7 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
         }
 
         $sUnsafeFileName = CKFinder_Connector_Utils_FileSystem::convertToFilesystemEncoding(CKFinder_Connector_Utils_Misc::mbBasename($uploadedFile['name']));
-		//-ÀH¾÷ÀÉ®×©R¦W
+		//-éš¨æ©Ÿæª”æ¡ˆå‘½å
 		$sExtension = CKFinder_Connector_Utils_FileSystem::getExtension($sUnsafeFileName);
 		$sUnsafeFileName=date('YmdHis').'.'.$sExtension;
         $sFileName = CKFinder_Connector_Utils_FileSystem::secureFileName($sUnsafeFileName);
@@ -190,8 +190,8 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
             }
         }
 
-
-		//* ¥Î¥H§PÂ_ ÀÉ®×¤W¶Ç¬O§_¶W¹L­­¨î¤j¤p add by Jones*/
+		
+		//* ç”¨ä»¥åˆ¤æ–· æª”æ¡ˆä¸Šå‚³æ˜¯å¦è¶…éŽé™åˆ¶å¤§å° add by Jones*/
 		$dirtemp_name =  explode('ckfinder',dirname(__FILE__));
 		$dirtemp_name = $dirtemp_name[0];
 		$ini_webset = parse_ini_file($dirtemp_name."includes/config/web_set.ini",true);
@@ -203,12 +203,13 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
 			@unlink($sFilePath);
 			$this->_errorHandler->throwError(CKFINDER_CONNECTOR_ERROR_WD_DESK_FULL);
         }
-		/* «á¥xÅçÃÒµn¤J */
+		/* å¾Œå°é©—è­‰ç™»å…¥ */
 		if (!isset($_SESSION["admin_info"]["id"])){
             clearstatcache();
 			@unlink($sFilePath);
 			$this->_errorHandler->throwError(CKFINDER_CONNECTOR_ERROR_WD_TOKEN);
 		}
+		
         CKFinder_Connector_Core_Hooks::run('AfterFileUpload', array(&$this->_currentFolder, &$uploadedFile, &$sFilePath));
     }
 }

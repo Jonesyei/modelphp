@@ -108,7 +108,7 @@ foreach (get_included_files() as $k=>$v){
 }
 
 
-
+if (!$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
 
 $tpl->assign("admin_info",$_SESSION["admin_info"]);//admin_info所有設定
 $tpl->assign("setup", $_SETUP);//config設定檔

@@ -56,11 +56,10 @@ if(Check_Admin($conn,$_POST["account"],$_POST["password"],strtoupper($_POST["cod
 		$_SESSION["admin_info"]["lang"] = $_POST["lang"];//有參數
 		$temp = $conn->GetRow("select * from ".PREFIX."language where detail='".$lang."'");
 		$_SESSION["admin_info"]["lang_title"] = $temp["name"];
-	}elseif ($_POST){
+	}elseif ($_POST || !$_SESSION["admin_info"]["lang"]){
 		$_SESSION["admin_info"]["lang"] = 'ch';//無參數給予預設值
 		$_SESSION["admin_info"]["lang_title"] = '中文';
 	}
-
 }
 
 $record["lang"] = $post["lang"] = $lang = $_SESSION["admin_info"]["lang"];

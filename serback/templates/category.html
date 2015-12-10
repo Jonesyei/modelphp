@@ -587,7 +587,7 @@ function picdel(d){
 		$('#'+file_type+'_file').remove();
 	}
 	function add_file(){
-		if($('#file_list >div').length > '({$data.button.file})'*1){
+		if($('#file_list >div').length >= '({$data.button.file})'*1){
 			alert('附加檔案超過({$data.button.file})個!!');
 		}else{
 			$('#file_list').append('<div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;">檔案名稱：<input type="text" name="file_name[]" /><br><input type="file" name="file[]" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)</div><br>')
