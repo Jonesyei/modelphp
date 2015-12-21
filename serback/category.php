@@ -44,6 +44,14 @@ cate_mode_reload($mode,0,$conn,$cpos["table"]);
 if ($_POST) linkto($_SERVER['REQUEST_URI']);
 
 
+//--尋找分類數層級
+if ($_GET["parent_id"]){
+	$depth_data = $conn->GetRow("select * from ".$cpos["table"]." where id='".quotes($_GET["parent_id"])."'");
+	$depth = ($depth_data["depth"]*1+1);
+}else{
+	$depth = '1';
+}
+
 //明細
 if($_SESSION["admin_info"]["view"]=="detail")
 {
@@ -58,10 +66,16 @@ if($_SESSION["admin_info"]["view"]=="detail")
 		}
 	}
 	
-	$data["one"]["parent_id_html"] = $data["one"]["prolist"]=create_select("parent_id",$tree_array,$data["one"]["parent_id"],$mode,"根目錄");//--加價購選單
+	$data["one"]["parent_id_html"] = $data["one"]["prolist"]=create_select("parent_id",$tree_array,($data["one"]["parent_id"]!=NULL ? $data["one"]["parent_id"]:$_GET["parent_id"]),$mode,"根目錄");//--加價購選單
+	//--分類樹判斷
 	switch($mode){
 		case "1":
-			$data["order_html"] .= '<tr><td align="right">分類折扣:</td><td><input type="text" name="desh" value="'.$data["one"]["desh"].'" maxlength="7"></td></tr>';
+			//--層級判斷
+			switch ($depth){
+				case "1":
+				$data["order_html"] .= '<tr><td align="right">分類折扣:</td><td><input type="text" name="desh" value="'.$data["one"]["desh"].'" maxlength="7"></td></tr>';
+				break;
+			}
 		break;
 	}
 	

@@ -334,17 +334,34 @@ function color_button(toobj){
 	<tr>
 	<td width="110" align="right" >標題：</td>
 		  <td >
-		  <input type="text" name="name"  value="({$data.one.name})" size="48" />
+		  <input type="text" name="name" value="({$data.one.name})" size="48" />
           
         
 		   </td>
 	</tr>
 	<tr>
-	<td width="110" align="right" >標題：</td>
+	<td width="110" align="right" >上層：</td>
 		  <td >
 		  ({$data.one.parent_id_html})
           
-        
+        	<script>
+			$(document).ready(function (){
+				//--選擇時設立還原資料
+				$('[name="parent_id"]').on('focus',function(e){
+					$(e.target).attr('defvalue',$(e.target).val());
+				});
+				//--離開時判斷是否異動資料詢問
+				$('[name="parent_id"]').on('blur',function(e){
+					if ($(e.target).attr('defvalue')!=$(e.target).val()){
+						if (confirm('是否要異動此分類樹下?\n如確定則需建立新頁面資訊')){
+							window.location.href='?mode=({$data.pageget.mode})&parent_id='+$(e.target).val()+'&id=({$data.pageget.id})';
+						}else{
+							$(e.target).val($(e.target).attr('defvalue'));
+						}
+					}
+				});
+			});
+			</script>
 		   </td>
 	</tr>
 	
