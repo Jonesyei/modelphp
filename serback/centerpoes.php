@@ -623,24 +623,17 @@ function system_temp($conn){
 function cpos_resort($value=0){
 	global $conn;
 	global $cpos;
+	if ($cpos["tablelistwhere"]==NULL || $cpos["tablelistwhere"]=='') $cpos["tablelistwhere"] = ' WHERE 1 ';
 	if ($cpos["sort_class"]!=NULL&&$cpos["sort_class"]!='')
 	{
 		$sort_class = $conn->GetArray("select * from ".$cpos["table"]." ".$cpos["tablejoin"].' '.$cpos["tablelistwhere"].' group by '.$cpos["sort_class"]);
 		foreach ($sort_class as $k=>$v){
-			$sql = "select * from ".$cpos["table"].' '.$cpos["tablejoin"].' where '.$cpos["sort_class"]."='".$v[$cpos["sort_class"]]."' ".$cpos["listorderby"];
-			$resort = $conn->GetArray($sql);
-			//----所有符合資料更改排序值
-			for($i=$value;$i<count($resort);$i++){
-				$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort = ".($i+1).' where id ="'.$resort[$i]["id"].'"');
-			}
+			$conn->Execute("SET @j:=0");
+			$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort=@j:=@j+1 ".$cpos["tablelistwhere"]." AND ".$cpos["sort_class"]."='".$v[$cpos["sort_class"]]."' ".$cpos["listorderby"]);
 		}
 	}else{
-		$sql = "select * from ".$cpos["table"].' '.$cpos["tablejoin"].' '.$cpos["tablelistwhere"].$cpos["listorderby"];
-		$resort = $conn->GetArray($sql);
-		//----所有符合資料更改排序值
-		for($i=$value;$i<count($resort);$i++){
-			$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort = ".($i+1).' where id ="'.$resort[$i]["id"].'"');
-		}
+		$conn->Execute("SET @j:=0");
+		$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort=@j:=@j+1 ".$cpos["tablelistwhere"]." ".$cpos["listorderby"]);
 	}
 }
 
