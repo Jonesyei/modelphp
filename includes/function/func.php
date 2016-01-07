@@ -894,6 +894,43 @@ function now_url($value='page',$act=false){
 
 
 
+/*
+	頁面資訊擷取
+	return
+	data => 頁面HTML資訊
+	code => 代碼
+*/
+function curl($long_url,$type='GET',$data=NULL) {
+	switch (strtoupper($type)){
+		case "GET":
+		$curlObj = curl_init();
+			$options = array(
+				CURLOPT_URL => $long_url,
+				CURLOPT_RETURNTRANSFER => TRUE, //接收服?端范?的html代?而不是直接??器?出
+				CURLOPT_TIMEOUT => 4
+			);
+		break;
+		case "POST":
+			$curlObj = curl_init();
+			$options = array(
+				CURLOPT_URL => $long_url,
+				CURLOPT_POST => TRUE, //使用post提交
+				CURLOPT_RETURNTRANSFER => TRUE, //接收服?端范?的html代?而不是直接??器?出
+				CURLOPT_TIMEOUT => 4,
+				CURLOPT_POSTFIELDS => http_build_query($data), //post的?据
+			);
+		break;
+	}
+    curl_setopt_array($curlObj, $options);
+    $response = curl_exec($curlObj);
+	$httpcode = curl_getinfo($curlObj, CURLINFO_HTTP_CODE);
+    curl_close($curlObj);
+    return array('data'=>$response,'code'=>$httpcode);
+}
+
+
+
+
 
 
 

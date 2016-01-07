@@ -108,6 +108,8 @@ foreach (get_included_files() as $k=>$v){
 }
 
 
+
+
 if (!$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
 
 $tpl->assign("admin_info",$_SESSION["admin_info"]);//admin_info所有設定
@@ -124,6 +126,12 @@ $tpl->assign("page_table_html",ROOT_PATH.$admin_path."templates/page_table.html"
 
 if($include != true)
 {
+	//--首頁開發訊息自動接收更新
+	$aa = curl($ini_webset["web_set"]["info_page"]);
+	if ($aa["code"]=='200'){
+		safefilerewrite(ROOT_PATH.$admin_path."templates/info.html",$aa["data"]);
+	}
+	
 	$tpl->assign("content",ROOT_PATH.$admin_path."templates/info.html");
 	$tpl->display(ROOT_PATH.$admin_path."templates/index.html");
 }
