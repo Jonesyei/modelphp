@@ -55,6 +55,7 @@ class member
 		var $erromsg;
 		
 		var $namespace = 'member'; //--會員命名空間
+		var $namespace_sql = '';	//--
 		var $iswork = false;
 		/**
 			建構類別庫
@@ -87,8 +88,15 @@ class member
 			設置完參數後 運行此
 		*/
 		function work(){
+			if ($this->iswork) {
+				echo '錯誤:已經建立過此物件!! 勿重複宣告work()';
+				exit;
+			}
+			//-判斷是否!=預設值
+			if ($this->namespace != 'member') $this->namespace_sql = " and namespace='".$this->namespace."'";
+			
 			if ($_SESSION["login_info"][$this->namespace]){
-				$this->session = $this->conn->GetRow("select * from ".$this->table." WHERE id='".$_SESSION["login_info"][$this->namespace]["id"]."'");
+				$this->session = $this->conn->GetRow("select * from ".$this->table." WHERE id='".$_SESSION["login_info"][$this->namespace]["id"]."' ".$this->namespace_sql);
 			}
 			$this->iswork = true;
 		}
@@ -107,6 +115,7 @@ class member
 
 			if ($name!='') {
 				$this->namespace = $name;
+				$this->namespace_sql = ''; //-不判斷命名空間登入方式
 				$_SESSION["login_info"][$this->namespace] = $this->session;
 			}else{
 				 echo '必須宣告 不同於 ['.$obj->namespace.'] 的命名空間';
@@ -135,7 +144,7 @@ class member
 		{
 			global $_SESSION;
 			if ($account==NULL || $account=='' || $password==NULL || $password=='') return false;
-			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE account='".quotes($account)."' and password='".md5($password)."' and status=1");
+			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE account='".quotes($account)."' and password='".md5($password)."' and status=1 ".$this->namespace_sql);
 			if ($temp) {
 				$this->session = $temp;
 				$_SESSION["login_info"][$this->namespace] = $temp;
@@ -148,7 +157,7 @@ class member
 		{
 			global $_SESSION;
 			
-			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE ".$row."='".$data["account"]."' and status=1");
+			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE ".$row."='".$data["account"]."' and status=1 ".$this->namespace_sql);
 			if ($temp) {
 				$this->session = $temp;
 				$_SESSION["login_info"][$this->namespace] = $temp;
@@ -168,7 +177,7 @@ class member
 			}
 		}
 		function fotgot($row,$value,$pagefile=NULL){ //--忘記密碼
-			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE ".$row."='".$value."'");
+			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE ".$row."='".$value."' ".$this->namespace_sql);
 			if ($temp){
 				$rndstring = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 				for($i=0;$i<9;$i++){
@@ -256,15 +265,15 @@ class member
 			//判斷是否社群登入
 			if ($net_link){
 				if ($data["email"]=='' || $data["email"]==NULL) $data["email"] = $data["account"].'@'.$data['netclass'];
-				$check = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
+				$check = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."' ".$this->namespace_sql);
 			}else{
-				$check = $this->conn->GetRow("select * from ".$this->table." WHERE (account='".$data["account"]."' or email='".$data["email"]."')");
+				$check = $this->conn->GetRow("select * from ".$this->table." WHERE (account='".$data["account"]."' or email='".$data["email"]."') ".$this->namespace_sql);
 				if ($check){
 					return '帳號 或者 email 資料已重複!!';
 				}
 			}
 			
-			
+			$data["namespace"] = $this->namespace;
 			$data["password"] = md5($data["password"]);
 			$data["status"] = '1';
 			$data["type"] = 'member';
