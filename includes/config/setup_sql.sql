@@ -127,6 +127,7 @@ INSERT INTO `datasetup_language` VALUES (4, '簡體', 'sc', 1, 3, '2015-07-08 07
 
 CREATE TABLE `datasetup_member` (
   `id` int(20) NOT NULL auto_increment,
+  `namespace` text NOT NULL COMMENT '所屬命名空間',
   `type` varchar(20) NOT NULL,
   `lang` varchar(20) NOT NULL,
   `mode` varchar(10) NOT NULL default 'normal' COMMENT 'FB會員=>''fb''一般會員=>''normal''',
@@ -159,13 +160,13 @@ CREATE TABLE `datasetup_member` (
 -- 列出以下資料庫的數據： `datasetup_member`
 -- 
 
-INSERT INTO `datasetup_member` VALUES (1, 'vip', 'ch', 'normal', 'gn006', 'Jones', 'F122844940', '1', '', 'b3fa1a10f4631645c605d1004c1afb9b', 'Jones2@vipcase.net', '新北市瑞芳區吉慶里中央路48巷162號3樓', '2013-12-05', '0922222222', '0922222222', 930, 1, '2015-01-19 18:04:41', '2015-07-24 16:38:33', '', 'vipadmin', '', NULL, '143627687014.png');
-INSERT INTO `datasetup_member` VALUES (7, 'member', 'ch', 'normal', 'service', 'Jones', '', '1', '', 'b3fa1a10f4631645c605d1004c1afb9b', '', '新中街35號', '', '886933632162', NULL, 0, 1, '2013-12-05 04:13:07', '2014-04-08 11:25:37', '', 'vipadmin', '', NULL, NULL);
-INSERT INTO `datasetup_member` VALUES (12, 'member', 'ch', 'normal', 'asdfasdf', '333', '', '', '', 'dbc4d84bfcfe2284ba11beffb853a8c4', 'marc@vipcase.net', '基隆市|_|仁愛區|_|200|_|TEST', '2014-03-19', 'SSS', NULL, 90, 1, '2014-03-07 04:53:23', '0000-00-00 00:00:00', '', '', '', NULL, NULL);
-INSERT INTO `datasetup_member` VALUES (13, 'gkmember', '', 'normal', 'gn0061', '蕭壽銘', 'F122844940', '1', '', '95be9281570d744d884a8aa4f7c72759', 'gn006941842008@yahoo.com.tw', '新中街35號', '2013-12-05', '886933632162', NULL, 0, 1, '2014-06-25 14:48:26', '2014-07-09 18:38:34', '', 'vipadmin', '', NULL, NULL);
-INSERT INTO `datasetup_member` VALUES (27, 'member', 'ch', 'normal', 'test', '蕭壽銘', NULL, '2', NULL, 'b3fa1a10f4631645c605d1004c1afb9b', 'Jones@vipcase.net', '新中街35號', '2014-07-05', '886933632162', NULL, 0, 1, '2015-01-13 10:23:09', '2014-08-18 11:54:32', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `datasetup_member` VALUES (28, 'member', 'ch', 'normal', 'kdjfksdjf', 'dfsdfds', NULL, 'radio', NULL, 'e3064137aaf44f6b2582a406488f6df6', 'dfkasdjf@email.cc', 'address', NULL, '0922222222', '0922222222', 0, 1, '2015-01-19 17:59:26', '2015-01-19 17:59:26', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `datasetup_member` VALUES (29, 'member', 'ch', 'normal', 'aalll@vip.cc', '系統管理員', NULL, '1', NULL, 'e3064137aaf44f6b2582a406488f6df6', 'aalll@vip.cc', '新北市瑞芳區吉慶里中央路48巷162號3樓', NULL, '02222224144', NULL, 0, 1, '2015-07-15 09:46:06', '2015-07-15 09:46:06', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `datasetup_member` VALUES (1, '', 'vip', 'ch', 'normal', 'gn006', 'Jones', 'F122844940', '1', '', 'b3fa1a10f4631645c605d1004c1afb9b', 'Jones2@vipcase.net', '新北市瑞芳區吉慶里中央路48巷162號3樓', '2013-12-05', '0922222222', '0922222222', 930, 1, '2015-01-19 18:04:41', '2015-07-24 16:38:33', '', 'vipadmin', '', NULL, '143627687014.png');
+INSERT INTO `datasetup_member` VALUES (7, '', 'member', 'ch', 'normal', 'service', 'Jones', '', '1', '', 'b3fa1a10f4631645c605d1004c1afb9b', '', '新中街35號', '', '886933632162', NULL, 0, 1, '2013-12-05 04:13:07', '2014-04-08 11:25:37', '', 'vipadmin', '', NULL, NULL);
+INSERT INTO `datasetup_member` VALUES (12, '', 'member', 'ch', 'normal', 'asdfasdf', '333', '', '', '', 'dbc4d84bfcfe2284ba11beffb853a8c4', 'marc@vipcase.net', '基隆市|_|仁愛區|_|200|_|TEST', '2014-03-19', 'SSS', NULL, 90, 1, '2014-03-07 04:53:23', '0000-00-00 00:00:00', '', '', '', NULL, NULL);
+INSERT INTO `datasetup_member` VALUES (13, '', 'gkmember', '', 'normal', 'gn0061', '蕭壽銘', 'F122844940', '1', '', '95be9281570d744d884a8aa4f7c72759', 'gn006941842008@yahoo.com.tw', '新中街35號', '2013-12-05', '886933632162', NULL, 0, 1, '2014-06-25 14:48:26', '2014-07-09 18:38:34', '', 'vipadmin', '', NULL, NULL);
+INSERT INTO `datasetup_member` VALUES (27, '', 'member', 'ch', 'normal', 'test', '蕭壽銘', NULL, '2', NULL, 'b3fa1a10f4631645c605d1004c1afb9b', 'Jones@vipcase.net', '新中街35號', '2014-07-05', '886933632162', NULL, 0, 1, '2015-01-13 10:23:09', '2014-08-18 11:54:32', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `datasetup_member` VALUES (28, '', 'member', 'ch', 'normal', 'kdjfksdjf', 'dfsdfds', NULL, 'radio', NULL, 'e3064137aaf44f6b2582a406488f6df6', 'dfkasdjf@email.cc', 'address', NULL, '0922222222', '0922222222', 0, 1, '2015-01-19 17:59:26', '2015-01-19 17:59:26', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `datasetup_member` VALUES (29, '', 'member', 'ch', 'normal', 'aalll@vip.cc', '系統管理員', NULL, '1', NULL, 'e3064137aaf44f6b2582a406488f6df6', 'aalll@vip.cc', '新北市瑞芳區吉慶里中央路48巷162號3樓', NULL, '02222224144', NULL, 0, 1, '2015-07-15 09:46:06', '2015-07-15 09:46:06', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
