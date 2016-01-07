@@ -48,7 +48,7 @@ CREATE TABLE `datasetup_admin_group` (
 -- 
 
 INSERT INTO `datasetup_admin_group` VALUES (4, '管理者', '293,298,182,315,354,353,372,373,374,355,375,120,121,122,123,124,125', 1, 1, '2011-07-19 15:17:26', '2014-03-18 16:04:24', 'admin', 'vipadmin', NULL, NULL);
-INSERT INTO `datasetup_admin_group` VALUES (7, '系統管理員', '293,298,342,337,338,348,182,315,401,402,403,404,405,387,389,388,390,391,399,392,400,406,120,121,122,123,124,377,378,376,125,396,398', 0, 1, '2014-03-11 15:50:00', '2015-07-24 16:09:16', 'service', 'vipadmin', '473,474,475,476,477,293,298,342,337,338,348,478,182,315,387,389,406,120,121,122,123,124,377,378,376,125,396,398', '425,426,427,428,429,430,418,419,420,421,422,423,424,431,435,433,436,437,432,438,434,439,415,417,416,407,408,412,413,411,409,410,414');
+INSERT INTO `datasetup_admin_group` VALUES (7, '系統管理員', '293,298,342,337,338,348,182,315,401,402,403,404,405,387,389,388,390,391,399,392,400,406,120,121,122,123,124,377,378,376,125,396,398', 0, 1, '2014-03-11 15:50:00', '2016-01-07 11:27:25', 'service', 'vipadmin', '473,474,475,476,477,293,298,342,337,338,348,478,491,492,493,182,315,387,389,406,488,489,120,121,122,123,124,377,378,376,125,396,398,490', '425,426,427,428,429,430,418,419,420,421,422,423,424,431,435,433,436,437,432,438,434,439,415,417,416,407,408,412,413,411,409,410,414');
 INSERT INTO `datasetup_admin_group` VALUES (8, '客戶管理者', '293,298,342,337,338,348,182,315,401,402,403,404,405,387,389,388,390,391,399,392,400,120,121,122,123,124,377,125,396', 2, 1, '2014-03-11 15:58:32', '2015-07-24 16:58:57', 'service', 'vipadmin', '473,474,475,476,477,293,298,342,337,338,348,478,182,315,387,389,406,120,121,122,123,124,125,396', NULL);
 
 -- --------------------------------------------------------
@@ -76,8 +76,8 @@ CREATE TABLE `datasetup_category` (
   `lang` varchar(5) default NULL,
   `update_date` datetime NOT NULL,
   `create_date` datetime NOT NULL,
-  `update_user` varchar(15) NOT NULL,
-  `create_user` varchar(15) NOT NULL,
+  `update_name` varchar(15) NOT NULL,
+  `create_name` varchar(15) NOT NULL,
   `max_count` text COMMENT '程式生成欄位',
   PRIMARY KEY  (`id`),
   KEY `sort` (`sort`),
@@ -191,10 +191,10 @@ CREATE TABLE `datasetup_setting` (
 -- 列出以下資料庫的數據： `datasetup_setting`
 -- 
 
-INSERT INTO `datasetup_setting` VALUES (1, 'ch', '', '網站名稱', '三隴', 1, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
-INSERT INTO `datasetup_setting` VALUES (2, 'ch', '', '優化關鍵字', '<meta name=\\"keywords\\" content=\\"三隴\\">\r\n<meta name=\\"description\\" content=\\"三隴\\">\r\n<meta name=\\"RATING\\" content=\\"general\\">\r\n<meta name=\\"REVISIT-AFTER\\" content=\\"1 Days\\">\r\n<meta name=\\"ROBOTS\\" content=\\"all\\">\r\n<meta name=\\"googlebot\\" content=\\"index,follow\\">', 2, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
+INSERT INTO `datasetup_setting` VALUES (1, 'ch', '', '網站名稱', '網站名稱', 1, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
+INSERT INTO `datasetup_setting` VALUES (2, 'ch', '', '優化關鍵字', '<meta name=\\"keywords\\" content=\\"關鍵字\\">\r\n<meta name=\\"description\\" content=\\"關鍵字內文\\">\r\n<meta name=\\"RATING\\" content=\\"general\\">\r\n<meta name=\\"REVISIT-AFTER\\" content=\\"1 Days\\">\r\n<meta name=\\"ROBOTS\\" content=\\"all\\">\r\n<meta name=\\"googlebot\\" content=\\"index,follow\\">', 2, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (3, 'ch', '', '收件者 E-Mail', 'Jones@vipcase.net', 1, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
-INSERT INTO `datasetup_setting` VALUES (4, 'ch', '', '寄件者 標題', '三隴 系統郵件', 1, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
+INSERT INTO `datasetup_setting` VALUES (4, 'ch', '', '寄件者 標題', 'XXX 系統郵件', 1, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (5, 'ch', '', '寄件者 E-Mail', 'Jones@vipcase.net', 1, '0000-00-00 00:00:00', '2015-07-23 15:55:33', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (16, 'ch', 'post_fee', '運費', '200', 1, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (17, 'ch', '', '紅利折抵上限(每個商品)', '50', 0, '0000-00-00 00:00:00', '2014-01-22 18:38:58', '', 'service');
@@ -204,19 +204,6 @@ INSERT INTO `datasetup_setting` VALUES (20, 'ch', '', '首頁跑馬燈文字', '
 INSERT INTO `datasetup_setting` VALUES (21, 'ch', '', '首頁跑馬燈連結', 'tw.yahoo.com', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
 INSERT INTO `datasetup_setting` VALUES (22, 'ch', '', 'YouTube 視頻連結', 'https://www.youtube.com/watch?v=44yXE5dC6I0', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
 INSERT INTO `datasetup_setting` VALUES (25, 'ch', '', '全站統一折扣率', '0', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
-INSERT INTO `datasetup_setting` VALUES (26, 'en', '', '網站名稱', '翰享實業', 1, '0000-00-00 00:00:00', '2014-01-28 14:41:18', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (27, 'en', '', '優化關鍵字', '<meta name=\\"keywords\\" content=\\"翰享實業\\">\r\n<meta name=\\"description\\" content=\\"翰享實業\\">\r\n<meta name=\\"rating\\" content=\\"general\\">\r\n<meta name=\\"revisit-after\\" content=\\"1 Days\\">\r\n<meta name=\\"robots\\" content=\\"all\\">\r\n<meta name=\\"googlebot\\" content=\\"index,follow\\">', 2, '0000-00-00 00:00:00', '2014-01-28 14:41:18', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (28, 'en', '', '收件者 E-Mail', 'Jones@vipcase.net', 1, '0000-00-00 00:00:00', '2014-01-28 14:41:18', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (29, 'en', '', '寄件者 標題', '翰享實業 系統郵件', 1, '0000-00-00 00:00:00', '2014-01-28 14:41:18', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (30, 'en', '', '寄件者 E-Mail', 'Jones@vipcase.net', 1, '0000-00-00 00:00:00', '2014-01-28 14:41:18', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (31, 'en', 'post_fee', '運費', '200', 1, '0000-00-00 00:00:00', '2014-01-22 18:38:58', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (32, 'en', '', '紅利折抵上限(每個商品)', '50', 0, '0000-00-00 00:00:00', '2014-01-22 18:38:58', '', 'service');
-INSERT INTO `datasetup_setting` VALUES (33, 'en', '', '加入會員贈送紅利點數', '100', 3, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
-INSERT INTO `datasetup_setting` VALUES (34, 'en', '', 'GOOGLE地圖', '<iframe width=\\"425\\" height=\\"350\\" frameborder=\\"0\\" scrolling=\\"no\\" marginheight=\\"0\\" marginwidth=\\"0\\" src=\\"https://maps.google.com.tw/maps?hl=zh-TW&ie=UTF8&ll=23.48575,119.49965&spn=9.854536,16.21582&t=m&z=7&brcurrent=3,0x346ef3065c07572f:0xe711f004bf9c5469,1&output=embed\\"></iframe><br /><small><a href=\\"https://maps.google.com.tw/maps?hl=zh-TW&ie=UTF8&ll=23.48575,119.49965&spn=9.854536,16.21582&t=m&z=7&brcurrent=3,0x346ef3065c07572f:0xe711f004bf9c5469,1&source=embed\\" style=\\"color:#0000FF;text-align:left\\">顯示詳細地圖</a></small>', 2, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
-INSERT INTO `datasetup_setting` VALUES (35, 'en', '', '首頁跑馬燈文字', '2013/8/27 隆重開幕 KASK安全帽特價中', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
-INSERT INTO `datasetup_setting` VALUES (36, 'en', '', '首頁跑馬燈連結', 'tw.yahoo.com', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
-INSERT INTO `datasetup_setting` VALUES (37, 'en', '', 'YouTube 視頻連結', 'https://www.youtube.com/watch?v=44yXE5dC6I0', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
-INSERT INTO `datasetup_setting` VALUES (38, 'en', '', '全站統一折扣率', '0', 1, '0000-00-00 00:00:00', '2014-01-13 10:56:13', '', 'admin');
 INSERT INTO `datasetup_setting` VALUES (46, 'ch', 'website_url', '網域導向頁面', 'index.php?class=demo', 1, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (44, 'ch', 'backup', '資料庫備份路徑', '../upload/database_backup/', 1, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (42, 'ch', 'button', '檔案上傳按鈕連結', 'index.php?class=qa&id=99', 1, '0000-00-00 00:00:00', '2014-06-25 11:18:29', '', 'service');
@@ -239,6 +226,7 @@ INSERT INTO `datasetup_setting` VALUES (54, 'ch', 'web_css', '編輯器前台式
 
 CREATE TABLE `datasetup_shopping_car` (
   `id` int(20) NOT NULL auto_increment,
+  `namespace` text NOT NULL COMMENT '存放命名空間',
   `step` tinyint(1) default '1' COMMENT '購物流程指標',
   `order_no` VARCHAR( 30 ) NOT NULL COMMENT '定單序號',
   `total` int(20) default '0' COMMENT '總價(不含折價 不含運費)',
@@ -288,7 +276,7 @@ CREATE TABLE `datasetup_shopping_car` (
   `s_paycardmode` text COMMENT '程式生成欄位',
   `order_img` longtext COMMENT '訂單圖像',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- 
 -- 列出以下資料庫的數據： `datasetup_shopping_car`
@@ -332,7 +320,7 @@ CREATE TABLE `datasetup_shopping_car_list` (
   PRIMARY KEY  (`shopping_car_list_id`),
   KEY `type` (`type`),
   KEY `lang` (`lang`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=293 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- 
 -- 列出以下資料庫的數據： `datasetup_shopping_car_list`
@@ -441,7 +429,7 @@ CREATE TABLE `datasetup_data_list` (
   PRIMARY KEY  (`id`),
   KEY `type` (`type`),
   KEY `lang` (`lang`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=247 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 
@@ -486,7 +474,7 @@ CREATE TABLE `datasetup_products` (
   PRIMARY KEY  (`id`),
   KEY `type` (`type`),
   KEY `lang` (`lang`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2157 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1001 ;
 
 
 CREATE TABLE `datasetup_shopping_car_groups` (
@@ -498,4 +486,4 @@ CREATE TABLE `datasetup_shopping_car_groups` (
   `groupcount` int(11) NOT NULL default '0' COMMENT '活動組合數量',
   `create_date` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=456 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

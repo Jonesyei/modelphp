@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-12-09 20:56:42
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-29 13:43:41
          compiled from "D:\AppServ\www\modelphp\serback\templates\about.html" */ ?>
 <?php /*%%SmartyHeaderCode:16614559b5c1240a491-63214556%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '9371fd394b3f9686efed6267ee47df3b6cd79c65' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\about.html',
-      1 => 1449640285,
+      1 => 1451367820,
       2 => 'file',
     ),
   ),
@@ -335,7 +335,9 @@ $(document).ready(
 		 (
 			 {
 				'uploader'		: '../includes/Uploadify/uploadify.swf', 
-				'script'		: '../includes/Uploadify/uploadify.php', 
+				'script'		: '../includes/Uploadify/uploadify.php<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['watermark']) {?>?watermark=<?php echo urlencode($_smarty_tpl->tpl_vars['data']->value['button']['watermark']['pic']);?>
+&act=<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['watermark']['act'];?>
+<?php }?>', 
 				'cancelImg'		: '../includes/Uploadify/cancel.png', 
 				'folder'		: '<?php echo $_smarty_tpl->tpl_vars['data']->value['file_url'];?>
 ', 

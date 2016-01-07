@@ -6,7 +6,8 @@
 
 	[ Well Done and its suppliers. All rights reserved. ]
 */
-
+header("Pragma: no-cache");
+header("Cache-Control: no-cache");
 header("Content-type:image/png");
 header("Content-Disposition:filename=image_code.png");
 

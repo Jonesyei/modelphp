@@ -252,7 +252,7 @@ $(document).ready(
 		 (
 			 {
 				'uploader'		: '../includes/Uploadify/uploadify.swf', 
-				'script'		: '../includes/Uploadify/uploadify.php', 
+				'script'		: '../includes/Uploadify/uploadify.php({if $data.button.watermark})?watermark=({urlencode($data.button.watermark.pic)})&act=({$data.button.watermark.act})({/if})', 
 				'cancelImg'		: '../includes/Uploadify/cancel.png', 
 				'folder'		: '({$data.file_url})', 
 				'queueID'		: 'fileQueue_list',

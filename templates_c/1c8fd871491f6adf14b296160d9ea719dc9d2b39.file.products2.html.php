@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-19 15:22:32
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-21 15:18:34
          compiled from "D:\AppServ\www\modelphp\serback\templates\products2.html" */ ?>
 <?php /*%%SmartyHeaderCode:6778559b5c0eb4d232-35376623%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1c8fd871491f6adf14b296160d9ea719dc9d2b39' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\products2.html',
-      1 => 1445239053,
+      1 => 1450167637,
       2 => 'file',
     ),
   ),
@@ -360,6 +360,7 @@ page_initial('table_content');
 
 
 <?php if ($_smarty_tpl->tpl_vars['admin_info']->value['view']=='detail') {?>
+<script src="../includes/js/load-image.all.min.js"></script><!--onchange load-->
 <script src='../includes/js/color/spectrum.js'></script>
 <link rel='stylesheet' href='../includes/js/color/spectrum.css' />
 
@@ -527,7 +528,7 @@ $(document).ready(
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){

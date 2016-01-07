@@ -67,14 +67,17 @@ if ($page_name == "index"){
 			if ($_GET["id"]==NULL) {//--沒資料預設
 				$data["one"] = $data["list"][0];
 			}else{
-				$data["one"] = $conn->GetRow("select * from ".PREFIX."data_list where type='about' and id='".$_GET["id"]."'");
+				$data["one"] = $conn->GetRow("select * from ".PREFIX."data_list where type='".quotes($_GET["class"])."' and id='".quotes($_GET["id"])."'");
 				$data["one"]["detail"] = dequotes($data["one"]["detail"],-1);
 			}
 		break;
 
 		
 		
-		//---建構中
+		/*
+			建構中畫面
+			當後台網站設定 系統管理者設定中 設定網域導向頁面
+		*/
 		case "demo":
 			$temp = $conn->GetRow("select * from ".PREFIX."setting where type='demo_show'".$lang);
 			if ($temp)
@@ -101,7 +104,7 @@ if ($page_name == "index"){
 
 //--會員狀態
 if (!$member){
-	include_once("member_class.php");
+	include_once(APP_PATH."class/member_class.php");
 	$member = new member($conn,PREFIX."member");
 }
 if($member->status()){//--判斷為登入的話

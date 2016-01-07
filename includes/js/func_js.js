@@ -331,6 +331,10 @@ function getPageCoord(element)
 //------------------------------------------------
 
 
+
+
+
+
 //-- ex: same to php now_url function 
 //-- 網址轉換
 function now_url(str) {
@@ -399,4 +403,40 @@ function now_url(str) {
     }
     temp_out_str = bk_url + '?' + temp_out_str;
     return temp_out_str;
+}
+
+
+
+
+/*
+	DataUri 縮圖處理
+	resizeImage(路由, 目標寬, 目標高, 返回函數(data) )
+	
+	注意此function 處理時非即時回應 結果
+*/
+function resizeImage(url, width, height, callback) {
+    var sourceImage = new Image();
+
+    sourceImage.onload = function(event) {
+
+        var canvas = document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+	
+	if (event.target.width>event.target.height){
+		var pr = width/event.target.width;
+		canvas.getContext("2d").drawImage(sourceImage, 0, 0, width, Math.ceil(event.target.height*pr));
+	}else{
+		var pr = height/event.target.height;
+		canvas.getContext("2d").drawImage(sourceImage, 0, 0, Math.ceil(event.target.width*pr), height);
+	}
+	
+        //canvas.getContext("2d").drawImage(sourceImage, 0, 0, width, height);
+
+	//--導回
+        callback(canvas.toDataURL());
+    }
+
+    sourceImage.src = url;
 }

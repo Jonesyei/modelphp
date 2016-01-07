@@ -73,7 +73,10 @@ if($_POST)
 	
 
 	$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
-	$mail->AddAddress($web_set["receive_email"]);
+	$mailto = explode_array(array(',',';'),$web_set["receive_email"]);
+	foreach ($mailto as $k=>$v){
+		$mail->AddAddress($v);	
+	}
 	$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
 	$mail->Subject = $web_set["default_email_title"];    // 設定郵件標題        
 	$mail->Body = $cache_string;

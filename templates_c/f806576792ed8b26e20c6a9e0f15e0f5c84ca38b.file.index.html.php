@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-12-09 14:06:57
+<?php /* Smarty version Smarty-3.1.18, created on 2016-01-07 10:32:42
          compiled from "D:\AppServ\www\modelphp\serback\templates\index.html" */ ?>
 <?php /*%%SmartyHeaderCode:3214559b5bf1cf8466-57938604%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f806576792ed8b26e20c6a9e0f15e0f5c84ca38b' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\index.html',
-      1 => 1449640647,
+      1 => 1452071961,
       2 => 'file',
     ),
   ),
@@ -52,7 +52,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="../ckfinder/ckfinder.js"></script>
 
-<script type="text/javascript" src="../includes/js/edit_in_place/jquery.jeditable.js"></script>
 
 
 <link href="style/ui.all.css" rel="stylesheet" type="text/css" /><!--tabs分頁用-->

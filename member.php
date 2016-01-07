@@ -1,6 +1,5 @@
 <?php
 include_once("head.php");
-include_once("member_class.php");
 
 $include = true;
 
@@ -9,12 +8,25 @@ $templates_page = "templates.html";
 $act = $_GET["act"];
 //--引用與設定
 $member = new member($conn,PREFIX."member");
+$member->work();
+
+/*
+//相同登入會員使用不同命名空間
+$member2 = new member($conn,PREFIX."member");
+$member2->clone_of($member,'member2');
+*/
 
 //--設定認證信功能
 //$member->check_mail = 1;
 //--信箱title設定 (不使用SMTP也要設定)
 $member->set_mail($web_set['title'],$web_set["send_email"]);
-//$member->smtp_setting('smtp.gmail.com','jones@vipcase.net','28484688',465,$type='ssl');
+//smtp設定
+$smtp_set = $conn->GetRow("select * from ".PREFIX."data_list where type='smtp_mail' and status=1");
+if ($smtp_set) {
+	$smtp_set["detail"] = explode('|__|',$smtp_set["detail"]);
+	$member->smtp_setting($smtp_set["detail"][1],$smtp_set["detail"][3],$smtp_set["detail"][4],$smtp_set["detail"][2]*1,$smtp_set["detail"][0]);
+}
+
 
 //## 購物車
 $shopping_car = new order($conn,PREFIX."shopping_car",PREFIX."shopping_car_list",PREFIX."products");
@@ -168,7 +180,7 @@ switch ($act){
 		$data["mount"] = $mount = 10;
 		$data["orderlist"] = $shopping_car->order_list(NULL,($_GET["page"]*1-1)*$mount,$mount);
 		$cousql = $shopping_car->order_list();
-		include("includes/page.php");
+
 		$data["page"] = page_show($cousql,$mount);
 		
 		if ($data["orderlist"])

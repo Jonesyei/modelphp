@@ -11,7 +11,7 @@ include_once(APP_PATH."includes/smarty/Smarty.class.php");
 
 require_once(APP_PATH."includes/function/JSON.php");	//php 4不支援 json轉換，利用別人寫的class
 
-
+include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
 include_once(APP_PATH."includes/function/seback_func.php");
 include_once(APP_PATH."includes/function/func.php");
 include_once(APP_PATH."includes/config/conn.php");
@@ -42,7 +42,7 @@ $tpl->cache_dir = APP_PATH . "cache/";
 $_SESSION["admin_info"]["tmp"] = "";
 
 
-$no_check_array = array('login','ajax');
+$no_check_array = array('login','ajax','ajx');
 //func.php 檢查是否登入
 if(Check_Admin($conn,$_POST["account"],$_POST["password"],strtoupper($_POST["code"]),$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
 {

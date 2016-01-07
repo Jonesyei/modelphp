@@ -37,6 +37,8 @@ if (($_POST["pic"][0]==''||$_POST["pic"][0]==NULL) && count($_POST["pic"])<=1) {
 }
 
 
+
+
 include_once("category_class.php"); //-分類樹核心 create by Jones
 include_once("centerpoes.php");
 
@@ -48,6 +50,8 @@ if ($_POST) linkto($_SERVER['REQUEST_URI']);
 if ($_GET["parent_id"]){
 	$depth_data = $conn->GetRow("select * from ".$cpos["table"]." where id='".quotes($_GET["parent_id"])."'");
 	$depth = ($depth_data["depth"]*1+1);
+}elseif ($data["one"]["depth"]){
+	$depth = $data["one"]["depth"];
 }else{
 	$depth = '1';
 }

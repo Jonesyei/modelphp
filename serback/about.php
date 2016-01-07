@@ -129,6 +129,9 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
+				$data["button"]["watermark"]["act"] = '1';
+				$data["button"]["watermark"]["pic"] = '../images/instagram.png';
+				
 				$data["one"]["name"] = "首頁EDM";
 				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
 				

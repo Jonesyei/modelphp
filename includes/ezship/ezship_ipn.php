@@ -1,7 +1,6 @@
 <?php
 $temp_nowurl = explode('includes',__file__);
 include_once($temp_nowurl[0]."includes/main_inc.php");
-include_once($temp_nowurl[0]."member_class.php");
 
 if ($_GET['sn_id']!=='00000000'){
 
