@@ -574,6 +574,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 		if($_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
 		{
 			
+			if ($_POST)
 			if (md5($checkcode)!=$_SESSION["serback__validate_code"]){
 				alert("驗證碼錯誤!!",-1);
 				exit;		

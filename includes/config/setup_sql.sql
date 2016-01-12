@@ -342,6 +342,7 @@ CREATE TABLE `datasetup_sysmenu` (
   `sort` int(20) NOT NULL,
   `name` varchar(20) NOT NULL,
   `url` varchar(255) NOT NULL default '0',
+  `selector` text COMMENT 'jQueryselector',
   `ifview` tinyint(1) NOT NULL,
   `parents` varchar(10) NOT NULL,
   `create_date` datetime NOT NULL,
@@ -355,40 +356,40 @@ CREATE TABLE `datasetup_sysmenu` (
 -- 列出以下資料庫的數據： `datasetup_sysmenu`
 -- 
 
-INSERT INTO `datasetup_sysmenu` VALUES (84, 123, 'ch', 0, 6, '其他管理', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (83, 122, 'ch', 1, 2, '後台帳號群組清單', 'admin_group.php', 1, '120', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (81, 120, 'ch', 0, 5, '後台帳號管理', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (82, 121, 'ch', 1, 1, '後台帳號清單', 'admin.php', 1, '120', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (85, 124, 'ch', 1, 1, '使用者管理', 'self.php', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (86, 125, 'ch', 1, 5, '網站設定', 'setting.php', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (155, 182, 'ch', 0, 4, '首頁管理', 'about.php', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (320, 293, 'ch', 0, 2, '商品管理', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (325, 298, 'ch', 1, 1, '商品分類', 'category.php?mode=1', 1, '293', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (357, 315, 'ch', 1, 1, '首頁EDM', 'about.php?class=EDM&id=lang', 1, '182', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (382, 337, 'ch', 0, 3, '會員管理', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (383, 338, 'ch', 1, 1, '會員清單', 'member.php', 1, '337', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (388, 342, 'ch', 1, 2, '商品項目', 'products2.php', 1, '293', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (394, 348, 'ch', 1, 2, '訂單管理', 'preferential.php', 1, '337', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (444, 396, 'ch', 1, 6, 'smtp郵件伺服器', 'about.php?class=smtp_mail&id=lang', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (529, 478, 'ch', 1, 3, '會員分類', 'about.php?class=memberdesh', 1, '337', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (435, 387, 'ch', 0, 4, '頁面管理', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (424, 376, 'ch', 1, 4, '語系管理', 'language.php', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (425, 377, 'ch', 1, 2, '系統目錄管理', '_sysmenu_set.php', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (426, 378, 'ch', 1, 3, '後台操作記錄', 'system_temp.php', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (528, 477, 'ch', 1, 4, '通用色彩管理', 'about.php?class=allcolor', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (437, 389, 'ch', 1, 0, '品牌故事', 'about.php?class=about&id=lang', 1, '387', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (524, 473, 'ch', 0, 1, '特製化管理', '', 1, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (525, 474, 'ch', 1, 1, '帽片色彩管理', 'about.php?class=pickcolor', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (526, 475, 'ch', 1, 2, '模組圖庫', 'about.php?class=pic_mode', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (527, 476, 'ch', 1, 3, '字形管理', 'about.php?class=font', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (446, 398, 'ch', 1, 7, '主機網域跳轉設定', 'url_rewrite.php', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (457, 406, 'ch', 1, 8, '聯絡我們', 'about.php?class=contact&id=lang', 1, '387', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
-INSERT INTO `datasetup_sysmenu` VALUES (539, 488, 'ch', 1, 15, '訂單信件訊息', 'about.php?class=paymail', 1, '387', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (540, 489, 'ch', 1, 16, '出貨信件訊息', 'about.php?class=cargomail', 1, '387', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (541, 490, 'ch', 1, 8, '商品分類主要目錄', 'catemode.php', 1, '123', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (542, 491, 'ch', 0, 3, '活動管理', '', 1, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (543, 492, 'ch', 1, 1, '任選商品活動', 'about.php?class=shop_active_any', 1, '491', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
-INSERT INTO `datasetup_sysmenu` VALUES (544, 493, 'ch', 1, 2, '現金折抵', 'about.php?class=active_desh', 1, '491', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (84, 123, 'ch', 0, 6, '其他管理', '', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (83, 122, 'ch', 1, 2, '後台帳號群組清單', 'admin_group.php', '', 1, '120', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (81, 120, 'ch', 0, 5, '後台帳號管理', '', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (82, 121, 'ch', 1, 1, '後台帳號清單', 'admin.php', '', 1, '120', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (85, 124, 'ch', 1, 1, '使用者管理', 'self.php', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (86, 125, 'ch', 1, 5, '網站設定', 'setting.php', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (155, 182, 'ch', 0, 4, '首頁管理', 'about.php', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (320, 293, 'ch', 0, 2, '商品管理', '', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (325, 298, 'ch', 1, 1, '商品分類', 'category.php?mode=1', '', 1, '293', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (357, 315, 'ch', 1, 1, '首頁EDM', 'about.php?class=EDM&id=lang', '', 1, '182', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (382, 337, 'ch', 0, 3, '會員管理', '', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (383, 338, 'ch', 1, 1, '會員清單', 'member.php', '', 1, '337', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (388, 342, 'ch', 1, 2, '商品項目', 'products2.php', '', 1, '293', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (394, 348, 'ch', 1, 2, '訂單管理', 'preferential.php', '', 1, '337', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (444, 396, 'ch', 1, 6, 'smtp郵件伺服器', 'about.php?class=smtp_mail&id=lang', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (529, 478, 'ch', 1, 3, '會員分類', 'about.php?class=memberdesh', '', 1, '337', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (435, 387, 'ch', 0, 4, '頁面管理', '', '', 1, '0', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (424, 376, 'ch', 1, 4, '語系管理', 'language.php', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (425, 377, 'ch', 1, 2, '系統目錄管理', '_sysmenu_set.php', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (426, 378, 'ch', 1, 3, '後台操作記錄', 'system_temp.php', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (528, 477, 'ch', 1, 4, '通用色彩管理', 'about.php?class=allcolor', '', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (437, 389, 'ch', 1, 0, '品牌故事', 'about.php?class=about&id=lang', '', 1, '387', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (524, 473, 'ch', 0, 1, '特製化管理', '', '', 1, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (525, 474, 'ch', 1, 1, '帽片色彩管理', 'about.php?class=pickcolor', '', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (526, 475, 'ch', 1, 2, '模組圖庫', 'about.php?class=pic_mode', '', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (527, 476, 'ch', 1, 3, '字形管理', 'about.php?class=font', '', 1, '473', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (446, 398, 'ch', 1, 7, '主機網域跳轉設定', 'url_rewrite.php', '', 1, '123', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (457, 406, 'ch', 1, 8, '聯絡我們', 'about.php?class=contact&id=lang', '', 1, '387', '0000-00-00 00:00:00', '2015-07-16 10:44:02', '', 'vipadmin');
+INSERT INTO `datasetup_sysmenu` VALUES (539, 488, 'ch', 1, 15, '訂單信件訊息', 'about.php?class=paymail', '', 1, '387', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (540, 489, 'ch', 1, 16, '出貨信件訊息', 'about.php?class=cargomail', '', 1, '387', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (541, 490, 'ch', 1, 8, '商品分類主要目錄', 'catemode.php', '', 1, '123', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (542, 491, 'ch', 0, 3, '活動管理', '', '', 1, '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (543, 492, 'ch', 1, 1, '任選商品活動', 'about.php?class=shop_active_any', '', 1, '491', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
+INSERT INTO `datasetup_sysmenu` VALUES (544, 493, 'ch', 1, 2, '現金折抵', 'about.php?class=active_desh', '', 1, '491', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '');
 
 
 

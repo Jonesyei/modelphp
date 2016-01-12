@@ -931,6 +931,33 @@ function curl($long_url,$type='GET',$data=NULL) {
 
 
 
+/*
+	Hex 轉 rgb
+	return array('r','g','b');
+*/
+function hextorgb($value){
+		$value = explode('#',$value);
+		if (count($value)<=1){
+			$value = strtoupper($value[0]);
+		}else{
+			$value = strtoupper($value[1]);
+		}
+		
+		//--色彩轉換hex 轉 rgb
+		if (strlen($value)>3){
+        	list( $r, $g, $b ) = array( $value[0] . $value[1], $value[2] . $value[3], $value[4] . $value[5] );
+		}else{
+			list( $r, $g, $b ) = array( $value[0] . $value[0], $value[1] . $value[1], $value[2] . $value[2] );
+		}
+        $r = hexdec( $r );
+        $g = hexdec( $g );
+        $b = hexdec( $b );
+        $v["R"] = $r;
+        $v["G"] = $g;
+        $v["B"] = $b;
+		return $v;
+}
+
 
 
 
