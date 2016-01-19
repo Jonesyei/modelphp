@@ -416,7 +416,10 @@ function Ckedit($name,$value,$style=NULL)
 	return $tmp;
 }
 
-
+//-- 字串陣列查詢語句返回
+function array_sql_search($row,$data){
+	return " and (".$row." like '%|".quotes($data)."|%' or ".$row." like '%|".quotes($data)."' or ".$row." like '".quotes($data)."|%' or ".$row."='".quotes($data)."')";
+}
 
 //提示
 function alert($messages,$url=NULL)

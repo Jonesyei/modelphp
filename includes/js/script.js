@@ -65,8 +65,15 @@ serback_editor = function (){
 					//--判斷是否為內容資料
 					add_url = $(this).attr('href');
 					if ($(this).attr('_isitem')!=null){
-						if ($(this).attr('href').indexOf('?')>=0) add_url = $(this).attr('href')+'&id='+Get($(this).attr('_isitem'));
-						if ($(this).attr('href').indexOf('?')<0) add_url = $(this).attr('href')+'?id='+Get($(this).attr('_isitem'));
+						//--判斷是否額外參數
+						if ($(this).attr('_isitem').split(',').length>1){
+							var items_list = $(this).attr('_isitem').split(',');
+							if ($(this).attr('href').indexOf('?')>=0) add_url = $(this).attr('href')+'&'+items_list[1]+'='+Get(items_list[0]);
+							if ($(this).attr('href').indexOf('?')<0) add_url = $(this).attr('href')+'?'+items_list[1]+'='+Get(items_list[0]);
+						}else{
+							if ($(this).attr('href').indexOf('?')>=0) add_url = $(this).attr('href')+'&id='+Get($(this).attr('_isitem'));
+							if ($(this).attr('href').indexOf('?')<0) add_url = $(this).attr('href')+'?id='+Get($(this).attr('_isitem'));
+						}
 					}
 					window.open(add_url,"serback2","_blank",config='height=500,width=500');
 				}
