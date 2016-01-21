@@ -36,6 +36,11 @@ $cpos["file_check"] = ""; //檔案比對功能 array("pic","file") or "file,pic"
 $cpos["sort_class"] = "class"; //--列表頁有多個不同類別 依照此欄位配排序
 $cpos["sort_mode"] = "asc" //-- asc 往後增加 desc 為第一個 預設為asc
 
+
+//--返回參數
+$cpos["insert_callback"] = ''	//新增成功返回
+$cpos["update_callback"] = ''	//修改成功返回
+$cpos["delete_callback"] = ''	//刪除成功返回
 */
 //預設值設定
 if ($cpos["pagecount"] == NULL || $cpos["pagecount"] == '') $cpos["pagecount"] = 10;
@@ -456,7 +461,12 @@ if ($_GET["del_id"] != NULL && $_GET["del_id"]!= ''){
 	}
 	system_temp($conn);
 	
-	if ($avalue) {alert('刪除成功',-1);}
+	if ($avalue) {
+		if (!$cpos["delete_callback"])
+			alert('刪除成功',$cpos["delete_callback"]);
+		else
+			alert('刪除成功',now_url('del_id'));
+	}
 }
 //----------------
 
@@ -584,7 +594,7 @@ function system_temp($conn){
 	global $_GET;
 	$table_all = $conn->GetArray("show tables");
 	foreach ($table_all as $k=>$v) $table_list[] = $v[0];
-	if (!in_array(PREFIX.'System_temp',$table_list)){ //----沒有此資料表就創建一個
+	if (!in_array(PREFIX.'system_temp',$table_list)){ //----沒有此資料表就創建一個
 		$conn->Execute("CREATE TABLE `".PREFIX."system_temp` (  `id` int(20) NOT NULL auto_increment,  `act` varchar(10) default NULL,  `account` varchar(20) NOT NULL,  `BACK_DATA` LONGTEXT ,  `POST_DATA` LONGTEXT ,  `FILE_URL` text NOT NULL,  `create_date` datetime NOT NULL,  PRIMARY KEY  (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 	}
 	$sys_data["account"] = $_SESSION["admin_info"]["account"];
@@ -614,8 +624,8 @@ function system_temp($conn){
 	$sys_data["FILE_URL"] = $_SESSION["admin_info"]["title"].'|__|'.$_SESSION["admin_info"]["page"];
 	$_SESSION["admin_info"]["title_temp"] = $_SESSION["admin_info"]["title"];//記憶可還原的是哪個功能頁
 	$sys_data["create_date"] = date("Y-m-d H:i:S");
-	
-	$conn->AutoExecute(PREFIX."System_temp",$sys_data,"INSERT");
+
+	$conn->AutoExecute(PREFIX."system_temp",$sys_data,"INSERT");
 }
 
 
@@ -627,9 +637,14 @@ function cpos_resort($value=0){
 	if ($cpos["sort_class"]!=NULL&&$cpos["sort_class"]!='')
 	{
 		$sort_class = $conn->GetArray("select * from ".$cpos["table"]." ".$cpos["tablejoin"].' '.$cpos["tablelistwhere"].' group by '.$cpos["sort_class"]);
+		if ($sort_class)
 		foreach ($sort_class as $k=>$v){
 			$conn->Execute("SET @j:=0");
-			$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort=@j:=@j+1 ".$cpos["tablelistwhere"]." AND ".$cpos["sort_class"]."='".$v[$cpos["sort_class"]]."' ".$cpos["listorderby"]);
+			if ($v[$cpos["sort_class"]]){ //--判斷對象非空值
+				$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort=@j:=@j+1 ".$cpos["tablelistwhere"]." AND ".$cpos["sort_class"]."='".$v[$cpos["sort_class"]]."' ".$cpos["listorderby"]);
+			}else{
+				$avalue = $conn->Execute("UPDATE ".$cpos["table"]." SET sort=@j:=@j+1 ".$cpos["tablelistwhere"]." ".$cpos["listorderby"]);
+			}
 		}
 	}else{
 		$conn->Execute("SET @j:=0");

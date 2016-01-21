@@ -126,7 +126,7 @@ if ($member->getinfo()){
 
 
 //-結帳資料
-if ($_POST && $_POST['submit']){
+if ($_POST && $_REQUEST['submit']){
 	
 	//--自訂訂單編號
 	$shopping_car->order_auto_set('JSP');

@@ -125,21 +125,23 @@ class order_center
 			if ($_SESSION["login_info"][$this->namespace]["id"]==NULL || $_SESSION["login_info"][$this->namespace]["id"]=='0'){
 				$_SESSION["login_info"][$this->namespace]["id"] = '0';
 				
-				//-判斷是否存在暫存購物車
+				//-判斷是否存在暫存購物
 				if ($_SESSION["temp_order_no"][$this->namespace]){
 					$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and order_no='".$_SESSION["temp_order_no"][$this->namespace]."'");
 				}
 				
-				if (!$_SESSION['temp_order_no'] || !$temp){
+				if (!$_SESSION['temp_order_no'][$this->namespace] || !$temp){
 					$cardata["member_id"] = $_SESSION["login_info"][$this->namespace]["id"];
 					$_SESSION["temp_order_no"][$this->namespace] = $cardata["order_no"] = strtoupper(base_convert(date('ymdhis'),10,16));//dechex()
 					$cardata["status"] = 1;
+					$cardata["namespace"] = $this->namespace;
 					$cardata["create_date"] = date("Y-m-d H:i:s");
 					$this->conn->AutoExecute($this->table,$cardata,"INSERT");
+					$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and order_no='".$_SESSION["temp_order_no"][$this->namespace]."'");
 				}
-
 			}else{
-				unset($_SESSION["temp_order_no"][$this->namespace]);
+				
+				if (isset($_SESSION["temp_order_no"]) && isset($_SESSION["temp_order_no"][$this->namespace])) unset($_SESSION["temp_order_no"][$this->namespace]);
 				//--檢查是否有購物車 沒有就創建一個
 				$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and namespace='".$this->namespace."' and member_id='".$_SESSION["login_info"][$this->namespace]["id"]."'");	
 				if (!$temp && $_SESSION["login_info"][$this->namespace]["id"]!=NULL){
@@ -533,7 +535,7 @@ class order_center
 					//--確認購物車是否有陣列組合商品達到條件
 					$sql ="select sum(count-decount) as sum from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and id in (".implode(',',$pro_array).") and status=1 group by shopping_car_id";
 					$carlist = $this->conn->GetRow($sql);
-					if ($carlist['sum']*1>=$count){ //大於設定
+					if ($carlist['sum']*1>=$count && $count>0){ //大於設定
 						$active_count = floor($carlist['sum']/$count);
 						
 						//---超過時只用設定的數量
@@ -1081,45 +1083,27 @@ class order_center
 			$cache_string = ob_get_contents(); //接收快取頁面
 			ob_end_clean(); //關閉快取
 
-				if (!$smtp_set){
+	
+			$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
+			$mail->AddAddress($pay_bill["recive_email"]);
+			$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
+			$mail->Subject = $subject;    // 設定郵件標題        
+			$mail->Body = $cache_string;
+			$mail->Send();
 			
-					$mailTo = $pay_bill["recive_email"];
-					$from_mail = $web_set["send_email"];
-					
-					$message = $cache_string;
-					$subject = $subject;
-					$headers = 'Content-type: text/html; charset="utf-8"' . "\r\n";
-					$headers .= "From: ".$from_mail . "\r\n"; // 請自行替換寄件地址
-					mail($mailTo, $subject, $message, $headers);
-					
-					//--分開寄送郵件 給管理者
-					$temp_mailto = explode(',',$web_set["receive_email"]);
-					foreach ($temp_mailto as $k=>$v){
-						mail($v, $subject, $message, $headers);
-					}
-					if ($callback) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'."<script>alert('已寄送訂單內容至郵件中!!');window.location.href='".$temp_url."';</script>";
-				}else{
-					$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
-					$mail->AddAddress($pay_bill["recive_email"]);
-					$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
-					$mail->Subject = $subject;    // 設定郵件標題        
-					$mail->Body = $cache_string;
-					$mail->Send();
-					
-					//--分開寄送給管理者
-					$mail->ClearAddresses();
-					$temp_mail = explode(',',$web_set["receive_email"]);
-					foreach ($temp_mail as $k=>$v){
-						$mail->AddAddress($v);
-					}
-					if($mail->Send()){
-						if ($callback) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'."<script>alert('已寄送訂單內容至郵件中!!');window.location.href='".$temp_url."';</script>";
-					}else{
-						print_r($smtp_set["detail"]);
-						exit;
-					}
-			
-				}
+			//--分開寄送給管理者
+			$mail->ClearAddresses();
+			$temp_mail = explode(',',$web_set["receive_email"]);
+			foreach ($temp_mail as $k=>$v){
+				$mail->AddAddress($v);
+			}
+			if($mail->Send()){
+				if ($callback) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'."<script>alert('已寄送訂單內容至郵件中!!');window.location.href='".$callback."';</script>";
+			}else{
+				print_r($smtp_set["detail"]);
+				exit;
+			}
+
 		}
 		
 		/*訂單寄信訊息資訊置入*/

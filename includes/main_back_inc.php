@@ -88,5 +88,31 @@ $_SESSION["admin_info"]["page"] = Page_get_url('');
 
 
 
+$mail = new PHPMailer();                        // 建立新物件 
+$mail->IsHTML(true);                         // 設定郵件內容為HTML
+$mail->CharSet = "utf-8";                       // 設定郵件編碼   
+$mail->Encoding = "base64";
+$mail->WordWrap = 50;                           // 每50個字元自動斷行
 
+$smtp_set = $conn->GetRow("select * from ".PREFIX."data_list where type='smtp_mail' and status=1");
+//--啟用 SMTP模式
+if ($smtp_set){
+	//--網站設定	
+	$sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
+	$tmp = $conn->GetArray($sql);	
+	$web_set["all"] = $tmp;
+	$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
+	$web_set["send_email"] = $tmp["4"]["detail"];
+	
+	$smtp_set["detail"] = explode('|__|',$smtp_set["detail"]);
+    $mail->IsSMTP();                                // 設定使用SMTP方式寄信        
+    $mail->SMTPAuth = true;                         // 設定SMTP需要驗證
+	
+    $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+    $mail->Host = $smtp_set["detail"][1];	        // Gmail的SMTP主機        
+    $mail->Port = $smtp_set["detail"][2]*1;                              // Gmail的SMTP主機的port為465      
+          
+    $mail->Username = $smtp_set["detail"][3];     // 設定驗證帳號        
+    $mail->Password = $smtp_set["detail"][4];              // 設定驗證密碼          
+}
 ?>
