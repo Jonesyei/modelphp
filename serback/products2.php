@@ -187,6 +187,7 @@ if($_GET["id"] || $_GET["id"]=='0')
 	$data["one"]["stock_pic"] = $size_array = explode('|__|',$data["one"]["stock_pic"]);
 	$data["one"]["stock_no"] = $size_array = explode('|__|',$data["one"]["stock_no"]);
 	$data["one"]["stock_status"] = explode('|__|',$data["one"]["stock_status"]);
+	$data["one"]["stock_price"] = explode('|__|',$data["one"]["stock_price"]);
 	$data["one"]["memo"] = dequotes($data["one"]["memo"],-1);
 	$data["one"]["memo_1"] = dequotes($data["one"]["memo_1"],-1);
 	

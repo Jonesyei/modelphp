@@ -16,7 +16,7 @@ $shopping_car->deshprice(折扣 or 折扣率,是否疊加[預設是]) 可重複�
 $shopping_car->set_point(1);
 
 新增 購物車 一般商品
-$shopping_car->addpro(商品編號,數量,是否疊加 預設否, 庫存規格 可不填);
+$shopping_car->addpro(商品編號,數量,是否疊加 預設否, 庫存規格 可不填,金額 可不填(預設NULL、"auto"自動後台資料、任意金額));
 
 新增 購物車 非一般商品(無商品編號)
 $shopping_car->addother(項目名稱,項目內容,價格,數量);
@@ -227,7 +227,7 @@ class order_center
 		}
 		
 		//-- 增加購物車內容 商品 數量 資料是否疊加
-		function addpro($value,$count=1,$act=false,$size=NULL){
+		function addpro($value,$count=1,$act=false,$size=NULL,$price=NULL){
 			
 			
 			//假使有尺寸規格資料對應尺寸規格
@@ -241,6 +241,31 @@ class order_center
 				$this->erromsg = '無此商品訊息!!';
 				return false;
 			}
+			
+			
+			//--判斷是否有自訂金額
+			if ($price){
+				$price_data["stock_price"] = explode('|__|',$product["stock_price"]);
+				$price_data["stock_no"] = explode('|__|',$product["stock_no"]);
+				$price_data["stock"] = explode('|__|',$product["stock"]);
+				$price_data["size"] = explode('|__|',$product["size"]);
+				switch ($price){
+					//--自動
+					case "auto":
+						if (array_search($size,$price_data["stock_no"])!==false){
+							$product["price2"] = $price_data["stock_price"][array_search($size,$price_data["stock_no"])];
+						}else{
+							$this->erromsg = '未提供尺寸金額設定!!';
+							return false;
+						}	
+					break;
+					//--字定義
+					default:
+						$product["price2"] = $price;
+					break;
+				}
+			}
+			
 			
 			//-判斷是否為百分比折扣
 			if (count($this->deshprice)>0) {
@@ -633,21 +658,33 @@ class order_center
 				 
 				 //-先取得目前購物車所有商品
 				 $car_list =  $this->car_list();
+				 
+				 //--紀錄最好的一次結果
+				$gd_active_money = 0;
+				$gd_active_name = '';
+				 
 				 if ($car_list)
 				 	foreach ($car_list as $k=>$v){//--先進行不疊加操作
-						//--紀錄最好的一次結果
-						$gd_active_money = 0;
-						$gd_active_name = '';
 						//--判斷是否在現折條件之中
 						foreach ($this->active_now_desh_array as $a=>$b){
 							if ($b[4]===NULL || $b[4]===true) continue;
 							$now_desh_pro = explode(',',$b[1]);
 							if (array_search($v['id'],$now_desh_pro)!==false){ //--判斷涵蓋在內
-								if (strpos($b[3],'%')!=''){
-									$check_money = round($v["count"]*$v["price2"]*str_replace('%','',$b[3])/100);
-								}else{
-									$check_money = floor($v["count"]*$v["price2"]/$b[2])*$b[3];
+								unset($atv_pro_list);
+								unset($atv_pro_data);
+								$check_money = 0;
+								foreach ($car_list as $z=>$y){
+									if (in_array($y["id"],$now_desh_pro)){
+										$check_money += ($y["count"]*$y["price2"]);
+									}
 								}
+
+								if (strpos($b[3],'%')!=''){
+									$check_money = round($check_money*str_replace('%','',$b[3])/100);
+								}else{
+									$check_money = floor($check_money/$b[2])*$b[3];
+								}
+
 								//-比對歷史最好紀錄
 								if ($check_money>$gd_active_money){
 									$gd_active_money = $check_money;
@@ -655,37 +692,51 @@ class order_center
 								}
 							}
 						}
-						//---判斷疊加的現折活動
-						foreach ($this->active_now_desh_array as $a=>$b){
+					}//---END foreach $car_list
+					
+				//---判斷疊加的現折活動
+				if ($car_list)
+						foreach ($this->active_now_desh_array as $a=>$b){ 
 							if ($b[4]!==NULL && $b[4]===false) continue;
+							
 							$now_desh_pro = explode(',',$b[1]);
 							if (array_search($v['id'],$now_desh_pro)!==false){ //--判斷涵蓋在內
-								if (strpos($b[3],'%')!=''){
-									$check_money = round($v["count"]*$v["price2"]*str_replace('%','',$b[3])/100);
-								}else{
-									$check_money = floor($v["count"]*$v["price2"]/$b[2])*$b[3];
+								unset($atv_pro_list);
+								unset($atv_pro_data);
+								$check_money = 0;
+								foreach ($car_list as $z=>$y){
+									if (in_array($y["id"],$now_desh_pro)){
+										$check_money += ($y["count"]*$y["price2"]);
+									}
 								}
+
+								if (strpos($b[3],'%')!=''){
+									$check_money = round($check_money*str_replace('%','',$b[3])/100);
+								}else{
+									$check_money = floor($check_money/$b[2])*$b[3];
+								}
+								
+								//-比對歷史最好紀錄
 								$gd_active_money += $check_money;
 								if ($gd_active_name!='') $gd_active_name .= ',';
 								$gd_active_name .= $b[0];
 							}
 						}//--end foreach 判斷現折條
-						//--寫入購物車商品活動表
-						$indata['shopping_car_id'] = $this->order['id'];
-						$indata['shopping_car_list_id'] = $v['shopping_car_list_id'];
-						$indata['active_name'] = $gd_active_name;
-						$indata['price'] = $gd_active_money;
-						$indata['groupcount'] = '1';
-						$indata['create_date'] = date('Y-m-d H:i:s');
-						$status = $this->conn->AutoExecute($this->actable,$indata,"INSERT");
-						
-						$carlist["now_desh"] = $gd_active_money;
-						$status = $this->conn->AutoExecute($this->cartable,$carlist,"UPDATE","shopping_car_list_id='".$v["shopping_car_list_id"]."'");
-						
-						$sum_desh += $gd_active_money; //--加總單次
-					}//---END foreach $car_list
-				 
-				 return $sum_desh;
+					
+				 //--寫入購物車商品活動表
+				$indata['shopping_car_id'] = $this->order['id'];
+				$indata['shopping_car_list_id'] = $v['shopping_car_list_id'];
+				$indata['active_name'] = $gd_active_name;
+				$indata['price'] = $gd_active_money;
+				$indata['groupcount'] = '1';
+				$indata['create_date'] = date('Y-m-d H:i:s');
+				$status = $this->conn->AutoExecute($this->actable,$indata,"INSERT");
+				
+				$carlist["now_desh"] = $gd_active_money;
+				$status = $this->conn->AutoExecute($this->cartable,$carlist,"UPDATE","shopping_car_list_id='".$v["shopping_car_list_id"]."'");
+				
+				$sum_desh += $gd_active_money; //--加總單次
+				return $sum_desh;
 			 }
 			 //$active_now_desh_array; // array(活動名稱,涵蓋商品編號(X,X),滿額多少,折抵金額,是否疊加(預設是));
 		}
