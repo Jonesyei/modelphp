@@ -48,7 +48,28 @@ if ($cpos["listorderby"] != NULL && $cpos["listorderby"] != '') $cpos["listorder
 if ($cpos["status"]==NULL || $cpos["status"]=='') $cpos["status"] = $_SETUP["status"];
 if ($cpos["file_check"] == NULL ) $cpos["file_check"] = "pic";
 if (!is_array($cpos["file_check"])) $cpos["file_check"] = explode(',',$cpos["file_check"]);
+if ($cpos["search"]==NULL || $cpos["search"]=='') $cpos["search"] = array('name'=>'keyword','detail'=>'keyword','create_date'=>'daterange','status'=>'s_status','class'=>'searchclass'); 
 //--------------------------------------------------------------------------
+
+
+//--擷取資料表內容
+$cpos_table_row = $conn->GetArray("desc ".$cpos["table"]);
+if (!$cpos_table_row) {
+	cpos_create_table($cpos["table"]);//--沒資料表自動建立
+	$cpos_table_row = $conn->GetArray("desc ".$cpos["table"]);
+}
+foreach ($cpos_table_row as $k=>$v){ //--取得資料表欄位資料進行判斷
+	$row_colum_key[] = $v[0];$row_colum_type[] = $v[1];
+}
+//--自動去除沒有欄位的資料集
+//檔案檢測
+foreach ($cpos["file_check"] as $k=>$v){
+	if (!in_array($v,$row_colum_key)) unset($cpos["file_check"][$k]);
+}
+//檔案檢測
+foreach ($cpos["search"] as $k=>$v){
+	if (!in_array($k,$row_colum_key)) unset($cpos["search"][$k]);
+}
 
 //---------復原修改
 if ($_GET["re_data_temp"]!=NULL&&$_GET["re_data_temp"]!=''&&$_SESSION["admin_info"]["data_temp"]!=''&&$_SESSION["admin_info"]["data_temp"]!=NULL){
@@ -89,6 +110,8 @@ if ($_GET["re_data_temp"]!=NULL&&$_GET["re_data_temp"]!=''&&$_SESSION["admin_inf
 	alert('前一筆更新資料已被還原!!',-1);
 	exit;
 }
+
+
 
 
 
@@ -136,10 +159,7 @@ if ($_SESSION["admin_info"]["view"]=="list"){
 	foreach ($conn->GetArray("desc ".$cpos["table"]) as $k=>$v) {$row_colum_key[] = $v[0];$row_colum_type[] = $v[1];}//--擷取資料表所有欄位
 	
 	//--欄位設置
-	if ($cpos["search"]==NULL) 
-	$search_array = array('name'=>'keyword','detail'=>'keyword','create_date'=>'daterange','status'=>'s_status','class'=>'searchclass'); 
-	else
-	$search_array =$cpos["search"];
+	$search_array = $cpos["search"];
 	
 	foreach ($_GET as $k=>$v){ //--取得參數資料
 		if (strpos($k,'_') && $v!='' && $v!=NULL){
@@ -306,14 +326,12 @@ if ($_POST && $_POST["act"] !="all" && !$db_full_check) {
 		}
 	}
 	
+	
 	//---判斷是否有欄位資料 沒有的話自動建立欄位
-	foreach ($conn->GetArray("desc ".$cpos["table"]) as $k=>$v){ //--取得資料表欄位資料進行判斷
-		$row_colum[] = $v[0];
-	}
 	foreach ($_POST as $k=>$v){//比對post資料
 		$row_def = array('act','search','searchlike','daterange','date_rang','mode','del_pic');//例外不新增的鍵值
 		if( in_array($k,$row_def) ) continue;
-		if (!in_array($k,$row_colum)) {
+		if (!in_array($k,$row_colum_key)) {
 			$conn->Execute("ALTER TABLE ".quotes($cpos["table"])." ADD ".quotes($k)." TEXT NULL COMMENT '程式生成欄位'");
 		}
 	}
@@ -460,9 +478,9 @@ if ($_GET["del_id"] != NULL && $_GET["del_id"]!= ''){
 		$_SESSION["admin_info"]["act_temp"] = "DELETE";
 	}
 	system_temp($conn);
-	
+
 	if ($avalue) {
-		if (!$cpos["delete_callback"])
+		if ($cpos["delete_callback"])
 			alert('刪除成功',$cpos["delete_callback"]);
 		else
 			alert('刪除成功',now_url('del_id'));
@@ -616,15 +634,14 @@ function system_temp($conn){
 		foreach ($_SESSION["admin_info"]["data_temp"] as $k=>$v){
 			$sys_data["POST_DATA"][$k] = $v["id"].' '.$v["name"];
 		}
-		if (count($sys_data["POST_DATA"])>1)
+		if (is_array($sys_data["POST_DATA"]))
 		$sys_data["POST_DATA"] = implode('|__|',$sys_data["POST_DATA"]);
 	}
 	
 	$sys_data["act"] = $_SESSION["admin_info"]["act_temp"];
 	$sys_data["FILE_URL"] = $_SESSION["admin_info"]["title"].'|__|'.$_SESSION["admin_info"]["page"];
 	$_SESSION["admin_info"]["title_temp"] = $_SESSION["admin_info"]["title"];//記憶可還原的是哪個功能頁
-	$sys_data["create_date"] = date("Y-m-d H:i:S");
-
+	$sys_data["create_date"] = date("Y-m-d H:i:s");
 	$conn->AutoExecute(PREFIX."system_temp",$sys_data,"INSERT");
 }
 
@@ -663,5 +680,22 @@ function file_dpie($array1,$array2,$fileurl=NULL){
 		if ($v!='' && $v!=NULL && file_exists($fileurl.$v) )
 		unlink($fileurl.$v);
 	}
+}
+
+function cpos_create_table($table){
+	global $conn;
+	$conn->Execute("
+		CREATE TABLE `".$table."` (
+		  `id` int(20) NOT NULL auto_increment,
+		  `sort` double default '0',
+		  `status` tinyint(4) default NULL,
+		  `lang` varchar(20) default NULL,
+		  `create_date` datetime default NULL,
+		  `update_date` datetime default NULL,
+		  `create_name` varchar(20) default NULL,
+		  `update_name` varchar(20) default NULL,
+		  PRIMARY KEY  (`id`)
+		) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='程式生成資料表' AUTO_INCREMENT=1 ;
+	");
 }
 ?>
