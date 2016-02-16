@@ -6,14 +6,15 @@
 
 	[ Well Done and its suppliers. All rights reserved. ]
 */
-
+header("Pragma: no-cache");
+header("Cache-Control: no-cache");
 header("Content-type:image/png");
 header("Content-Disposition:filename=image_code.png");
 
+if (!isset($_SESSION)) { session_start(); }
+
 unset($_SESSION['serback__validate_code']);
 unset($_SESSION['vlcode']);
-
-if (!isset($_SESSION)) { session_start(); }
 
 //session_register('__validate_code');
 //if(array_key_exists('__validate_code', $_SESSION)){

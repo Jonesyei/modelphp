@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-08-31 11:49:49
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-23 11:57:48
          compiled from "D:\AppServ\www\modelphp\serback\templates\member.html" */ ?>
 <?php /*%%SmartyHeaderCode:25673559b5c100a0eb5-92581229%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '23126946731f786f03e969a1df851ff8f6a1da98' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\member.html',
-      1 => 1440734549,
+      1 => 1449643847,
       2 => 'file',
     ),
   ),
@@ -71,6 +71,8 @@ $(document).ready(function(){
 ">
     <input type="text" name="sql" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['csv_sql'];?>
 ">
+    <input type="text" name="rows" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['output_row_str'];?>
+">
 </form>
 
 <div id="csv_div" title="匯出資料進階設定">
@@ -108,22 +110,25 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['output']['last']       = ($_
     <font color="red">(項目可拖曳變換匯出順序)</font>
 </div>
 <script>
-    $( "#csv_div" ).dialog( {
+$( "#csv_div" ).dialog( {
 	  height:300,
       modal: true,
       buttons: {
         '取消': function() {$( this ).dialog( "close" );}
 		,'匯出': function() {
-			output_title = ''; output_sql = '';
+			output_title = ''; output_sql = ''; output_row = '';
 			$('.outrow').each(function (idx,obj){
 				if ($(obj).attr('checked')!=''&&$(obj).attr('checked')!=null){
 					if (output_title!='') output_title +=',';
 					if (output_sql!='') output_sql +=',';
+					if (output_row!='') output_row +='|__|';
 					output_title += $(obj).attr('alt');
 					output_sql += $(obj).val();
+					output_row += $(obj).val();
 				}
 			})
 			$('#csv [name="title"]').val(output_title);
+			$('#csv [name="rows"]').val(output_row);
 			$('#csv [name="sql"]').val('select ' + output_sql + ' from <?php echo $_smarty_tpl->tpl_vars['data']->value['cpos']['table'];?>
  <?php echo $_smarty_tpl->tpl_vars['data']->value['cpos']['tablelistwhere'];?>
  <?php echo str_replace("'","\\'",$_smarty_tpl->tpl_vars['data']->value['cpos']['search_output']);?>

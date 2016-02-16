@@ -1,6 +1,5 @@
 <?php
 include_once("head.php");
-include_once("member_class.php");
 
 $include = true;
 
@@ -9,10 +8,11 @@ $templates_page = "templates.html";
 ///▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇引用與設定Start▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇
 //## 會員
 $member = new member($conn,PREFIX."member");
+$member->work();
+
 //## 購物車
 $shopping_car = new order($conn,PREFIX."shopping_car",PREFIX."shopping_car_list",PREFIX."products");
-
-
+$shopping_car->work();
 
 //--運費設定
 $post_fee = $conn->GetRow("select * from ".PREFIX."setting WHERE type='post_fee' and lang = '".quotes($lang)."'");//--運費
@@ -126,7 +126,7 @@ if ($member->getinfo()){
 
 
 //-結帳資料
-if ($_POST && $_POST['submit']){
+if ($_POST && $_REQUEST['submit']){
 	
 	//--自訂訂單編號
 	$shopping_car->order_auto_set('JSP');

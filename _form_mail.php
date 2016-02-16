@@ -1,26 +1,75 @@
 <?php
 include_once("includes/main_inc.php");
-$form = array(
-''=>'',
-'name'=>'姓名',
-'phone'=>'電話',
-'conpay'=>'公司',
-'email'=>'聯絡EMAIL',
-'msg'=>'留言',
-'address'=>'地址',
-'sex'=>'性別',
-'fax'=>'傳真'
-);
+
+/*
+	必須發送的POST資訊
+	type = 命名別名
+	code = 驗證碼
+*/
+
 
 
 if($_POST)
 {
-
-		
+	
 	if(md5((strtoupper($_POST["code"])))!=($_SESSION["__validate_code"]))
 	{
 		alert("驗證碼錯誤",-1);
+	}else{
+		unset($_POST["code"]);
 	}
+	
+	//--表單欄位資料
+	$class_data = $conn->GetRow("select * from ".PREFIX."data_list where type='form_set' and b_name='".quotes($_POST["type"])."' and status=1");
+	if ($class_data){
+		$class_data["detail"] = explode('|__|',$class_data["detail"]);
+		$class_data["memo"] = explode('|__|',$class_data["memo"]);
+		if ($class_data["detail"])
+			foreach ($class_data["detail"] as $k=>$v){
+				$form[$v] = $class_data["memo"][$k];
+			}
+			
+		///--自動記憶新增資料表功能
+		$table_set = PREFIX.'form';
+		if ($table_set!=''){
+			$table_check = $conn->GetRow("SHOW TABLES WHERE Tables_in_".$dbData." = '".$table_set."'");
+			//--沒資料建立資料表
+			if (!$table_check) {
+				$conn->Execute("
+				CREATE TABLE  `".$table_set."` (
+				 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				 `type` TEXT NOT NULL ,
+				 `status` int(11) NOT NULL default '1',
+				 `create_date` DATETIME NULL ,
+				 `update_date` DATETIME NULL ,
+				 `create_name` TEXT NULL ,
+				 `update_name` TEXT NULL
+				) ENGINE = INNODB;
+				");
+			}
+			//--資料表檢查
+			$row_check = $conn->GetArray("desc ".$table_set);
+			if ($row_check)
+				foreach ($row_check as $k=>$v){
+					$row_array[] = $v["Field"];
+				}
+				
+			if ($row_array)
+			foreach ($form as $a=>$b) {
+					if (!in_array($a,$row_array) && isset($_POST[$a])) $conn->Execute("ALTER TABLE ".$table_set." ADD ".quotes($a)." TEXT NULL COMMENT '".quotes($b)."'");
+			}
+		}
+		//---資料寫入
+		if ($table_set){
+			$indata = $_POST;
+			unset($_POST["type"]);
+			$indata["create_date"] = $indata["update_date"] = date("Y-m-d H:i:s");
+			$avalue = $conn->AutoExecute($table_set,$indata,"INSERT");
+		}
+	}//--endif class_data
+	
+	
+	
 	
 	
 	//網站設定 $web_set
@@ -48,8 +97,8 @@ if($_POST)
 			}else{
 				$post_contact[] = array('value'=>$v,'title'=>$form[$k]);
 			}
-		}else{
-			$post_contact[] = array('value'=>$v,'title'=>$$k);
+		}else if ($v!=''){
+			$post_contact[] = array('value'=>$v,'title'=>$k);
 		}
 	}
 	//--額外追加特殊多填欄位
@@ -71,7 +120,10 @@ if($_POST)
 	
 
 	$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
-	$mail->AddAddress($web_set["receive_email"]);
+	$mailto = explode_array(array(',',';'),$web_set["receive_email"]);
+	foreach ($mailto as $k=>$v){
+		$mail->AddAddress($v);	
+	}
 	$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
 	$mail->Subject = $web_set["default_email_title"];    // 設定郵件標題        
 	$mail->Body = $cache_string;
@@ -94,54 +146,5 @@ if($_POST)
 
 
 LinkTo("./");
-
-
-
-
-
-
-/*
-
-function SendMail($from,$mailto,$subject,$msg,$filename=''){ // 傳送 mail 
-$subject = '=?utf-8?B?'.base64_encode("$subject").'?='; // 標題加密(防亂碼) 
-$boundary = uniqid( ""); // 產生分隔字串 
-// 設定MAIL HEADER 
-$headers = ''; 
-$headers .= 'MIME-Version: 1.0'."\r\n"; 
-$headers .= 'Content-type: multipart/mixed; boundary="'.$boundary.'"; charset="UTF-8"'."\r\n"; //宣告分隔字串 
-$headers .= 'From:'.$from."\r\n"; // 設定寄件者 
-$headers .= 'X-Mailer: PHP/' . phpversion()."\r\n"; 
-// 信件內容開始 
-$body .= '--'.$boundary."\r\n"; 
-$body .= 'Content-type: text/plain; charset="UTF-8"'."\r\n";// 信件本文header 
-$body .= 'Content-Transfer-Encoding: 8bit'."\r\n";// 信件本文header 
-$body .= $msg."\r\n"; // 本文內容 
-	//附加檔案處理 
-	if($filename){ 
-		$mimeType = mime_content_type($filename); // 判斷檔案類型 ，php.ini要開啟php_mime_magic.dll
-		if(!$mimeType) $mimeType ="application/unknown"; // 若判斷不出則設為未知 
-		$fp = fopen($filename, "r"); // 開啟檔案 
-		$read = fread($fp, filesize($filename)); // 取得檔案內容 
-		fclose($fp); // 關閉檔案 
-		$read = base64_encode($read);//使用base64編碼 
-		$read = chunk_split($read); //把檔案所轉成的長字串切開成多個小字串 
-		$file = basename($filename); //傳回不包含路徑的檔案名稱(mail中會顯示的檔名)
-		
-		// 附檔處理開始 
-		$body .= '--'.$boundary ."n"; 
-		// 設定附加檔案HEADER 
-		$body .= 'Content-type: '.$mimeType.'; name='.$file."\r\n"; 
-		$body .= 'Content-transfer-encoding: base64'."\r\n"; 
-		$body .= 'Content-disposition: attachment; filename='.$file."\r\n"; 
-		// 加入附加檔案內容 
-		$body .= $read ."\r\n"; 
-	}//處理附加檔案完畢 
-$body .= "--$boundary--";//郵件結尾
-
-mail($mailto, $subject, $body, $headers); // 寄出信件
-
-}
-*/
-
 
 ?>

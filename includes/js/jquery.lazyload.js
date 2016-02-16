@@ -21,7 +21,7 @@
 
 $(function() { 
 	$("img:not([nowork])").each(function(idx,obj){
-		//$(obj).attr('data-original',$(this).attr('src')).removeAttr('src'); 
+		$(obj).attr('data-original',$(this).attr('src')).removeAttr('src'); 
 	});
 	
 	$("img:not([nowork])").lazyload({ effect : "fadeIn"  });  
@@ -113,6 +113,9 @@ $(function() {
 			});
 			
         }
+		
+		//--消耗效能做法 每秒判斷 是否被作用
+		laz_Interval = window.setInterval(update,1000);
 
         this.each(function() {
             var self = this;

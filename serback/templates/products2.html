@@ -224,6 +224,7 @@ page_initial('table_content');
 
 
 ({if $admin_info.view == 'detail'})
+<script src="../includes/js/load-image.all.min.js"></script><!--onchange load-->
 <script src='../includes/js/color/spectrum.js'></script>
 <link rel='stylesheet' href='../includes/js/color/spectrum.css' />
 
@@ -358,7 +359,7 @@ $(document).ready(
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){
@@ -584,11 +585,12 @@ function re_sort(){
       ({section name=size loop=$data.one.size})
   		<div class="zlist">規格: <input type="text" name="size[]" value="({if $data.one.size[size]==null})基本({else})({$data.one.size[size]})({/if})"> 
         顏色:<input type="text" class="color_list" name="color[]" value="({$data.one.color[size]})">
-        圖片:<img src="({$data.file_url})({$data.one.stock_pic[size]})" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]" value="({$data.one.stock_pic[size]})">
+        圖片:<img src="({$data.file_url})({$data.one.stock_pic[size]})" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]" value="({$data.one.stock_pic[size]})"><br>
         現貨:<input type="text" name="stock[]" value="({if $data.one.stock[size]!=null})({$data.one.stock[size]})({else})0({/if})" onkeyup="this.value=this.value.replace(/\D/g,\'\');">
         貨號:<input type="text" name="stock_no[]" value="({$data.one.stock_no[size]})" />
         顯示:<input type="radio" name="stock_status[({$smarty.section.size.index})]" value="1" ({if $data.one.stock_status[size]!=='0'})checked({/if})>開啟
         <input type="radio" name="stock_status[({$smarty.section.size.index})]" value="0" ({if $data.one.stock_status[size]==='0'})checked({/if})>關閉
+        金額:<input type="text" name="stock_price[]" value="({$data.one.stock_price[size]})">
         <input type="button" value=" 刪除 " onclick="$(this).parent().remove();" /></div>
       ({/section})
 	   </td>
@@ -600,7 +602,7 @@ function re_sort(){
 	})
 	function addtolist(){
 		var temp_time = new Date().getTime();
-		$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+$('#size_add_box').val()+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value="">  圖片:<img src="" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]">現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');"> 貨號:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"><font color="red">(未存檔)</font></div>');
+		$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+$('#size_add_box').val()+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value="">  圖片:<img src="" style="width:50px;"><input type="file" style="width:80px;"><br><input type="hidden" name="stock_pic[]">現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');"> 貨號:<input type="text" name="stock_no[]" value="">金額:<input type="text" name="stock_price[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"><font color="red">(未存檔)</font></div>');
 		$('.zlist:last input[type="file"]')[0].onchange = fileuploadstockpic;
 		create_color_select('#c'+temp_time);
 	}
@@ -618,7 +620,7 @@ function re_sort(){
 			am = $('#pro_size option:selected').val().split('|__|');
 			for(aa in am) {
 				var temp_time = new Date().getTime();
-			$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+am[aa]+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value=""> 現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');">  貨號:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"></div>');
+			$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+am[aa]+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value=""> 現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');">  貨號:<input type="text" name="stock_no[]" value="">金額:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"></div>');
 				create_color_select('#c'+temp_time);
 			}
 	}

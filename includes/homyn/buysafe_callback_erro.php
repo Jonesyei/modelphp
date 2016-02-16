@@ -1,5 +1,5 @@
 <?php
-include_once("../includes/main_inc.php");
+include_once("../../includes/main_inc.php");
 
 if ($_POST){
 	$data["data"] = 'erro==>'.json_encode($_POST);

@@ -131,8 +131,8 @@ input.login-id { background: #fff; font-size:15px; color:#333; padding:3px 10px;
 .header .login-person a.logout { background: #60563b; display:block; font-size:13px; line-height:25px; color:#fff; padding:0px 10px; margin:0px; text-align:center; float:right;
                                               -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;  width:80px;}
 .header .login-person a.logout:hover { background: #9a8765;  color:#fff;}
-.header .login-person .use-space { clear:both; float:right; font-size:13px; line-height:25px; color:#fff; line-height:35px; }
-.header .login-person .use-percent-box { float:right; background:#c9b185; width:100px; overflow:hidden; margin:14px 0px 14px 10px; height:8px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}
+.header .login-person .use-space { clear:both; float:right; font-size:13px; line-height:25px; color:#fff; line-height:35px; text-align:right; }
+.header .login-person .use-percent-box {  background:#c9b185; width:100px; display:inline-block; overflow:hidden; margin:0px 20px 0px 10px; height:8px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;}
 .header .login-person .use-percent-load { background:#d58109; height:8px;}
 
 

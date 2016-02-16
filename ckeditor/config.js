@@ -1,9 +1,9 @@
-/**
+﻿/**
  * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.stylesSet.add('vipcase',[
+ CKEDITOR.stylesSet.add('vipcase',[
     // Block-level styles
 	
 	/*
@@ -13,13 +13,18 @@ CKEDITOR.stylesSet.add('vipcase',[
     // Inline styles
     { name : '最新消息標題' , element : 'div', attributes : { 'class' : 'title' } }*/
 ]);
-
-
+ 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here. For example:
+	
+	// %REMOVE_START%
+	// The configuration options below are needed when running CKEditor from source files.
+	config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,language,link,list,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,scayt,stylescombo,tab,table,tabletools,undo,wsc,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
+	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
+	config.skin = 'moonocolor';
+	
 	config.language = 'zh';
 	config.height = '500px';
-	// config.uiColor = '#AADC6E';
+	
 	config.filebrowserBrowseUrl = '/ckfinder/ckfinder.html';
 	config.filebrowserImageBrowseUrl = '/ckfinder/ckfinder.html?Type=Images';
 	config.filebrowserFlashBrowseUrl = '/ckfinder/ckfinder.html?Type=Flash';
@@ -32,7 +37,6 @@ CKEDITOR.editorConfig = function( config ) {
 	}else{
 		config.contentsCss = '../css/main.css';
 	}
-	//config.stylesSet = 'vipcase';	
 	
 	
 	config.enterMode = CKEDITOR.ENTER_BR;
@@ -40,6 +44,10 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	
 	config.allowedContent = true;//設為true 編輯器不會自動將 class 或 style給移除
-
 	
+	// %REMOVE_END%
+
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
 };

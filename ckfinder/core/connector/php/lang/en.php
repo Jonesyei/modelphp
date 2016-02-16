@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+// Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
 // For licensing, see LICENSE.html or http://ckfinder.com/license
 
 //  Defines the object for the English language. This is the base file for all translations.
@@ -32,5 +32,7 @@ $GLOBALS['CKFLang'] = array (
 		'301' => 'Copying file(s) failed.',
 		'500' => 'The file browser is disabled for security reasons. Please contact your system administrator and check the CKFinder configuration file.',
 		'501' => 'The thumbnails support is disabled.',
+		'901' => '主機空間已達限制!! 請連絡網動廣告科技 工程人員處理',
+		'902' => '無權限操作',
 	)
 );

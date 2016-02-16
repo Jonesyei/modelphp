@@ -8,7 +8,7 @@ include_once("../includes/main_back_inc.php");
 if (1){ //判斷是否啟用後台權限判斷
 
 	//判斷權限
-	$menu_list_data = array('_sysmenu_set','system_temp');
+	$menu_list_data = array('_sysmenu_set','system_temp','index');
 
 	if(Auth_check($conn)==false && !in_array(Now_file(),$menu_list_data))
 	{
@@ -39,6 +39,23 @@ $max_file_disk = number_format($max_file_disk['data'],2).$disk_array[$max_file_d
 $_SESSION["admin_info"]["file_size_total"] = $now_file_disk.' / '.$max_file_disk;
 $_SESSION["admin_info"]["size_bar_width"] = ( ($ini_webset["web_set"]["now_file"]) / ($ini_webset["web_set"]["upload_max_size"]) )*100;
 $_SESSION["admin_info"]["file_size_bar"] = $ini_webset["web_set"]["upload_check_status"];
+
+/*資料庫使用空間*/
+$db_total_disk = 0;
+$db_disk = $conn->GetArray("SHOW TABLE STATUS");
+if ($db_disk)
+	foreach ($db_disk as $k=>$v){
+		$db_total_disk += $v["Data_length"]*1+$v["Index_length"]*1;
+	}
+$db_now_total_disk = $db_total_disk;
+$db_total_disk = disk_data($db_total_disk);
+$db_total_disk = number_format($db_total_disk['data'],2).$disk_array[$db_total_disk['depth']];
+$db_max_disk = disk_data($ini_webset["web_set"]["db_max_size"]);
+$db_max_disk = number_format($db_max_disk['data'],2).$disk_array[$db_max_disk['depth']];
+$_SESSION["admin_info"]["db_size_total"] = $db_total_disk.' / '.$db_max_disk;
+$_SESSION["admin_info"]["db_bar_width"] = ( $db_now_total_disk / ($ini_webset["web_set"]["db_max_size"]) )*100;
+
+
 
 
 //---登入閒置時間驗證
@@ -93,6 +110,8 @@ foreach (get_included_files() as $k=>$v){
 
 
 
+if (!$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
+
 $tpl->assign("admin_info",$_SESSION["admin_info"]);//admin_info所有設定
 $tpl->assign("setup", $_SETUP);//config設定檔
 $tpl->assign("menu", $menu_html); //menu
@@ -107,6 +126,12 @@ $tpl->assign("page_table_html",ROOT_PATH.$admin_path."templates/page_table.html"
 
 if($include != true)
 {
+	//--首頁開發訊息自動接收更新
+	$aa = curl($ini_webset["web_set"]["info_page"]);
+	if ($aa["code"]=='200'){
+		safefilerewrite(ROOT_PATH.$admin_path."templates/info.html",$aa["data"]);
+	}
+	
 	$tpl->assign("content",ROOT_PATH.$admin_path."templates/info.html");
 	$tpl->display(ROOT_PATH.$admin_path."templates/index.html");
 }

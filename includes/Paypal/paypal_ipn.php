@@ -1,7 +1,6 @@
 <?php
 $temp_nowurl = explode('includes',__file__);
 include_once($temp_nowurl[0]."includes/main_inc.php");
-include_once($temp_nowurl[0]."member_class.php");
 
 //--購物車
 $shopping_car = new order($conn,PREFIX."shopping_car",PREFIX."shopping_car_list",PREFIX."products");

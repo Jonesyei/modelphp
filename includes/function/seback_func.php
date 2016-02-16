@@ -574,6 +574,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 		if($_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
 		{
 			
+			if ($_POST)
 			if (md5($checkcode)!=$_SESSION["serback__validate_code"]){
 				alert("驗證碼錯誤!!",-1);
 				exit;		
@@ -605,7 +606,12 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 					$_SESSION["admin_info"]["auth"] = $temp["auth_ch"];
 				}
 				
-				
+				//--判斷是否有設定好EMAIL 否者導向設定頁面
+				if ($detail["email"]=='') {
+					echo "
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+					<script>if (confirm('您還未設定後台管理者EMAIL信箱，為避免忘記密碼是否要前往設定，以利收到忘記密碼通知函')) window.location.href='./admin.php?id=lang'</script>";
+				}
 			}	
 		}
 		else

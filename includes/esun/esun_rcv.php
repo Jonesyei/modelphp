@@ -1,6 +1,6 @@
 <?php
-include_once("../main_inc.php");
-include_once("../../member_class.php");
+$temp_nowurl = explode('includes',__file__);
+include_once($temp_nowurl[0]."includes/main_inc.php");
 
 $member_id = '8089009467';//特店代號
 $member_key = 'EOVVASTMGPBIWUFQEKOREYEHSUJRN1EB';
