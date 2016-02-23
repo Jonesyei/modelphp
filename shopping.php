@@ -136,10 +136,7 @@ if ($_POST && $_REQUEST['submit']){
 		alert('付款結帳失敗!!'.$shopping_car->erromsg,'?list=1');
 		exit;
 	}else{
-		$temp = $shopping_car->esun_pay_send($pay_bill);
-		if ($temp){
-			alert($temp,-1);
-		}
+		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路徑');
 	}
 	linkto('index.jsx');
 }else{
@@ -193,15 +190,10 @@ if ($_SESSION["temp_other_shopping_car"]){
 		$o_value = explode(',',$_SESSION["temp_other_shopping_car"]["value"]);
 		$o_count = explode(',',$_SESSION["temp_other_shopping_car"]["count"]);
 		foreach ($o_name as $k=>$v){
-			if ($o_name[$k]!='大底板'){
-				//echo $o_name[$k].' '.$o_detail[$k].' '.$o_value[$k].' '.$o_count[$k];
-				$shopping_car->addother('color-'.$o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
-			}else{
 				$shopping_car->addother($o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$$sort);
-			}
 		}
 		unset($_SESSION["temp_other_shopping_car"]);//-刪除暫存記憶
-		linkto('?list=1&oadd=1');
+		linkto('?list=1');
 		//print_r($_SESSION["temp_other_shopping_car"]);
 }
 if ($_REQUEST["addoth"]){
@@ -211,11 +203,7 @@ if ($_REQUEST["addoth"]){
 	$o_value = explode(',',$_REQUEST["value"]);
 	$o_count = explode(',',$_REQUEST["count"]);
 	foreach ($o_name as $k=>$v){
-		if ($o_name[$k]!='大底板'){
-			$shopping_car->addother('color-'.$o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
-		}else{
 			$shopping_car->addother($o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
-		}
 	}
 	if ($_REQUEST["ajax"]){
 		echo $_REQUEST["name"].'已加入購物車!!';
@@ -294,12 +282,7 @@ if ($_GET["del"] && $_GET["del"]!=''){
 if ($_GET["payorder"]){
 	$pay_bill = $shopping_car->getorder(" where id='".$_GET["payorder"]."'");
 	if ($pay_bill["pay_status"]!='1'){
-		//$temp = $shopping_car->homyn_pay_send($pay_bill);
-		//$temp = $shopping_car->neweb_pay_send($pay_bill);
-		$temp = $shopping_car->esun_pay_send($pay_bill);
-		if ($temp){
-			alert($temp,-1);
-		}
+		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路由');
 	}else{
 		alert('此筆交易已經成功付款了，無需再次付款!!',-1);
 		exit;

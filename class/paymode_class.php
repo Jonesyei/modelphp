@@ -5,7 +5,7 @@
 class order extends order_center{
 	//---------金流區域
 		//--紅陽
-		function homyn_pay_send($pay_bill){
+		function homyn_pay_send($pay_bill,$callback=NULL){
 			$other_row = '';
 			//--串接金流
 			switch ($pay_bill["paycardmode"]){
@@ -20,11 +20,11 @@ class order extends order_center{
 					$send_array["DueDate"] = date("Ymd", (strtotime(date("Y-m-d H:i:s"))+604800) );//繳款期限 +7天
 				break;
 				case "5":
-					$this->ezship_pay_send($pay_bill);
+					$this->ezship_pay_send($pay_bill,$callback);
 					exit;
 				break;
 				default: //-ATM
-					$this->order_mail_send($pay_bill,1);
+					$this->order_mail_send($pay_bill,$callback);
 					exit;
 				break;
 			}
@@ -49,10 +49,10 @@ class order extends order_center{
 		
 		//---------金流區域
 		//--EZSHIP
-		function ezship_pay_send($pay_bill){
+		function ezship_pay_send($pay_bill,$callback=NULL){
 			global $_SESSION;
 			$_SESSION['ezship_pay'] = $pay_bill;
-			$this->order_mail_send($pay_bill,1);
+			$this->order_mail_send($pay_bill,$callback);
 			
 			$LINTYPE = explode('/',$_SERVER['SERVER_PROTOCOL']);
 			//--取貨付款使用
@@ -71,7 +71,7 @@ class order extends order_center{
 		
 		//---------金流區域
 		//--玉山銀行
-		function esun_pay_send($pay_bill){
+		function esun_pay_send($pay_bill,$callback=NULL){
 			$other_row = '';
 			//--串接金流
 			switch ($pay_bill["paycardmode"]){
@@ -83,7 +83,7 @@ class order extends order_center{
 					exit;
 				break;
 				default: //-ATM、貨到付款
-					$this->order_mail_send($pay_bill,1);
+					$this->order_mail_send($pay_bill,$callback);
 					exit;
 				break;
 			}
