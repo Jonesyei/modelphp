@@ -812,38 +812,38 @@ class order_center
 			//---判斷有參數抓取 參數訂單的商品列表
 			switch ($order){
 				case NULL:
-				
-					$data = $this->conn->GetArray("select * from ".$this->cartable." ".$left_join." where shopping_car_id='".$this->order["id"]."' and status=1 order by ".$sort);
-					if ($data)
-					foreach ($data as $k=>$v){
-						$data[$k]["pic"] = explode('|__|',$v["pic"]);
-						$temp = explode(',',$v["size"]);
-						$data[$k]["size"] = $temp[0];
-						$data[$k]["color_html"] = '<span class="color_output_html" style="background:#'.$temp[1].'">　</span>';
-						$data[$k]["stock_no"] = $temp[2];
-						$data[$k]["del_url"] = '&del='.$v["shopping_car_list_id"];
-					}
-					return $data;
-				
+					$data = $this->conn->GetArray("select * from ".$this->cartable." ".$left_join." where shopping_car_id='".$this->order["id"]."' and status=1 order by ".$sort);				
 				break;
 				
 				default:
-				
-					$data = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".$order."' and status=1 order by ".$sort);
-
-					foreach ($data as $k=>$v){
-						$data[$k]["pic"] = explode('|__|',$v["pic"]);
-						$temp = explode(',',$v["size"]);
-						$data[$k]["size"] = $temp[0];
-						$data[$k]["color_html"] = '<span class="color_output_html" style="background:#'.$temp[1].'">　</span>';
-						$data[$k]["stock_no"] = $temp[2];
-						$data[$k]["del_url"] = '&del='.$v["shopping_car_list_id"];
-					}
-					return $data;				
-					
+					$data = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".$order."' and status=1 order by ".$sort);		
 				break;
 			}
+			
+			if ($data)
+			foreach ($data as $k=>$v){
+				$pro_data = $this->conn->GetRow("select * from ".$this->protable." where id='".$v["id"]."'");
+				if ($pro_data){
+					$pro_data["size"] = explode('|__|',$pro_data["size"]);
+					$pro_data["stock"] = explode('|__|',$pro_data["stock"]);
+					$pro_data["stock_no"] = explode('|__|',$pro_data["stock_no"]);
+					$pro_data["stock_status"] = explode('|__|',$pro_data["stock_status"]);
+					$pro_data["stock_price"] = explode('|__|',$pro_data["stock_price"]);
+					$pro_data["stock_pic"] = explode('|__|',$pro_data["stock_pic"]);
+					$pro_data["color"] = explode('|__|',$pro_data["color"]);
+				}
+				if (array_search($v["size"],$pro_data["stock_no"])!==false){
+					$key = array_search($v["size"],$pro_data["stock_no"]);
+					$data[$k]["color_html"] = '<span class="color_output_html" style="background:#'.$pro_data["color"][$key].'">　</span>';
+					$data[$k]["stock_no"] = $v["size"];
+					$data[$k]["size"] = $pro_data["size"][$key];
+				}
+				$data[$k]["del_url"] = '&del='.$v["shopping_car_list_id"];
+			}
+			return $data;
+			
 		}
+		
 		//--購物車商品 移除
 		function car_remove($value=NULL){
 			if ($value==NULL){

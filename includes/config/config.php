@@ -49,8 +49,8 @@ $_SETUP["payment_status"] = array('0'=>'未付款','1'=>'已付款','2'=>'回傳
 //--------------金流設定
 //$_SETUP["paycardmode"] = array('1'=>'線上刷卡','2'=>'超商付款');
 $_SETUP["paytype"] = array('1'=>'線上刷卡','2'=>'超商付款','3'=>'ATM轉帳','4'=>'貨到付款','5'=>'WEBATM');
-$_SETUP["WebNo"] = "M121531752";//商家代號
-$_SETUP["code"] = "ashur0317";//商家交易碼
+
+
 
 $_SETUP["title_img"] = array(
 'history_case'=>'title-case.png',

@@ -36,7 +36,8 @@ $(document).ready(function (){
 /*
 	後台引導式編輯
 	前台加上後台設定的選擇方式
-	_isitem => 內容頁面數值參數 , 用以對應後台資料
+	_isitem => 內容頁面數值參數,後台對象參數值(可不填預設id) , 用以對應後台資料
+	_para	=> 額外連結參數 (EX: &s_mode=2&s_status=1)
 */
 serback_editor = function (){
 	var _menu_data;
@@ -57,7 +58,7 @@ serback_editor = function (){
 	if (_menu_data!=null && _menu_data.length>0){
 		for (aa in _menu_data){
 			$(_menu_data[aa].selector).each(function (idx,obj){
-				$(obj).prepend('<div style="position:relative;"><span style="position:absolute;z-index:9998;right:0;"><input type="button" '+($(obj).attr('_isitem')!=null ? "_isitem=\""+$(obj).attr('_isitem')+"\"":"")+' value="'+_menu_data[aa].name+'" serback_editor href="serback/'+_menu_data[aa].url+'" style="font-size:30px;"></span></div>');
+				$(obj).prepend('<div style="position:relative;"><span style="position:absolute;z-index:9998;right:0;"><input type="button" '+($(obj).attr('_isitem')!=null ? "_isitem=\""+$(obj).attr('_isitem')+"\"":"")+' '+($(obj).attr('_para')!=null ? "_para=\""+$(obj).attr('_para')+"\"":"")+' value="'+_menu_data[aa].name+'" serback_editor href="serback/'+_menu_data[aa].url+'" style="font-size:30px;"></span></div>');
 			})
 			.find('input[serback_editor]')
 			.on('click',function (){
@@ -75,6 +76,7 @@ serback_editor = function (){
 							if ($(this).attr('href').indexOf('?')<0) add_url = $(this).attr('href')+'?id='+Get($(this).attr('_isitem'));
 						}
 					}
+					if ($(this).attr('_para')!=null && $(this).attr('_para')!=null) add_url += $(this).attr('_para');
 					window.open(add_url,"serback2","_blank",config='height=500,width=500');
 				}
 			});

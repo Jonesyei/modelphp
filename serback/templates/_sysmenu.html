@@ -7,7 +7,7 @@
 	<h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
     
   <div class="page-tool">
-	  <div style="float:left">結構複製至 ({$langselect})<input type="button" value="複製" onclick="lselect();"></div>
+	  <div style="float:left">結構複製至 ({$langselect})<input type="button" value="複製" onclick="lselect();"><input type="button" value="複製至所有語系" onclick="langallselect();"></div>
 	  <a href="#" onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>
 	  <a href="?id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>
       <a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
@@ -17,6 +17,17 @@
 	  if ($('[name="class"]').val()==null || $('[name="class"]').val()=='') return alert('請選擇一個語系');
 	  if (!confirm('確認要把整個結構複製至 '+$('[name="class"] option[value="'+$('[name="class"]').val()+'"]').text()+' 語系目錄麻?')) return;
 		window.location.href='?copy='+$('[name="class"]').val();
+  }
+  function langallselect(){
+	  if (!confirm('確定複製到所有語系?')) return;
+	  var copy_str = '';
+	  $('[name="class"] option').each(function (idx,obj){
+		  if ($(obj).val()!=null && $(obj).val()!=''){
+			  if (copy_str!='') copy_str +=',';
+			  copy_str += $(obj).val();
+		  }
+	  });
+	  window.location.href='?copy='+copy_str;
   }
   </script>
   <!--div id="title"-->

@@ -5,7 +5,7 @@ $include = true;//不讓 index.php display的參數
 
 $cpos["pagecount"] = 10; //每頁顯示筆數
 $cpos["table"] = PREFIX."data_list";
-$cpos["tablelistwhere"] = "WHERE type='".quotes($_GET["class"])."'";//列表顯示資料的條件
+$cpos["tablelistwhere"] = "WHERE type='form_set'";//列表顯示資料的條件
 $cpos["tablewhere"] = 'id="'.$_GET["id"].'"';
 $cpos["listorderby"] = "create_date desc";
 
