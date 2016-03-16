@@ -37,8 +37,6 @@ if($act=='submit')
 	//--取得所有欄位資料表 自動生成沒有的AUTH
 	foreach ($conn->GetArray("desc ".$table) as $k=>$v) {$row_colum_key[] = $v[0];$row_colum_type[] = $v[1];}//--擷取資料表所有欄位
 	if (!in_array('auth_'.$lang,$row_colum_key)){
-		echo "ALTER TABLE ".quotes($table)." ADD `".quotes('auth_'.$lang)."` TEXT NULL COMMENT '程式生成欄位'";
-		exit;
 		$conn->Execute("ALTER TABLE ".quotes($table)." ADD `".quotes('auth_'.$lang)."` TEXT NULL COMMENT '程式生成欄位'");
 	}
 
@@ -68,9 +66,11 @@ if($act=='submit')
 	}
 	else
 	{
-		$record["create_date"] = date("Y-m-d H:i:s");
-		$record["create_name"] = $_SESSION["admin_info"]["account"];
+		unset($record["auth_".$lang]);
+		$record["create_date"] = $record["update_date"] = date("Y-m-d H:i:s");
+		$record["create_name"] = $record["update_name"] = $_SESSION["admin_info"]["account"];
 		$conn->AutoExecute($table,$record,"INSERT");
+		$conn->Execute("UPDATE ".$table." SET `auth_".$lang."`='".substr($auth,0,-1)."' WHERE id='".$conn->Insert_ID()."'"); //--修正特殊字符無法寫入欄位
 		alert("新增完成",Get_Url(array()));
 		exit;
 	}

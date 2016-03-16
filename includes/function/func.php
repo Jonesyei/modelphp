@@ -383,22 +383,9 @@ return Ckedit($name,$value,$style);
 
 
 //編輯器 名稱,寬,高,值
-function Ckedit($name,$value,$style=NULL)
+function Ckedit($name,$value,$style='normal')
 {
-	/*
-	ob_start(); //打開快取
-	echo '<textarea id="'.$name.'" name="'.$name.'" cols="1" rows="1">'.deQuotes($value,-1).'</textarea>';
-	$CKEditor = new CKEditor();
-	$CKEditor->basePath = '../includes/ckeditor/';
-	
-	if($style!=NULL) $CKEditor->config = array('contentsCss'=>$style);
-	
-	$CKEditor->replace($name);
-	
-	$tmp = ob_get_contents(); //接收快取頁面
-	ob_end_clean(); //關閉快取
-	*/
-	$tmp = '<textarea id="'.$name.'" name="'.$name.'" cols="1" rows="1">'.deQuotes($value,-1).'</textarea>';
+	$tmp = '<textarea id="'.$name.'" name="'.$name.'" editor="'.$style.'" cols="1" rows="1">'.deQuotes($value,-1).'</textarea>';
 	$tmp .= "
 	<script>
 	CKEDITOR.replace( '".$name."',

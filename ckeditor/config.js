@@ -32,12 +32,32 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserImageUploadUrl = '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images';//可上傳圖檔
 	config.filebrowserFlashUploadUrl = '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';//可上傳Flash檔案
 	
-	if (website_css!=null && website_css!=''){
+	if (typeof(website_css)!="undefined" && website_css!=null && website_css!=''){
 		config.contentsCss = website_css;
 	}else{
 		config.contentsCss = '../css/main.css';
 	}
 	
+	///---簡易版判斷
+	if (document.getElementById(this.name).attributes['editor']!=null && document.getElementById(this.name).getAttribute('editor')=='easy'){
+		config.toolbarGroups = [
+			{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+			{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+			{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+			'/',
+			{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+			{ name: 'links', groups: [ 'links' ] },
+			{ name: 'insert', groups: [ 'insert' ] },
+			{ name: 'styles', groups: [ 'styles' ] },
+			{ name: 'colors', groups: [ 'colors' ] },
+			'/',
+			{ name: 'tools', groups: [ 'tools' ] },
+			{ name: 'others', groups: [ 'others' ] },
+			{ name: 'about', groups: [ 'about' ] }
+		];
+		config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Scayt,Language,Link,Unlink,Anchor,Image,Flash,PageBreak,Iframe,ShowBlocks,Maximize,About'; 
+	}
 	
 	config.enterMode = CKEDITOR.ENTER_BR;
 	config.shiftEnterMode = CKEDITOR.ENTER_BR;

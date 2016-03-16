@@ -516,22 +516,26 @@ switch ($_SESSION["admin_info"]["view"]){
 case "detail"://單筆
 	$sql = "select ".$cpos["tablerow"]." from ".$cpos["table"].' '.$cpos["tablejoin"]." WHERE ".$cpos["tablewhere"];
 	$data["one"] = $conn->GetRow($sql);
-	$data["one"]["status_html"] = Make_radio($cpos["status"],$data["one"]["status"],'status');//--狀態製作標籤
 	///--------------將指定欄位成為編輯器
 	if( is_array($cpos["fck_set"]) )
 	{
 		foreach($cpos["fck_set"] as $k=>$v)
 		{
 			$data["one"][$v."_fck"] = 
-			Fck($v,'90%','450','../fckeditor/',deQuotes($data["one"][$v],-1),"../../style/".$style.".css");
+			Ckedit($v,deQuotes($data["one"][$v],-1));
 		}
 	}
 	else
 	{
-		$data["one"]["detail_fck"] = Fck("detail",'90%','450','../fckeditor/',deQuotes(@$data["one"]["detail"],-1),"../../style/".$style.".css");
+		foreach ($data["one"] as $k=>$v){
+			if (!is_numeric($k)) {
+				$data["one"][$k."_fck"] = Ckedit($k,deQuotes($data["one"][$k],-1));
+				$data["one"][$k."_fck_easy"] = Ckedit($k,deQuotes($data["one"][$k],-1),'easy');
+			}
+		}
 	}
 	//---------------------------------
-
+	$data["one"]["status_html"] = Make_radio($cpos["status"],$data["one"]["status"],'status');//--狀態製作標籤
 break;
 
 case "list";//清單

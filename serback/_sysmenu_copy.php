@@ -12,7 +12,16 @@ unset($row_colum_type);
 foreach ($conn->GetArray("desc ".$jcopy["auth_table"]) as $a=>$b) {$row_colum_key[] = $b[0];$row_colum_type[] = $b[1];}//--擷取資料表所有欄位
 
 $workdata = explode(',',$_GET["copy"]);
+if ($workdata)
+	foreach ($workdata as $k=>$v){
+		//--刪除所有
+		if ($conn->GetRow("select * from ".$jcopy["table"]." where lang ='".$v."'")){
+			$conn->Execute("DELETE FROM ".$jcopy["table"]." WHERE lang ='".$v."'");
+		}
+	}
+if ($workdata)
 foreach ($workdata as $k=>$v){
+	
 	//--先拉出語系中所有資料內容
 	$jdata = j_take_tree('',$_SESSION["admin_info"]["lang"]);
 	
@@ -20,6 +29,7 @@ foreach ($workdata as $k=>$v){
 	$jmaxlv = $conn->GetRow("select Max(lv) as lv from ".$jcopy["table"]);
 	$jmaxlv = $jmaxlv["lv"]*1;
 	
+
 	//--建立資料結構
 	$lv_data = j_create_tree($jdata,$v);
 	
@@ -28,21 +38,22 @@ foreach ($workdata as $k=>$v){
 	//--取得所有欄位資料表 自動生成沒有的AUTH
 	if (!in_array('auth_'.$v,$row_colum_key)){
 		$conn->Execute("ALTER TABLE ".quotes($jcopy["auth_table"])." ADD `".quotes('auth_'.$v)."` TEXT NULL COMMENT '程式生成欄位'"); //-沒欄位則新增
+	}
 		//--取得所有群組
 		$admin_group = $conn->GetArray("select * from ".quotes($jcopy["auth_table"])."");
-		unset($insert_lv_data);
 		if ($admin_group)
 			foreach ($admin_group as $a=>$b){
+				unset($insert_lv_data);
 				$lv_have_data = explode(',',$b["auth_".$_SESSION["admin_info"]["lang"]]);
 				foreach ($lv_have_data as $x=>$y){
 					$insert_lv_data[] = $lv_data[$y];
 				}
+				$conn->Execute("UPDATE ".quotes($jcopy["auth_table"])." SET `auth_".$v."`='".implode(',',$insert_lv_data)."' where id='".$b["id"]."'");	//--權限結構複製
 			}
-		$conn->Execute("UPDATE ".quotes($jcopy["auth_table"])." SET `auth_".$v."`='".implode(',',$insert_lv_data)."'");	//--權限結構複製
-	}
+
 
 }
-alert('已複製結構樹資料!!',now_url('copy'));
+alert('已複製結構樹資料!!','./');
 exit;
 
 
