@@ -1,5 +1,8 @@
 <?PHP 
 /* create by Jones
+
+成為編輯器欄位設定 表示方式  $data["one"][欄位名稱.'_fck'];
+成為日期選擇器設定  表示方式  $data["one"][欄位名稱.'_datepicker'];
 ----------------------------------------------------說明文件 ---  導入參數設定
 //列表頁參數
 $cpos["pagecount"] = 2; //每頁顯示筆數
@@ -61,6 +64,7 @@ if (!$cpos_table_row) {
 foreach ($cpos_table_row as $k=>$v){ //--取得資料表欄位資料進行判斷
 	$row_colum_key[] = $v[0];$row_colum_type[] = $v[1];
 }
+
 //--自動去除沒有欄位的資料集
 //檔案檢測
 foreach ($cpos["file_check"] as $k=>$v){
@@ -517,21 +521,11 @@ case "detail"://單筆
 	$sql = "select ".$cpos["tablerow"]." from ".$cpos["table"].' '.$cpos["tablejoin"]." WHERE ".$cpos["tablewhere"];
 	$data["one"] = $conn->GetRow($sql);
 	///--------------將指定欄位成為編輯器
-	if( is_array($cpos["fck_set"]) )
-	{
-		foreach($cpos["fck_set"] as $k=>$v)
-		{
-			$data["one"][$v."_fck"] = 
-			Ckedit($v,deQuotes($data["one"][$v],-1));
-		}
-	}
-	else
-	{
-		foreach ($data["one"] as $k=>$v){
-			if (!is_numeric($k)) {
-				$data["one"][$k."_fck"] = Ckedit($k,deQuotes($data["one"][$k],-1));
-				$data["one"][$k."_fck_easy"] = Ckedit($k,deQuotes($data["one"][$k],-1),'easy');
-			}
+	foreach ($row_colum_key as $k=>$v){
+		if (!is_numeric($v)) {
+			$data["one"][$v."_fck"] = Ckedit($v,deQuotes($data["one"][$v],-1));
+			$data["one"][$v."_fck_easy"] = Ckedit($v,deQuotes($data["one"][$v],-1),'easy');
+			$data["one"][$v."_datepicker"] = datepicker($v,$data["one"][$v]);
 		}
 	}
 	//---------------------------------
