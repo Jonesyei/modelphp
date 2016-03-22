@@ -20,7 +20,7 @@ if($_POST)
 	}
 	
 	//--表單欄位資料
-	$class_data = $conn->GetRow("select * from ".PREFIX."data_list where type='form_set' and b_name='".quotes($_POST["type"])."' and status=1");
+	$class_data = $conn->GetRow("select * from ".PREFIX."data_list where type='form_set' and b_name='".quotes($_REQUEST["type"])."' and status=1");
 	if ($class_data){
 		$class_data["detail"] = explode('|__|',$class_data["detail"]);
 		$class_data["memo"] = explode('|__|',$class_data["memo"]);
@@ -62,7 +62,11 @@ if($_POST)
 		//---資料寫入
 		if ($table_set){
 			$indata = $_POST;
+			foreach ($indata as $k=>$v){
+				if (is_array($v)) $indata[$k] = implode(',',$v);
+			}
 			unset($_POST["type"]);
+			$indata["type"] = $_REQUEST["type"];
 			$indata["create_date"] = $indata["update_date"] = date("Y-m-d H:i:s");
 			$avalue = $conn->AutoExecute($table_set,$indata,"INSERT");
 		}

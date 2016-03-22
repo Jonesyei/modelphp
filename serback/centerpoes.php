@@ -46,6 +46,7 @@ $cpos["update_callback"] = ''	//修改成功返回
 $cpos["delete_callback"] = ''	//刪除成功返回
 */
 //預設值設定
+if (!isset($cpos["sort_mode"]) || $cpos["sort_mode"] == '') $cpos["sort_mode"] = 'desc';
 if ($cpos["pagecount"] == NULL || $cpos["pagecount"] == '') $cpos["pagecount"] = 10;
 if ($cpos["listorderby"] != NULL && $cpos["listorderby"] != '') $cpos["listorderby"] = ' ORDER BY '.$cpos["listorderby"];
 if ($cpos["status"]==NULL || $cpos["status"]=='') $cpos["status"] = $_SETUP["status"];
@@ -357,13 +358,14 @@ if ($_POST && $_POST["act"] !="all" && !$db_full_check) {
 	unset($_POST["act"]); //移除不必要的陣列元
 	if ($_POST["id"] == NULL || $_POST["id"] == "" || $_POST["id"]=="0"){
 		//----------新增排序為最後一筆 (如果有排序前後參數優先)
-			$sort = $conn->GetRow("select * from ".$cpos["table"]." ".$cpos["tablelistwhere"]." ORDER BY sort desc");
 			if (strtolower($cpos["sort_mode"])=="desc"){
 				$_POST["sort"] = 0;
-			}elseif ($sort["sort"] != NULL){
-				$_POST["sort"] = $sort["sort"]*1+1;
 			}else{
-				$_POST["sort"] = 1;
+				$sort = $conn->GetRow("select * from ".$cpos["table"]." ".$cpos["tablelistwhere"]." ORDER BY sort desc");
+				if ($sort["sort"] != NULL)
+					$_POST["sort"] = $sort["sort"]*1+1;
+				else
+					$_POST["sort"] = 1;	
 			}
 		//-------------------------
 		unset($_POST["id"]); //新增不需要設定ID

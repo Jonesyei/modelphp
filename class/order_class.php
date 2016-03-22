@@ -77,6 +77,7 @@ class order_center
 		var $point_status = 0;	//紅利比率模式 0 比率  1固定值
 		
 		var $stock_mode = 0;//庫存模式
+		var $stock_time = 86400;	//--庫存扣除後未付款訂單保留秒數
 		
 		var $not_member_car_time = 86400; //--非會員購物操作延遲秒數 預設一天
 		
@@ -989,6 +990,54 @@ class order_center
 			return true;
 		}
 		
+		//--回復庫存量
+		/*
+			庫存因扣除後 超過訂單支付時間回復商品庫存量 (此功能適用於所有用戶群 非只當下用戶)
+			使用 restock 欄位判斷已恢復
+		*/
+		function reset_stock(){
+			$left_join = " left join (select shopping_car_list_id,shopping_car_id,id as pid,size,count,restock from ".$this->cartable." where restock=0) as car on car.shopping_car_id=id";
+			$left_join .= " inner join (select id as proid,status as pstatus from ".$this->protable." where status=1) as pro on pro.proid=car.pid";
+			$list_data = $this->conn->GetArray("select * from ".$this->table." ".$left_join." where step=2 and pay_status!=1 and create_date<='".date("Y-m-d H:i:s",strtotime("-".$this->stock_time." seconds"))."'");
+			if ($list_data){
+				
+				//--帶出獲得的資料集
+				foreach ($list_data as $k=>$v){
+					if ($v["pid"]!=NULL && $v["pid"]!=''){
+						$all_car_list_id[] = $v["shopping_car_list_id"]; //--購物車商品列表清單ID
+						$all_pro_id[] = $v["pid"];	//--購物車包含的產品id
+					}
+				}
+				
+				//--產品資料擷取
+				$pro_data = $this->conn->GetArray("select * from ".$this->protable." where id in (".implode(',',$all_pro_id).")");
+				if ($pro_data)
+					foreach ($pro_data as $k=>$v){
+						$v["stock_no"] = explode('|__|',$v["stock_no"]);
+						$v["stock"] = explode('|__|',$v["stock"]);
+						$pro_list[$v["id"]] = $v;
+					}
+					
+				//--針對資料操作
+				foreach ($list_data as $k=>$v){
+					$key_id = array_search($v["size"],$pro_list[$v["pid"]]["stock_no"]);
+					$pro_list[$v["pid"]]["stock"][$key_id] += ($v["count"]);
+				}
+				
+				//--產品資料回寫
+				foreach ($pro_list as $k=>$v){
+					$v["stock_no"] = implode('|__|',$v["stock_no"]);
+					$v["stock"] = implode('|__|',$v["stock"]);
+					$this->conn->AutoExecute($this->protable,$v,"UPDATE"," id='".$k."'");
+				}
+				
+				//--購物車商品列表資料回寫
+				$this->conn->Execute("UPDATE ".$this->cartable." SET restock=1 WHERE shopping_car_list_id in (".implode(',',$all_car_list_id).")");
+			}//--end if
+				
+		}
+		
+		
 		//--庫存判斷 產品編號,規格,目標數量
 		function check_stock($pid,$size,$count){
 			//--判斷是否庫存模式
@@ -1134,7 +1183,10 @@ class order_center
 			$cache_string = ob_get_contents(); //接收快取頁面
 			ob_end_clean(); //關閉快取
 
-	
+			//---關閉錯誤訊息
+			$mail->SMTPDebug = false;
+			$mail->do_debug = 0;
+			
 			$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
 			$mail->AddAddress($pay_bill["recive_email"]);
 			$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
