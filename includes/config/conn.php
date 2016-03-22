@@ -1,6 +1,7 @@
 <?php
 	
 define('PREFIX',"modelphp_");
+
 $dbHost = "localhost";
 $dbUser = "root";
 $dbPass = "000000";

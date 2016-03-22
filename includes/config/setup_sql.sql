@@ -274,7 +274,6 @@ CREATE TABLE `datasetup_shopping_car` (
   `create_name` varchar(20) default NULL,
   `update_name` varchar(20) default NULL,
   `ATMcode` text COMMENT 'ATM轉帳後四碼',
-  `s_paycardmode` text COMMENT '程式生成欄位',
   `order_img` longtext COMMENT '訂單圖像',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -314,10 +313,7 @@ CREATE TABLE `datasetup_shopping_car_list` (
   `stock` int(10) default '0',
   `protype` int(20) default NULL COMMENT '商品種類root_id=1',
   `probrand` int(20) default NULL COMMENT '商品品牌root_id=2',
-  `del_pic` varchar(100) default NULL COMMENT '程式自動生成',
-  `talkabout` text COMMENT '討論評價內容',
-  `talkstar` int(11) default NULL COMMENT '評價等級',
-  `talkrequest` text COMMENT '客服回應',
+  `restock` int(11) NOT NULL default '0' COMMENT '是否已恢復庫存',
   PRIMARY KEY  (`shopping_car_list_id`),
   KEY `type` (`type`),
   KEY `lang` (`lang`)
