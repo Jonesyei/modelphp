@@ -29,11 +29,23 @@
 <link href="../includes/js/datepick/timePicker.css" rel="stylesheet" type="text/css"><!--timePicker-->
 
 
-
 </head>
 
 <body>
-
+<script>
+serback_style();
+function serback_style(){
+	if (window.localStorage.getItem("serback_style")!=null && window.localStorage.getItem("serback_style")!="default"){
+		$('body').append('<link href="style/'+window.localStorage.getItem("serback_style")+'.css" rel="stylesheet" type="text/css" media="all" />');
+	}
+}
+$(document).ready(function (){
+	$('select[serback_style]').val(window.localStorage.getItem("serback_style")).on('change',function (){
+		window.localStorage.setItem('serback_style',$(event.target).val());
+		window.location.reload();
+	});
+});
+</script>
 <div id="warper">
 
 <div class="header"><!-- head -->

@@ -5,22 +5,18 @@ include_once("../includes/main_back_inc.php");
 
 
 //func.php 組成menu html樣式
-if (1){ //判斷是否啟用後台權限判斷
 
-	//判斷權限
-	$menu_list_data = array('_sysmenu_set','system_temp','index');
+//判斷權限
+$menu_list_data = array('_sysmenu_set','system_temp','index');
 
-	if(Auth_check($conn)==false && !in_array(Now_file(),$menu_list_data))
-	{
-		alert("無權限進入頁面!!","index.php");
-		exit;
-	}
-	//左側選單
-	$menu_html = Make_menu($conn);
-	
-}else{
-	$menu_html = mode_menu($conn);
+if(Auth_check($conn)==false && !in_array(Now_file(),$menu_list_data))
+{
+	alert("無權限進入頁面!!","index.php");
+	exit;
 }
+//左側選單
+$menu_html = Make_menu($conn);
+
 if($_SESSION["admin_info"]["open_menu"]) $menu_html .= "<script>Open_menu('".$_SESSION["admin_info"]["open_menu"]."')</script>";
 
 
