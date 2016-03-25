@@ -28,13 +28,51 @@ $(document).ready(
 );
 
 
+/*行動裝置事件賦予*/
+var mouseEventTypes = {
+touchstart : "mousedown",
+touchmove : "mousemove",
+touchend : "mouseup"
+};
+$(window).load(function (){
+	for (originalType in mouseEventTypes) {
+	document.addEventListener(originalType, function(originalEvent) {
+	event = document.createEvent("MouseEvents");
+	touch = originalEvent.changedTouches[0];
+	event.initMouseEvent(mouseEventTypes[originalEvent.type], true, true,
+	window, 0, touch.screenX, touch.screenY, touch.clientX,
+	touch.clientY, touch.ctrlKey, touch.altKey, touch.shiftKey,
+	touch.metaKey, 0, null);
+	originalEvent.target.dispatchEvent(event);
+	});
+	}
+});
 
+
+
+function lock_view(){
+	$('body')[0].onmousewheel = function (){ return false;}
+	$('body')[0].onmousedown = function (){return false;}
+	$('body')[0].onmouseup = function (){ return false;}
+	$('body')[0].onmousemove = function (){ return false;}
+
+	$('body')[0].ontouchmove = function (){ return false;}
+}
+
+function unlock_view(){
+	$('body')[0].onmousewheel = function (){ return ;}
+	$('body')[0].onmousedown = function (){return ;}
+	$('body')[0].onmouseup = function (){ return ;}
+	$('body')[0].onmousemove = function (){ return ;}
+
+	$('body')[0].ontouchmove = function (){ return ;}
+}
 
 
 //search_value GET 值
 function Get(sv)
 {
-	var value = "";
+	var value = [];
 	var get = window.location.href.toString().split(window.location.host)[1];
 	get = get.split("?")[1];
 	if(get==null) return value;
@@ -43,9 +81,14 @@ function Get(sv)
 	
 	for(idx in get)
 	{
-		if(sv==get[idx].split("=")[0]) value = get[idx].split("=")[1];
+		if(sv==get[idx].split("=")[0]) value[value.length] = get[idx].split("=")[1];
 	}
-	return value;
+	if (value.length>1)
+		return value;
+	else if (value.length==1)
+		return value[0];
+	else
+		return "";
 }
 
 
@@ -298,21 +341,48 @@ function menu_search(){
 //datepicker
 function Datepick(obj,range,format) {
 	
-	if(format==null) format = 'yyyy,mm,dd';
+	if(format==null) 
+		format = 'yy,mm,dd';
+	else
+		format = format.replace('yyyy','yy');
+		
 	if(range=='range')
 	{
-		$(obj).datepick({ 
-			rangeSelect: true,
-			dateFormat: format,
-			showTrigger: "<img src='../includes/js/datepick/calendar-blue.gif' >"
-		}); 	
+		var temp_next_obj = $(obj).clone();
+		var obj = $(obj);
+		$( obj ).attr('name',$(obj).attr('name')+'[]').after(temp_next_obj);
+		$( temp_next_obj ).attr('name',$(temp_next_obj).attr('name')+'[]').before('-');
+		$( obj ).attr('size','12').datepicker({
+		  changeMonth: true,
+		  dateFormat: format,
+		  numberOfMonths: 1,
+		  buttonImage: "../includes/js/datepick/calendar-blue.gif",
+		  buttonImageOnly: true,
+		  onClose: function( selectedDate ) {
+			$( temp_next_obj ).val(selectedDate).datepicker( "option", "minDate", selectedDate );
+		  }
+		});
+		$( temp_next_obj ).attr('size','12').datepicker({
+		  changeMonth: true,
+		  dateFormat: format,
+		  numberOfMonths: 1,
+		  buttonImage: "../includes/js/datepick/calendar-blue.gif",
+		  buttonImageOnly: true,
+		  onClose: function( selectedDate ) {
+			$( obj ).datepicker( "option", "maxDate", selectedDate );
+		  }
+		});
+		
 	}
 	else
 	{
-		$(obj).datepick({ 
-			dateFormat: format,
-			showTrigger: "<img src='../includes/js/datepick/calendar-blue.gif' >"
-		});  	
+		$( obj ).datepicker({
+		  showOn: "button",
+		  dateFormat: format,
+		  buttonImage: "../includes/js/datepick/calendar-blue.gif",
+		  buttonImageOnly: true,
+		  buttonText: "Select date"
+		});	
 	}
 };
 

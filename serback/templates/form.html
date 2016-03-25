@@ -2,16 +2,11 @@
 <script>
 $(document).ready(function(){
 	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
-	$('[name="daterange"]').val( Get("daterange") );
+	$('[name="daterange[]"]').each(function (idx,obj){
+		$(obj).val( Get("daterange%5B%5D")[idx] );
+	});
 
 	$('#SearchBtn').click(function(){
-		if( $('[name="daterange"]').val().split("-")[1]!=null)
-		{
-			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
-			
-			$('[name="daterange"]').val( daterange );
-		}
-		
 		$('#search_form').submit();
 	});
 

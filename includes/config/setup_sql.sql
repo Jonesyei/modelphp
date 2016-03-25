@@ -217,7 +217,7 @@ INSERT INTO `datasetup_setting` VALUES (51, 'ch', 'design', '分類最大組數'
 INSERT INTO `datasetup_setting` VALUES (52, 'ch', 'no_post_fee', '免運費金額', '1600', 1, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (53, 'ch', 'post_fee2', '達到金額運費', '0', 1, '0000-00-00 00:00:00', '2015-01-20 18:27:52', '', 'vipadmin');
 INSERT INTO `datasetup_setting` VALUES (45, 'ch', 'demo_show', '頁面建構中自訂義', '<span style=\\"font-size:36px;\\"><b>網站建構中</b></span>', 3, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
-INSERT INTO `datasetup_setting` VALUES (54, 'ch', 'web_css', '編輯器前台式樣檔應用路徑', '../css/main.css', 1, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
+INSERT INTO `datasetup_setting` VALUES (54, 'ch', 'web_css', '編輯器前台式樣檔應用路徑', 'css/main.css', 1, '0000-00-00 00:00:00', '2015-07-23 15:49:36', '', 'vipadmin');
 
 -- --------------------------------------------------------
 

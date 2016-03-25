@@ -25,9 +25,9 @@ if (document.addEventListener){
 }
 */
 
-$(document).ready(function (){
+WDJQ(document).ready(function (){
 	domready();
-	$(window).bind('load',function(){
+	WDJQ(window).bind('load',function(){
 		windowload();
 	});
 });
@@ -41,7 +41,7 @@ $(document).ready(function (){
 */
 serback_editor = function (){
 	var _menu_data;
-            $.ajax( {
+            WDJQ.ajax( {
                 url: "ajax.php",
                 data: {type:"serback_editor"},
                 type:"GET",
@@ -53,30 +53,30 @@ serback_editor = function (){
                 }
             });
 	//--上版描述
-	$('body').prepend('<div style="position: fixed;z-index: 9999;top: 0;text-align: center;width: 100%;font-size: 18px;color: white;background: red;">後台編輯模式<BR><input type="button" value="點此正常瀏覽網站" onclick="window.localStorage.removeItem(\'serback_editor\');"></div>');
+	WDJQ('body').prepend('<div style="position: fixed;z-index: 9999;top: 0;text-align: center;width: 100%;font-size: 18px;color: white;background: red;">後台編輯模式<BR><input type="button" value="點此正常瀏覽網站" onclick="window.localStorage.removeItem(\'serback_editor\');"></div>');
 	
 	if (_menu_data!=null && _menu_data.length>0){
 		for (aa in _menu_data){
-			$(_menu_data[aa].selector).each(function (idx,obj){
-				$(obj).prepend('<div style="position:relative;"><span style="position:absolute;z-index:9998;right:0;"><input type="button" '+($(obj).attr('_isitem')!=null ? "_isitem=\""+$(obj).attr('_isitem')+"\"":"")+' '+($(obj).attr('_para')!=null ? "_para=\""+$(obj).attr('_para')+"\"":"")+' value="'+_menu_data[aa].name+'" serback_editor href="serback/'+_menu_data[aa].url+'" style="font-size:30px;"></span></div>');
+			WDJQ(_menu_data[aa].selector).each(function (idx,obj){
+				WDJQ(obj).prepend('<div style="position:relative;"><span style="position:absolute;z-index:9998;right:0;"><input type="button" '+(WDJQ(obj).attr('_isitem')!=null ? "_isitem=\""+WDJQ(obj).attr('_isitem')+"\"":"")+' '+(WDJQ(obj).attr('_para')!=null ? "_para=\""+WDJQ(obj).attr('_para')+"\"":"")+' value="'+_menu_data[aa].name+'" serback_editor href="serback/'+_menu_data[aa].url+'" style="font-size:30px;"></span></div>');
 			})
 			.find('input[serback_editor]')
 			.on('click',function (){
 				if (confirm('您要編輯此資料內容')) {
 					//--判斷是否為內容資料
-					add_url = $(this).attr('href');
-					if ($(this).attr('_isitem')!=null){
+					add_url = WDJQ(this).attr('href');
+					if (WDJQ(this).attr('_isitem')!=null){
 						//--判斷是否額外參數
-						if ($(this).attr('_isitem').split(',').length>1){
-							var items_list = $(this).attr('_isitem').split(',');
-							if ($(this).attr('href').indexOf('?')>=0) add_url = $(this).attr('href')+'&'+items_list[1]+'='+Get(items_list[0]);
-							if ($(this).attr('href').indexOf('?')<0) add_url = $(this).attr('href')+'?'+items_list[1]+'='+Get(items_list[0]);
+						if (WDJQ(this).attr('_isitem').split(',').length>1){
+							var items_list = WDJQ(this).attr('_isitem').split(',');
+							if (WDJQ(this).attr('href').indexOf('?')>=0) add_url = WDJQ(this).attr('href')+'&'+items_list[1]+'='+Get(items_list[0]);
+							if (WDJQ(this).attr('href').indexOf('?')<0) add_url = WDJQ(this).attr('href')+'?'+items_list[1]+'='+Get(items_list[0]);
 						}else{
-							if ($(this).attr('href').indexOf('?')>=0) add_url = $(this).attr('href')+'&id='+Get($(this).attr('_isitem'));
-							if ($(this).attr('href').indexOf('?')<0) add_url = $(this).attr('href')+'?id='+Get($(this).attr('_isitem'));
+							if (WDJQ(this).attr('href').indexOf('?')>=0) add_url = WDJQ(this).attr('href')+'&id='+Get(WDJQ(this).attr('_isitem'));
+							if (WDJQ(this).attr('href').indexOf('?')<0) add_url = WDJQ(this).attr('href')+'?id='+Get(WDJQ(this).attr('_isitem'));
 						}
 					}
-					if ($(this).attr('_para')!=null && $(this).attr('_para')!=null) add_url += $(this).attr('_para');
+					if (WDJQ(this).attr('_para')!=null && WDJQ(this).attr('_para')!=null) add_url += WDJQ(this).attr('_para');
 					window.open(add_url,"serback2","_blank",config='height=500,width=500');
 				}
 			});
@@ -98,15 +98,15 @@ domready = 	function(){
 		if (typeof(VerifyCode)!="undefined") VerifyCode(); //驗證碼賦予 事件
 		
 		//--base64圖片 onload 錯誤時讀取
-		$('img').each(function (idx,obj){
-			$(obj).on('error',function (){
-				if ($(this).attr('tsrc')!=null && $(this).attr('tsrc')!=''){
-					$(this)[0].src = $(this).attr('tsrc');
+		WDJQ('img').each(function (idx,obj){
+			WDJQ(obj).on('error',function (){
+				if (WDJQ(this).attr('tsrc')!=null && WDJQ(this).attr('tsrc')!=''){
+					WDJQ(this)[0].src = WDJQ(this).attr('tsrc');
 				}
 			});
-			$(obj).on('load',function (){
-				if ($(this).attr('tsrc')!=null && $(this).attr('tsrc')!=''){
-					$(this).removeAttr('tsrc');
+			WDJQ(obj).on('load',function (){
+				if (WDJQ(this).attr('tsrc')!=null && WDJQ(this).attr('tsrc')!=''){
+					WDJQ(this).removeAttr('tsrc');
 				}
 			});
 		});
@@ -120,36 +120,36 @@ domready = 	function(){
 windowload = function (){
 	
 	//--移除標籤資訊
-	$('script').remove();
+	WDJQ('script').remove();
 
 	//-IE圖片加載失敗時使用
-	$('img').each(function (idx,obj){
-		if (typeof($(obj)[0].naturalWidth)!=="undefined" && $(obj)[0].naturalWidth===0){
-			$(this)[0].src = $(this).attr('tsrc');
+	WDJQ('img').each(function (idx,obj){
+		if (typeof(WDJQ(obj)[0].naturalWidth)!=="undefined" && WDJQ(obj)[0].naturalWidth===0){
+			WDJQ(this)[0].src = WDJQ(this).attr('tsrc');
 		}
 	});
 	
 	//--驗證碼reload
-	if ($('img[src*="verifycode"]').length>0){
+	if (WDJQ('img[src*="verifycode"]').length>0){
 		var temp_time = new Date();
-		var temp_str = $('img[src*="verifycode"]').attr('src').split('?');
+		var temp_str = WDJQ('img[src*="verifycode"]').attr('src').split('?');
 		if (temp_str.length>0)
-		$('img[src*="verifycode"]').attr('src',temp_str[0]+'?'+temp_time.getTime());
+		WDJQ('img[src*="verifycode"]').attr('src',temp_str[0]+'?'+temp_time.getTime());
 	}
 
 	//--帳號自動轉英數
 	/*
-	if ($('input[name="account"]').length>0){
-		$('input[name="account"]').each(function (idx,obj){
-			$(obj).bind('keyup',function (){this.value=this.value.replace(/\W/g,'');return false;});
-			$(obj).on('keydown',function (){$(obj).keyup();});
+	if (WDJQ('input[name="account"]').length>0){
+		WDJQ('input[name="account"]').each(function (idx,obj){
+			WDJQ(obj).bind('keyup',function (){this.value=this.value.replace(/\W/g,'');return false;});
+			WDJQ(obj).on('keydown',function (){WDJQ(obj).keyup();});
 		});
 	}
 	*/
 	
 	//--編輯器圖片 自動最大全屏寬度
 	var detail_obj = '*[detail]';
-	$(detail_obj).each(function (idx,obj){
+	WDJQ(detail_obj).each(function (idx,obj){
 		
 	})
 	

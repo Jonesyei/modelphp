@@ -382,10 +382,10 @@ return Ckedit($name,$value,$style);
 
 
 
-//編輯器 名稱,寬,高,值
-function Ckedit($name,$value,$style='normal')
+//編輯器 名稱,資料內容,編輯器預設類型,框架預設class
+function Ckedit($name,$value,$style='normal',$bodyclass='')
 {
-	$tmp = '<textarea id="'.$name.'" name="'.$name.'" editor="'.$style.'" cols="1" rows="1">'.deQuotes($value,-1).'</textarea>';
+	$tmp = '<textarea id="'.$name.'" name="'.$name.'" editor="'.$style.'" cols="1" rows="1" bodyclass="'.$bodyclass.'">'.deQuotes($value,-1).'</textarea>';
 	$tmp .= "
 	<script>
 	CKEDITOR.replace( '".$name."',
@@ -411,7 +411,7 @@ function datepicker($name,$value,$attr='',$format=array()){
 	if (typeof($.fn.datepicker)=='function') {
 		jQuery('#".$name."').datepicker(JSON.parse('".json_encode($format)."'));
 	}else{
-		document.getElementById('alies').setAttribute('type','date');
+		document.getElementById('".$name."').setAttribute('type','date');
 	}
 	</script>
 	";

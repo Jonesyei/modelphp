@@ -2,16 +2,11 @@
 <script>
 $(document).ready(function(){
 	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
-	$('[name="daterange"]').val( Get("daterange") );
+	$('[name="daterange[]"]').each(function (idx,obj){
+		$(obj).val( Get("daterange%5B%5D")[idx] );
+	});
 
 	$('#SearchBtn').click(function(){
-		if( $('[name="daterange"]').val().split("-")[1]!=null)
-		{
-			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
-			
-			$('[name="daterange"]').val( daterange );
-		}
-		
 		$('#search_form').submit();
 	});
 
@@ -210,7 +205,44 @@ $(document).ready(function(){
 
 
 
-
+<script>
+var sortnow = '({$data.list.0.sort})'*1;//--本頁排序起始值
+var sortcount = '({$smarty.section.idex.index})'*1;//--項目數量
+var sortmain = ".table-style01"; //-列表主體
+var sortrow = ".tr_sort:not(.ui-sortable-placeholder)"; //--可以移動的項目
+var sort_act = 0;
+  $(function() {
+    $( sortmain ).sortable( {items: sortrow} );
+    //$( sortmain ).disableSelection();
+  });
+  
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	  $(obj).on("mouseup",function (){
+		if (sort_act!=2){
+			unlock_view();
+			window.setTimeout("cps()",50);
+		}
+		sort_act=0;
+	  });
+	  $(obj).on("mousedown",function (){
+		if (sort_act!=2) {sort_act=1;lock_view();}
+	  });
+	  $(obj).on("mouseover",function (){ //--滑鼠移入加入顯示黑色方框式樣
+			_td_style = "border-bottom:1px solid #000000;border-top:1px solid #000000;";
+	 		$(obj).find('td').attr("style",_td_style);
+			$(obj).find('td:first').attr("style",_td_style+"border-left:1px solid #000000;");
+			$(obj).find('td:last').attr("style",_td_style+"border-right:1px solid #000000;");
+	  });
+	  $(obj).on("mouseout",function (){ //--滑鼠移出移除所有式樣
+			$(obj).find('td').removeAttr("style");
+	  });
+  });
+  function cps(){
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	$(obj).find('input[type="text"]').val(sortnow+idx);
+  });
+  }
+</script>
 
 <script>
 page_initial('table_content');
@@ -427,7 +459,7 @@ function upload_one(response){
 <script>
 
   $(function() {
-    $( "#piclist" ).sortable( {items: 'div[id]'} );
+    $( "#piclist" ).sortable( {items: 'div[id]',stop: function( event, ui ) {unlock_view();},start:function (){lock_view();} } );
     //$( "#piclist" ).disableSelection(); 讓可拖曳物件的無法編輯以及選取
   });
 
@@ -525,6 +557,9 @@ function re_sort(){
 	}
 	function aes (dname){
 		$('[name="'+dname+'[]"]').click();
+		$('[name="'+dname+'[]"]').on('change',function (){
+			ajxupload();
+		});
 	}
 	</script>
     <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
@@ -598,7 +633,7 @@ function re_sort(){
     <script>
 	$(document).ready(function (){
 		create_color_select('.color_list');
-		$('#size_td').sortable( {items: 'div.zlist'} );
+		$('#size_td').sortable( {items: 'div.zlist',stop: function( event, ui ) {unlock_view();},start:function (){lock_view();}} );
 	})
 	function addtolist(){
 		var temp_time = new Date().getTime();

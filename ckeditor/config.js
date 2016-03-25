@@ -22,6 +22,16 @@ CKEDITOR.editorConfig = function( config ) {
 	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
 	config.skin = 'moonocolor';
 	
+	//--編輯器檔案預設起始路徑
+	config.baseHref = window.location.href.split('serback')[0];
+	//--預設主體class
+	if (document.getElementById(this.name).attributes['bodyclass']!=null && document.getElementById(this.name).getAttribute('bodyclass')!=''){
+		config.bodyClass = document.getElementById(this.name).getAttribute('bodyclass');
+	}
+	//---式樣含蓋貼上
+	CKEDITOR.config.forcePasteAsPlainText = true;
+	
+	
 	config.language = 'zh';
 	config.height = '500px';
 	
@@ -33,7 +43,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserFlashUploadUrl = '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';//可上傳Flash檔案
 	
 	if (typeof(website_css)!="undefined" && website_css!=null && website_css!=''){
-		config.contentsCss = website_css;
+		config.contentsCss = website_css.split(',');
 	}else{
 		config.contentsCss = '../css/main.css';
 	}

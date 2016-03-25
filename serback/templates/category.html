@@ -2,16 +2,11 @@
 <script>
 $(document).ready(function(){
 	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
-	$('[name="daterange"]').val( Get("daterange") );
+	$('[name="daterange[]"]').each(function (idx,obj){
+		$(obj).val( Get("daterange%5B%5D")[idx] );
+	});
 
 	$('#SearchBtn').click(function(){
-		if( $('[name="daterange"]').val().split("-")[1]!=null)
-		{
-			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
-			
-			$('[name="daterange"]').val( daterange );
-		}
-		
 		$('#search_form').submit();
 	});
 
@@ -149,7 +144,7 @@ var sortrow = '.tr_sort[parent_id="1"]:not(.ui-sortable-placeholder)'; //--可�
 var sort_act = 0;
 var sortlastobj;
 $(function() {
-	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();},
+	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();unlock_view();},start:function (){lock_view();},
 		change: function (e,ui){
 		  $(ui.placeholder).hide().slideDown();
 		}
@@ -470,7 +465,7 @@ function upload_one(response){
 <script>
 
   $(function() {
-    $( "#piclist" ).sortable( {items: 'div[id]'} );
+    $( "#piclist" ).sortable( {items: 'div[id]',stop: function( event, ui ) {unlock_view();},start:function (){lock_view();}} );
     //$( "#piclist" ).disableSelection(); 讓可拖曳物件的無法編輯以及選取
   });
 
@@ -553,6 +548,9 @@ function picdel(d){
 	}
 	function aes (dname){
 		$('[name="'+dname+'[]"]').click();
+		$('[name="'+dname+'[]"]').on('change',function (){
+			ajxupload();
+		});
 	}
 	</script>
     <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
@@ -611,7 +609,7 @@ function picdel(d){
 		}
 	}
 	$(function() {
-		$( "#file_list" ).sortable();
+		$( "#file_list" ).sortable( {stop: function( event, ui ) {unlock_view();},start:function (){lock_view();}} );
 		$( "#file_list" ).disableSelection();
 	});
     </script>
@@ -652,7 +650,7 @@ function picdel(d){
 	var pro_obj = '#size_div';//--容器
 	
 	$(function() {
-    $(pro_obj).sortable();
+    $(pro_obj).sortable( {stop: function( event, ui ) {unlock_view();},start:function (){lock_view();}} );
     $(pro_obj).disableSelection();
 	});
 	
