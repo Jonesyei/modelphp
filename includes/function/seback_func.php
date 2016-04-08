@@ -131,7 +131,7 @@ function Auth_check($conn)
 									$sett = explode('=',$v2);
 									if (in_array($sett[0],$unset_array,0)) continue;
 								}
-								if (stripos($v2,'id=',0)!==false) continue;
+								if (stripos($v2,'id=',0)!==false || stripos($v2,'page=',0)!==false ||  stripos($v2,'s_',0)!==false) continue;
 								if($temp[0]==$tmp[0] && in_array($v2,$tmp2)==true)
 								{
 									$url_set = 1;
