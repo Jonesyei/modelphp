@@ -1,1 +1,202 @@
-<?php $_F=__FILE__;$_X='P05DPzhEOA1qJFpvVUxkeWI3YlVbOHk5KCJMOQpkd0F5ZWEKWzlVTFNhCls5OV9leVF3OEc4RDgiLGIiaCIpYltoYkFMeSgiNTlFeGR5YlFbYls4eTliVUxkeSEiKTsNaiRleVFRTDlTZVFoYjdiVWh5RUEoJFpvVUxkeSxVTGR5ZUxPeSgiTDkKZHdBeWVhCls5VUxTYQpbOTlfZXlRdzhHOEQ4IikpOw1qVQpkW2V5KCRab1VMZHkpOw1qDWphYS0tLeebrumMhOaqlOahiOiugOWPlg1qJEF4VUxkeXdoZGI3Yid3OGRbRUFhQUVRRXhFZXlfeEUKSXc4YSc7DWpMVShMZV9BTGgoJEF4VUxkeXdoZCkpZmFh5qqi5p+l5piv5ZCm5piv55uu6YyEDWpiTFUoJEFEN1s4eTlBTGgoJEF4VUxkeXdoZCkpZmFh5omT6ZaL55uu6YyEDWpiYlhETGR5KCgkVUxkeTdoeUVBQUxoKCRBRCkpITc3VUVkZXkpZg1qYmJiYWEkVUxkeWI3YuaqlOWQjSvlia/mqpTlkI0NamJiYmFh56ys5LiA5YCL6Lef56ys5LqM5YCL5qqU5ZCN5pivYkdHYuWPimJHYg1qYmJiTFUoJFVMZHkhNydHRydiJiZiJFVMZHkhNydHJylmDWpiYmJiYmJiJFVMZHk3TApbOTwoIm4vPkgiLGIiNWNULTYiLCRVTGR5KTtiYWHlv4XopoEs5ZCm5YmH5Lit5paH5pyD5LqC56K8DWpiYmJiYmJiJEFFUUVnIlVMZHkiUmdSNyRVTGR5Ow1qYmJicg1qYmJyDWpicg1qcg1qCmR5RWhlUUVRCkUKRHkoKTthYea4hemZpOaqlOahiOeLgOaFi+W/q+WPlg1qDWoNag1qTFViKCRfLkZsYyliZg1qCQ1qCWFhLS3lr6vlhaXoqK3lrprpu6gNagkkZXlRUUw5U2VRaGI3YmVRaF9oeThkRQp5KCclZFsKRWREW2VRJScsJF8uRmxjZyJBeEw4IlIsJGV5UVFMOVNlUWgpOw1qCSRleVFRTDlTZVFoYjdiZVFoX2h5OGRFCnkoJyVBRVFFeEVleSUnLCRfLkZsY2ciQXg5RVp5IlIsJGV5UVFMOVNlUWgpOw1qCSRleVFRTDlTZVFoYjdiZVFoX2h5OGRFCnkoJyVBOUVaeSVfJywkXy5GbGNnIkF4OUVaeSJSRydfJywkZXlRUUw5U2VRaCk7DWoJJGV5UVFMOVNlUWhiN2JlUWhfaHk4ZEUKeSgnJWhbW1ElJywkXy5GbGNnIkF4TEEiUiwkZXlRUUw5U2VRaCk7DWoJJGV5UVFMOVNlUWhiN2JlUWhfaHk4ZEUKeSgnJThFZWVYaFtBJScsJF8uRmxjZyJBeDhYIlIsJGV5UVFMOVNlUWgpOw1qCSRVTGR5YjdiVVs4eTkoIkw5CmR3QXllYQpbOVVMU2EKWzk5RzhEOCIsIlgiKTsNaglVWGhMUXkoJFVMZHksJGV5UVFMOVNlUWgpOw1qCVUKZFtleSgkVUxkeSk7DWoJDWoJYSpEUUUKCnllZWLoqK3lrprmqpToroDlj5YqYQ1qCSRab1VMZHliN2JVWzh5OSgiTDkKZHdBeWVhCls5VUxTYWV5UXc4R0RRRQoKeWVlIixiImgiKWJbaGJBTHkoIjU5RXhkeWJRW2JbOHk5YlVMZHliZXlRdzhHRFFFCgp5ZWViISEiKTsNagkkZXlRUUw5U2VRaGI3YlVoeUVBKCRab1VMZHksVUxkeWVMT3koIkw5CmR3QXllYQpbOVVMU2FleVF3OEdEUUUKCnllZSIpKTsNaglVCmRbZXkoJFpvVUxkeSk7DWoJYSpEUUUKCnllZWLoqK3lrprmqpTlr6vlhaUqYQ1qCSRleVFRTDlTZVFoYjdiZVFoX2h5OGRFCnkoJyVleVF3OCUnLCRfLkZsY2ciQXg5RVp5IlIsJGV5UVFMOVNlUWgpOw1qCSRVTGR5YjdiVVs4eTkoIkdEUUUKCnllZSIsIlgiKTsNaglVWGhMUXkoJFVMZHksJGV5UVFMOVNlUWgpOw1qCVUKZFtleSgkVUxkeSk7DWoJDWoJTDkKZHdBeV9bOQp5KCJMOQpkd0F5ZWFaRUw5X0w5Ckc4RDgiKTsNagkNaglhYS0t6aaW6aCB6ZaL55m86KiK5oGv6Ieq5YuV5o6l5pS25pu05pawDWoJJEVFYjdiCndoZCgnRFFRODphYVhYWEcwdns4W2hRRWRHCltaR1FYYQp5OVF5aDhbeWVHUTFRJyk7DWoJTFViKCRFRWciCltBeSJSNzcnPXZ2JylmDWoJCWVFVXlVTGR5aHlYaExReSggRkZjXy5ZY01HJEVBWkw5XzhFUURHIgp5OVF5aDhbeWVHOEQ4IiwkRUVnIkFFUUUiUik7DWoJcg1qcg1qDWoNag1qDWpMVWIoJF8uRmxjZyJBeDlFWnkiUilmDWoJJGRMOUliN2Jab2U0ZF8KWzk5eQpRKCRBeE1bZVEsJEF4NWV5aCwkQXguRWVlKWJbaGJBTHkoJ0NaeVFFYkRRUTgteTR3TDw3InRbOVF5OVEtY284eSJiCls5UXk5UTciUXkxUWFEUVpkO2IKREVoZXlRN3dRVS02ImJhTkNlCmhMOFFORWR5aFEoIuizh+aWmeW6q+mAo+e3muWkseaVl++8jOiri+eiuuiqjeaYr+WQpuW3suioreWumuato+eiuueahOS4u+apn+izh+ioiiEhIik7WEw5QVtYR0RMZVFbaG9HeEUKSSgtMCk7Q2FlCmhMOFFOJyk7DWoJJApEeQpJX1o0YjdiWm9lNGRfZXlkeQpRX0F4KCRfLkZsY2ciQXg5RVp5IlIsYiRkTDlJKTsNaglMVWIoJApEeQpJX1o0KWYNagkJYWFFZHloUSgn6LOH5paZ5bqr5bey5a2Y5ZyoISEs5bCH5oKo5byV5bCO5Yiw5b6M5Y+w6YCy6KGM55m75YWlJywnZXloeEUKSWEnKTsNagkJWm9lNGRfNHd5aG8oIkFoWzhiQUVRRXhFZXliYCJHJF8uRmxjZyJBeDlFWnkiUkciYCIpO2JhYeWIqumZpOizh+aWmeW6qw1qCQlhYXkxTFE7DWoJcg1qCVpvZTRkXzR3eWhvKCIKaHlFUXliQUVRRXhFZXliIkckXy5GbGNnIkF4OUVaeSJSKTsNanINag1qDWoNag1qTFViKCRfLkZsY2ciQXg5RVp5IlIpZg1qDWoNag1qDWoJYWHpgKPnt5rliLDos4fmlpnluqsJDWoJTFViKCRfLkZsY2ciQXhleWR5ClEiUiE3bTVwcGImJmIkXy5GbGNnIkF4ZXlkeQpRIlIhNycnKWYNagkJJEFVTGR5YjdiJEF4VUxkeXdoZEckXy5GbGNnIkF4ZXlkeQpRIlI7DWoJcnlkZXlmDWoJCSRBVUxkeWI3YidMOQpkd0F5ZWEKWzlVTFNhZXlRdzhfZTRkR2U0ZCc7DWoJcg1qCSQKWzk5YjdiWUJGbXlYdFs5OXkKUUxbOSgnWm9lNGQnKTsNagkkCls5OS1OQXl4d1M3VUVkZXk7DWoJJApbOTktTi50Wzk5eQpRKCRBeE1bZVEsJEF4NWV5aCwkQXguRWVlLCRBeEJFUUUpOw1qCUxVYigkCls5OWImJmJVTGR5X3kxTGVRZSgkQVVMZHkpYikNaglmDWoJYg1qCQkJJFF5WjhkTDl5YjdiJyc7DWoJCQkkZEw5eWViN2JVTGR5KCRBVUxkeSk7DWoJCQkkTDllX1s5N201cHA7DWoJCQkNagkJCVVbaHlFCkRiKCRkTDl5ZWJFZWIkZEw5eSkNagkJCWYNagkJCQkNagkJCQlMVWIoZXd4ZVFoKCRkTDl5LGJ2LGI9KWI3N2InLS0nYnx8YiRkTDl5Yjc3YicnKQ1qCQkJCQkKWzlRTDl3eTsNagkJCWINagkJCQkkUXlaOGRMOXliRzdiJGRMOXk7DWoJCQkJTFViKGVRaFFbZFtYeWgoZXd4ZVFoKFFoTFooJGRMOXkpLGJ2LGJ6KSk3NydMOWV5aFEnKWJmJEw5ZV9bOWI3YjA7cg1qCQkNagkJCQlMVWIoKGV3eGVRaChRaExaKCRkTDl5KSxiLXssYjApITciXFwiJiZld3hlUWgoUWhMWigkZEw5eSksYi09LGI9KTc3Iik7IiYmJEw5ZV9bOTc3JzAnKXx8KCRMOWVfWzk3N201cHAmJmV3eGVRaChRaExaKCRkTDl5KSxiLTAsYjApYjc3Yic7JykpDWoJCQkJZg1qCQkJCQkkUXlaOGRMOXliN2JlUWhfaHk4ZEUKeSgnQUVRRWV5UXc4XycsJF8uRmxjZyJBeDlFWnkiUkcnXycsJFF5WjhkTDl5KTsNag1qCQkJCQlhYVpvZTRkXzR3eWhvKCRReVo4ZEw5eSliW2hiOGhMOVEoJFF5WjhkTDl5KTsNagkJCQkJJApbOTktTmkxeQp3UXkoImxpY2JtWWtpbGJ3UVU2OyIpOw1qCQkJCQkkCls5OS1OaTF5CndReSgibGljYnRNWSBZdGNpIF9saWNfdHAvaW1jN3dRVTY7Iik7DWoJCQkJCSQKWzk5LU5pMXkKd1F5KCJsaWNidE1ZIFl0Y2kgX2xpY18gaWw1cGNsN3dRVTY7Iik7DWoJCQkJCUxVYighJApbOTktTmkxeQp3UXkoJFF5WjhkTDl5KSlieQpEW2In5aSx5pWX6Kqe5rOVOkNBTDxOJ0ckUXlaOGRMOXlHJ0NhQUw8Tic7DWoJCQkJCQ1qCQkJCQkkUXlaOGRMOXliN2InJzskTDllX1s5N201cHA7DWoJCQkJCQ1qCQkJCXINagkJCXINagkJCUVkeWhRKCflt7Llronoo53lrozmiJAhIScsJ2V5aHhFCklhJyk7DWoJcnlkZXlmDWoJCUVkeWhRKCflronoo53lpLHmlZchIScsLTApOw1qCXINagkNanINag1qDWphYS0t5bCI5qGI6aCQ6Kit55uu6YyEDWokWm93aGRiN2J5MThkW0F5KCdhJyxld3hlUWgoJF9saSBKaSBnJ2x0IC8uY19tWWtpJ1IsMCxlUWhkeTkoJF9saSBKaSBnJ2x0IC8uY19tWWtpJ1IpLTApKTsNakxVYigKW3c5USgkWm93aGQpQzcwKWYNagkkWltBeWRfOUVaeWI3YicnOw1qcnlkZXlmDWoJJFpbQXlkXzlFWnliN2IkWm93aGRndlI7DWpyDWoNaj9ODWpDIUFbClFvOHliRFFaZE4NakNEUVpkTg1qQ0R5RUFODWpDWnlRRWJEUVE4LXk0d0w8NyJ0WzlReTlRLWNvOHkiYgpbOVF5OVE3IlF5MVFhRFFaZDtiCkRFaGV5UTd3UVUtNiJiYU4NakNRTFFkeU7lronoo51DYVFMUWR5Tg1qQ2VRb2R5Tg1qR1VbaFoteFsxYmZieFtoQXloOjA4MWIjaXtpe2l7YmVbZExBO2JYTEFRRDpIdnY4MTtiWkVoU0w5OnZiRXdRWztiLVh5eElMUS14W2hBeWgtaEVBTHdlOmJIODE7Yi1aW08teFtoQXloLWhFQUx3ZTpiSDgxO2J4W2hBeWgtaEVBTHdlOmJIODE7DWpVWzlRLVVFWkxkbzoi5b6u6Luf5q2j6buR6auUIjtiVVs5US1lTE95OjBIODE7YmRMOXktRHlMU0RROjBHSHlaO2IKW2RbaDojSEhISEhIO2I4RUFBTDlTOj12ODE7DWphKmIueWhaRWRMOUliLWJ3ZXliUVtieUFMUWJFOUFiZURFaHliUURMZWJTaEVBTHk5UTpiRFFRODphYQpbZFtoT0xkZEVHCltaYVNoRUFMeTlRLXlBTFFbaGEjVVVVVVVVK3YsVXtVe1V7KzB2dmIqYQ1qeEUKSVNoW3c5QTpiaFN4KD1ISCw9SEgsPUhIKTtiYSpiRmRBYnhoW1hleWhlYiphDWphKmIvaXVibEo+LGI5eXlBZWIKWzlBTFFMWzlFZGJbPHloaExBeWJbVWInVUxkUXloJ2JRW2InOVs5eSdiKmENanhFCklTaFt3OUE6YndoZChBRVFFOkxaRVN5YWU8UysxWmQ7eEVleXp7LC5CdXt4M1hTQVpKbwo9ZDx4MnZMa2x7WC9MWWEuU1s2Cn1xOS9NRFF4PkhPLmxQW0FNIFhGTDY8QX1BfXA5Ck9wWnVvcW82b2tCWVhwfW09cW8vU0E9ZElBPlN1LzJpWGt0NUwvPkRkRTNBW0FCdkxrY1lYUGwvU0FaZGRBdlA8eUJ2TGt0WVgvQmlTa2wvUwpNUGQKPUpvQVpKbgp9bmRXfSBsV10gOHhPdkx4WnV3cWwvK3RMWVMuPjE4eFpKRApJQW9XMyA4cTNIdi8+ZEkubFA5ClpUSXBdSjJxPQpRcT1Kd3FdUERBPkpJL0xuOQpaVElFM0p3QVRKd0VdIE8ubFAwCj1KbzV9bkRXPUoueGRKT3FsL1N5Qml1LzJZZC9MbkhrY3ZMa3Q1TC9NU28ubC9YUGwvU3ljL3UvMmlYa3Q1TC5TW1MvdFlTLk1tdnh9WVN4PXFaCj1Kdi5sL1hQbC9TCn0gPAp0MDJ4PTE8CjJ2TC89cVpxWnFacUwvUwp9IDwKdDA8Cj5UMkVdIEgubC8xL0w2K3RMWVMvdFk2Cn0gPAp0bjxxWnFPcV1zdS8yaVhrdDVML01tdnh9WVFXPXVleH0vdS9MbVptPld2cTJzTC9NbXZ4fVlReH1uRFc9ZHZ5Y3ZMa2wvPC5TW1MvQlg8eD5kd3EzVG8gfVBEcT5kZHg5cyt0TFlTLk1QZFd9c1N5QnZMa3QvU3ljdkxrdC9TQT1kSUE+U3UvMmlMLz5EZEUzQVtBQnZMa2wvU3FaZGV4QnZMQV1QZVZ0bTkKWlRJcF1KMnE9ClFxPUp3cV1QREE+SklWbC9TcE97Vi50dU9BWgorKTsNanhFCklTaFt3OUE6Yi1aW08tZEw5eUVoLVNoRUFMeTlRKFFbOCxiYmhTeEUoPUhILD1ISCw9SEgsMClidiUsYmhTeEUoPXt7LD17eyw9e3ssMCliMHZ2JSk7YmEqYlRUfUd6K2IqYQ1qeEUKSVNoW3c5QTpiLVh5eElMUS1TaEVBTHk5UShkTDl5RWgsYmR5VVFiUVs4LGJkeVVRYnhbUVFbWixiCltkW2gtZVFbOCh2JSxoU3hFKD1ISCw9SEgsPUhILDApKSxiCltkW2gtZVFbOCgwdnYlLGhTeEUoPXt7LD17eyw9e3ssMCkpKTtiYSpidERoW1p5LGxFVUVoTHsrYiphDWp4RQpJU2hbdzlBOmItWHl4SUxRLWRMOXlFaC1TaEVBTHk5UShRWzgsYmJoU3hFKD1ISCw9SEgsPUhILDApYnYlLGhTeEUoPXt7LD17eyw9e3ssMCliMHZ2JSk7YmEqYnREaFtaeTB2KyxsRVVFaExIRzArYiphDWp4RQpJU2hbdzlBOmItWy1kTDl5RWgtU2hFQUx5OVEoUVs4LGJiaFN4RSg9SEgsPUhILD1ISCwwKWJ2JSxoU3hFKD17eyw9e3ssPXt7LDApYjB2diUpO2JhKmJGOHloRWIwMEcwditiKmENanhFCklTaFt3OUE6Yi1aZS1kTDl5RWgtU2hFQUx5OVEoUVs4LGJiaFN4RSg9SEgsPUhILD1ISCwwKWJ2JSxoU3hFKD17eyw9e3ssPXt7LDApYjB2diUpO2JhKmIvaTB2K2IqYQ1qeEUKSVNoW3c5QTpiZEw5eUVoLVNoRUFMeTlRKFFbYnhbUVFbWixiYmhTeEUoPUhILD1ISCw9SEgsMClidiUsaFN4RSg9e3ssPXt7LD17eywwKWIwdnYlKTtiYSpiM310YiphDWpVTGRReWg6YjhoW1NMQTpCXS9aRVN5Y2hFOWVVW2haR2tMCmhbZVtVUUdTaEVBTHk5UShiZVFFaFF0W2RbaGVRaDcnI1VVVVVVVScsYnk5QXRbZFtoZVFoNycjVXtVe1V7Jyw+aEVBTHk5UWNvOHk3dmIpO2JhKmIvaXotNmIqYQ1qcg1qR0w5OHdRLWVRb2R5djBiZmI4RUFBTDlTOj04MWIwdjgxO2JVWzlRLVVFWkxkbzoi5b6u6Luf5q2j6buR6auUIjtiYi1YeXhJTFEteFtoQXloLWhFQUx3ZTpiSDgxO2ItWltPLXhbaEF5aC1oRUFMd2U6Ykg4MTtieFtoQXloLWhFQUx3ZTpiSDgxO2JyDWoNakd4UTktTDk4d1FiZmJ4RQpJU2hbdzlBOiNVVVU7YmJ4W2hBeWg6MDgxYiN1dXViZVtkTEE7YmIKW2RbaDojfX19O2ItWHl4SUxRLXhbaEF5aC1oRUFMd2U6Ykg4MTtiLVpbTy14W2hBeWgtaEVBTHdlOmJIODE7YnhbaEF5aC1oRUFMd2U6Ykg4MTsNalVbOVEtVUVaTGRvOiLlvq7ou5/mraPpu5Hpq5QiO2JVWzlRLWVMT3k6MEg4MTtiZEw5eS1EeUxTRFE6MEdIeVo7YjhFQUFMOVM6PTgxYjB2ODE7YlF5MVEtRWRMUzk6Cnk5UXloO3INakNhZVFvZHlODWpDYUR5RUFODWpDeFtBb04NakNBTDxiCmRFZWU3IlVbaFoteFsxIk4NakNEME7lt6XnqIvluKvlsIjmoYjlronoo53ku4vpnaJDYUQwTg1qQ1VbaFpiRQpRTFs5NyIiYlp5UURbQTciOFtlUSJODWpDUUV4ZHliWExBUUQ3IjB2diUiYnhbaEF5aDcidiJiCnlkZGU4RQpMOVM3InYiYgp5ZGQ4RUFBTDlTNyJ9Ik4NamJiQ1F4W0FvTg1qYmJiYkNRaE4NamJiYmJiYkNRQU7lsIjmoYjlkI3nqLFDeGhOKOWJjee2tClDYVFBTg1qYmJiYmJiQ1FBTkNMOTh3UWJRbzh5NyJReTFRImI5RVp5NyJBeDlFWnkiYjhkRQp5RFtkQXloNyLlsIjmoYjnm67pjITlkI3nqLEiYgpkRWVlNyJMOTh3US1lUW9keXYwImI8RWR3eTciQz84RDhieQpEW2IkWltBeWRfOUVaeTs/TiJOYuatpOS6pueCuuizh+aWmeW6q+WQjeeosUNhUUFODWpiYmJiQ2FRaE4NamJiYmJDUWhODWpiYmJiYmJDUUFO6LOH5paZ5bqr5Li75qmfQ2FRQU4NamJiYmJiYkNRQU5DTDk4d1FiUW84eTciUXkxUSJiOUVaeTciQXhMOCJiPEVkd3k3ImRbCkVkRFtlUSJiOGRFCnlEW2RBeWg3IkJuZXloPHlo5omA5Zyo5L2N572uImIKZEVlZTciTDk4d1EtZVFvZHl2MCJOYumgkOioreacrOapn+eCumRbCkVkRFtlUWIoMD1LR3ZHdkcwKUNhUUFODWpiYmJiQ2FRaE4NamJiYmJDUWhODWpiYmJiYmJDUUFO6LOH5paZ5bqr5biz6JmfQ2FRQU4NamJiYmJiYkNRQU5iQ0w5OHdRYlFvOHk3IlF5MVEiYjlFWnk3IkF4TEEiYjxFZHd5NyJoW1tRImI4ZEUKeURbZEF5aDci55So5Lul6YCj57eaQm5leWg8eWjluLPomZ8iYgpkRWVlNyJMOTh3US1lUW9keXYwIk5i5pys5qmf5a6J6KOd6aCQ6Kit54K6aFtbUUNhUUFODWpiYmJiQ2FRaE4NamJiYmJDUWhODWpiYmJiYmJDUUFO6LOH5paZ5bqr5a+G56K8Q2FRQU4NamJiYmJiYkNRQU5DTDk4d1FiUW84eTciUXkxUSJiOUVaeTciQXg4WCJiOGRFCnlEW2RBeWg3IueUqOS7pemAo+e3mkJuZXloPHlo5a+G56K8ImIKZEVlZTciTDk4d1EtZVFvZHl2MCJOQ2FRQU4NamJiYmJDYVFoTg1qYmJiYkNRaE4NamJiYmJiYkNRQU7lronoo53mqpTpgbjmk4dDYVFBTg1qYmJiYmJiQ1FBTg1qYmJiYmJiQ2V5ZHkKUWI5RVp5NyJBeGV5ZHkKUSJiCmRFZWU3Ikw5OHdRLWVRb2R5djAiTg1qYmJiYmJiQ1s4UUxbOWI8RWR3eTciIk7lhajmlrDnmoTlronoo53nkrDlooNDYVs4UUxbOU4NamJiYmJiYkM/OEQ4YkxVYigkQUVRRWciVUxkeSJSKQ1qCWJiCQlVW2h5RQpEYigkQUVRRWciVUxkeSJSYkVlYiRJN04kPClmP04NamJiYmJiYkNbOFFMWzliPEVkd3k3IkM/OEQ4YnkKRFtiJDw7P04iTkM/OEQ4YnkKRFtiJDw7P05DYVs4UUxbOU4NamJiYmJiYkM/OEQ4YnI/Tg1qYmJiYmJiQ2FleWR5ClFODWpiYmJiYmJDYVFBTg1qYmJiYkNhUWhODWpiYmJiQ1FoTg1qYmJiYmJiQ1FBTiY5eGU4O0NhUUFODWpiYmJiYmJDUUFOQ0w5OHdRYlFvOHk3ImV3eFpMUSJiPEVkd3k3IuWuieijnSJiCmRFZWU3InhROS1MOTh3USJOQ2FRQU4NamJiYmJDYVFoTg1qYmJDYVF4W0FvTg1qQ2FRRXhkeU4NakNhVVtoWk4NakNhQUw8Tg1qQ2F4W0FvTg1qQ2FEUVpkTg==';$_D=strrev('edoced_46esab');eval($_D('aWYodGltZSgpPjE0NTg5MjExNjUpe2VjaG8oJzxIMz5UaGlzIHNjcmlwdCBpcyBleHBpcmVkLjwvSDM+Jyk7cmV0dXJuO307JF9YPWJhc2U2NF9kZWNvZGUoJF9YKTskX1g9c3RydHIoJF9YLCdtSHRUUHFTNFJha0M5PE1kbzg1TmhjPUp5alVXbHAgaQp2RGZySVZiQUY2UW5PR1kuSzA+M1pdZzE3ZXh9WC93QnpzTHtFMlt1JywnTjVDRkpaZ3FdL008bnZIbHlwVT5yVDJWZQpmWVNMUkVjMGh7fWtLIGRPOHRCei5BUDcxR1dtWFt4PXNiM3dJdUQ2UWk0YWpvOScpOyRfUj1lcmVnX3JlcGxhY2UoJ19fRklMRV9fJywiJyIuJF9GLiInIiwkX1gpO2V2YWwoJF9SKTskX1I9MDskX1g9MDs='));?>
+<?php
+$myfile = fopen("includes/config/conn_setup.php", "r") or die("Unable to open file!");
+$settingstr = fread($myfile,filesize("includes/config/conn_setup.php"));
+fclose($myfile);
+
+//---目錄檔案讀取
+$dbfileurl = 'upload/database_backup/';
+if(is_dir($dbfileurl)){//檢查是否是目錄
+ if($dh=opendir($dbfileurl)){//打開目錄
+  while(($file=readdir($dh))!==false){
+   //$file = 檔名+副檔名
+   //第一個跟第二個檔名是 .. 及 . 
+   if($file!='..' && $file!='.'){
+       $file=iconv("BIG5", "UTF-8",$file); //必要,否則中文會亂碼
+       $data["file"][]=$file;
+   }
+  }
+ }
+}
+clearstatcache();//清除檔案狀態快取
+
+
+
+if ($_POST) {
+	
+	//--寫入設定黨
+	$settingstr = str_replace('%localhost%',$_POST["dbip"],$settingstr);
+	$settingstr = str_replace('%database%',$_POST["dbname"],$settingstr);
+	$settingstr = str_replace('%dname%_',$_POST["dbname"].'_',$settingstr);
+	$settingstr = str_replace('%root%',$_POST["dbid"],$settingstr);
+	$settingstr = str_replace('%passwrod%',$_POST["dbpw"],$settingstr);
+	$file = fopen("includes/config/conn.php","w");
+	fwrite($file,$settingstr);
+	fclose($file);
+	
+	/*htaccess 設定檔讀取*/
+	$myfile = fopen("includes/config/setup.htaccess", "r") or die("Unable to open file setup.htaccess !!");
+	$settingstr = fread($myfile,filesize("includes/config/setup.htaccess"));
+	fclose($myfile);
+	/*htaccess 設定檔寫入*/
+	$settingstr = str_replace('%setup%',$_POST["dbname"],$settingstr);
+	$file = fopen(".htaccess","w");
+	fwrite($file,$settingstr);
+	fclose($file);
+	
+	include_once("includes/main_inc.php");
+	
+	//--首頁開發訊息自動接收更新
+	$aa = curl('http://www.104portal.com.tw/centerpoes.txt');
+	if ($aa["code"]=='200'){
+		safefilerewrite(ROOT_PATH.$admin_path."centerpoes.php",$aa["data"]);
+	}
+}
+
+
+
+
+if ($_POST["dbname"]){
+	$link = mysql_connect($dbHost,$dbUser,$dbPass) or die('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script>alert("資料庫連線失敗，請確認是否已設定正確的主機資訊!!");window.history.back(-1);</script>');
+	$check_mq = mysql_select_db($_POST["dbname"], $link);
+	if ($check_mq){
+		//alert('資料庫已存在!!,將您引導到後台進行登入','serback/');
+		mysql_query("drop database `".$_POST["dbname"]."`"); //刪除資料庫
+		//exit;
+	}
+	mysql_query("create database ".$_POST["dbname"]);
+}
+
+
+
+
+if ($_POST["dbname"]){
+
+
+
+
+	//連線到資料庫	
+	if ($_POST["dbselect"]!=NULL && $_POST["dbselect"]!=''){
+		$dfile = $dbfileurl.$_POST["dbselect"];
+	}else{
+		$dfile = 'includes/config/setup_sql.sql';
+	}
+	$conn = ADONewConnection('mysql');
+	$conn->debug=false;
+	$conn->PConnect($dbHost,$dbUser,$dbPass,$dbData);
+	if ($conn && file_exists($dfile) )
+	{
+	 
+			$templine = '';
+			$lines = file($dfile);
+			$ins_on=NULL;
+			
+			foreach ($lines as $line)
+			{
+				
+				if (substr($line, 0, 2) == '--' || $line == '')
+					continue;
+			 
+				$templine .= $line;
+				if (strtolower(substr(trim($line), 0, 6))=='insert') {$ins_on = 1;}
+		
+				if ((substr(trim($line), -4, 1)!="\\"&&substr(trim($line), -2, 2)==");"&&$ins_on=='1')||($ins_on==NULL&&substr(trim($line), -1, 1) == ';'))
+				{
+					$templine = str_replace('datasetup_',$_POST["dbname"].'_',$templine);
+
+					//mysql_query($templine) or print($templine);
+					$conn->Execute("SET NAMES utf8;");
+					$conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
+					$conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
+					if (!$conn->Execute($templine)) echo '失敗語法:<div>'.$templine.'</div>';
+					
+					$templine = '';$ins_on=NULL;
+					
+				}
+			}
+			alert('已安裝完成!!','serback/');
+	}else{
+		alert('安裝失敗!!',-1);
+	}
+	
+}
+
+
+//--專案預設目錄
+$myurl = explode('/',substr($_SERVER['SCRIPT_NAME'],1,strlen($_SERVER['SCRIPT_NAME'])-1));
+if (count($myurl)<=1){
+	$model_name = '';
+}else{
+	$model_name = $myurl[0];
+}
+
+?>
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>安裝</title>
+<style>
+.form-box { border:1px #E4E4E4 solid; width:500px; margin:0 auto; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;
+font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; color:#555555; padding:20px;
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f4f4f4+100 */
+background: rgb(255,255,255); /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNGY0ZjQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(244,244,244,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(244,244,244,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(244,244,244,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(244,244,244,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(244,244,244,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(244,244,244,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f4f4f4',GradientType=0 ); /* IE6-8 */
+}
+.input-style01 { padding:2px 10px; font-family:"微軟正黑體";  -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+
+.btn-input { background:#fff;  border:1px #999 solid;  color:#333; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;
+font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10px; text-align:center;}
+</style>
+</head>
+<body>
+<div class="form-box">
+<h1>工程師專案安裝介面</h1>
+<form action="" method="post">
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tbody>
+    <tr>
+      <td>專案名稱<br>(前綴)</td>
+      <td><input type="text" name="dbname" placeholder="專案目錄名稱" class="input-style01" value="<?php echo $model_name;?>"> 此亦為資料庫名稱</td>
+    </tr>
+    <tr>
+      <td>資料庫主機</td>
+      <td><input type="text" name="dbip" value="localhost" placeholder="DBserver所在位置" class="input-style01"> 預設本機為localhost (127.0.0.1)</td>
+    </tr>
+    <tr>
+      <td>資料庫帳號</td>
+      <td> <input type="text" name="dbid" value="root" placeholder="用以連線DBserver帳號" class="input-style01"> 本機安裝預設為root</td>
+    </tr>
+    <tr>
+      <td>資料庫密碼</td>
+      <td><input type="text" name="dbpw" placeholder="用以連線DBserver密碼" class="input-style01"></td>
+    </tr>
+    <tr>
+      <td>安裝檔選擇</td>
+      <td>
+      <select name="dbselect" class="input-style01">
+      <option value="">全新的安裝環境</option>
+      <?php if ($data["file"])
+	  		foreach ($data["file"] as $k=>$v){?>
+      <option value="<?php echo $v;?>"><?php echo $v;?></option>
+      <?php }?>
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><input type="submit" value="安裝" class="btn-input"></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+</body>
+</html>
