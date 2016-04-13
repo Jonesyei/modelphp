@@ -1,7 +1,6 @@
 <?php
 	
 define('PREFIX',"modelphp_");
-
 $dbHost = "localhost";
 $dbUser = "root";
 $dbPass = "000000";
@@ -28,12 +27,12 @@ if (!$connect_check) {
 	}
 }
 
+
 //設定utf8編碼
 $conn->Execute("SET NAMES utf8;");
 $conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
 $conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
-$conn->Execute("SET @centerpos = 'c804f3bc30e07d85ac4f51d6390b4bcf';");
-
+$conn->Execute("SET @centerpos = '057ec2a50d5f463ebe12f9d5cbe5c1d5';");
 
 
 
