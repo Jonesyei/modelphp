@@ -16,9 +16,11 @@
 	watermark
 		url		=> 圖片來源
 		markurl	=> 水印圖片路徑
-		type	=> 採用不透背圖片
+		pw		=> 水印圖片所占寬度比
+		ph		=> 水印圖片所懺長度比
+		in		=> 圖像所在位置
 */
-header('Content-type: image/jpeg');
+header('Content-type: image/png');
 
 /**
  * 抓取要縮圖的比例
@@ -97,6 +99,7 @@ switch ($_GET["act"]){
 			if (is_file($save_filename.$file)!=NULL && (filemtime($save_filename.$file) >= strtotime("-3 days")) ){
 				$check_img = 1;
 				$image = open_image($save_filename.$file);
+				imageinterlace($image, 1); //--將圖片轉換為漸進式模
 				imagejpeg($image);
 			}
 		}
@@ -108,6 +111,7 @@ switch ($_GET["act"]){
 			//比預設縮圖小就不用縮
 			if($percent==1){
 				imagejpeg($image,$save_filename.strtolower(basename($url)));
+				imageinterlace($image, 1); //--將圖片轉換為漸進式模
 				imagejpeg($image);
 			}else{
 				$new_w  = $w * $percent;
@@ -118,6 +122,7 @@ switch ($_GET["act"]){
 				imagecopyResampled($im2, $image, 0, 0, 0, 0, $new_w, $new_h, $w, $h);
 				$image = $im2;
 				imagejpeg($image, $save_filename.strtolower(basename($url)));
+				imageinterlace($image, 1); //--將圖片轉換為漸進式模
 				imagejpeg($image);
 			}
 		}
@@ -130,29 +135,93 @@ switch ($_GET["act"]){
 		$w_height = $img_info['1'];
 		$w_mime   = $img_info['mime'];
 		
+		$pi_w = ($_GET["pw"] ? $_GET["pw"]:0.4);
+		$pi_h = ($_GET["ph"] ? $_GET["ph"]:0.2);
+		
+		//--打開水印圖檔
 		$watermark = open_image($_GET["markurl"]);
 
+		
 		$watermark_pos_x = abs(($w/2) - ($w_width/2));
 		$watermark_pos_y = abs(($h/2) - ($w_height/2));
-		if ($_GET["type"]){ //是否使用不透背圖片
-			//--非透明背景圖
-			$watermark_pos_x = abs(($w/2) - ($w_width/2));
-			$watermark_pos_y = abs(($h/2) - ($w_height/2));
-			imagecopymerge($image, $watermark, $watermark_pos_x, $watermark_pos_y, 0, 0, $w_width, $w_height, 100);
-		}else{
-			// 浮水印的圖若是透明背景、透明底圖, 需要用下述兩行
-			$watermark_pos_x = ($w/2);
-			$watermark_pos_y = ($h/2);
-			imagesetbrush($image, $watermark);
-			imageline($image, $watermark_pos_x, $watermark_pos_y, $watermark_pos_x, $watermark_pos_y, IMG_COLOR_BRUSHED);
-		}
+
+		//--大小換算
+		$target_w = abs($w_width*($w/$w_width)*$pi_w);
+		$target_h = abs($w_height*($h/$w_height)*$pi_h);
+		
+		// 浮水印的圖若是透明背景、透明底圖, 需要用下述兩行
+		$case_in = ($_GET["in"] ? $_GET["in"]:5);
+		$temp_png_w_array = png_water_inpos($w,$h,$target_w,$target_h,$case_in);
+		$watermark_pos_x = $temp_png_w_array[0];
+		$watermark_pos_y = $temp_png_w_array[1];
+		
+		$image_p = imagecreatetruecolor($target_w, $target_h);//--建立空圖
+		imagealphablending( $image_p, false );
+		imagecopyresampled( $image_p, $watermark, 0, 0, 0, 0, $target_w, $target_h, $w_width, $w_height);
+		
+		$watermark = $image_p;
+		imagesetbrush($image, $watermark);
+		imageline($image, $watermark_pos_x, $watermark_pos_y, $watermark_pos_x, $watermark_pos_y, IMG_COLOR_BRUSHED);
+		
+		imageinterlace($image, 1); //--將圖片轉換為漸進式模
 		imagejpeg($image);
+		imagedestroy($image);
 	break;
 	
 }
 imageinterlace($image, 1); //--將圖片轉換為漸進式模
 imagedestroy($image);
+//●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●
 
 
 
+
+
+
+
+/*
+	使用 function 參數
+*/
+//--位置定位
+function png_water_inpos($w,$h,$target_w,$target_h,$case_in){
+	switch ($case_in){
+		case "1"://--左上
+			$watermark_pos_x = $target_w/2;
+			$watermark_pos_y = $target_h/2;
+		break;
+		case "2"://--中上
+			$watermark_pos_x = ($w/2);
+			$watermark_pos_y = $target_h/2;
+		break;
+		case "3"://--右上
+			$watermark_pos_x = $w-$target_w/2;
+			$watermark_pos_y = $target_h/2;
+		break;
+		case "4"://--左中
+			$watermark_pos_x = $target_w/2;
+			$watermark_pos_y = ($h/2);
+		break;
+		case "5": //--置中
+			$watermark_pos_x = ($w/2);
+			$watermark_pos_y = ($h/2);
+		break;
+		case "6"://--右中
+			$watermark_pos_x = $w-$target_w/2;
+			$watermark_pos_y = ($h/2);
+		break;
+		case "7"://--左下
+			$watermark_pos_x = $target_w/2;
+			$watermark_pos_y = $h-$target_h/2;
+		break;
+		case "8"://--中下
+			$watermark_pos_x = ($w/2);
+			$watermark_pos_y = $h-$target_h/2;
+		break;
+		case "9"://--右下
+			$watermark_pos_x = $w-$target_w/2;
+			$watermark_pos_y = $h-$target_h/2;
+		break;
+	}
+	return array($watermark_pos_x,$watermark_pos_y);
+}
 ?>

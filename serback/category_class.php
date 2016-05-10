@@ -58,8 +58,8 @@ function cate_mode_reload($parent_id,$step=0,$conn,$table){
 			$avalue = $conn->Execute("UPDATE ".$table." SET rgt=".$step." where id='".$v["id"]."'");
 		}
 	}
-		$avalue = $conn->Execute("UPDATE ".$table." SET rgt=".($step+1)." where id='".$parent_id."'");
 	
+	$avalue = $conn->Execute("UPDATE ".$table." SET rgt=".($step+1)." where id='".$parent_id."'");
 	return $step;
 }
 ?>

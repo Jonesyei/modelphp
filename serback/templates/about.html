@@ -119,7 +119,7 @@ var sortmain = ".table-style01"; //-列表主體
 var sortrow = ".tr_sort:not(.ui-sortable-placeholder)"; //--可以移動的項目
 var sort_act = 0;
   $(function() {
-    $( sortmain ).sortable( {items: sortrow,stop: function( event, ui ) {unlock_view();},start:function (){lock_view();}} );
+    $( sortmain ).sortable( {items: sortrow,stop: function( event, ui ) {cps();unlock_view();},start:function (){lock_view();}} );
     //$( sortmain ).disableSelection();
   });
   
