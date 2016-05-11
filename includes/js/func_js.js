@@ -1,6 +1,6 @@
-$(document).ready(function(){
+WDJQ(document).ready(function(){
 	//網站鎖右鍵
-	/*$(document).bind("contextmenu",function(event){
+	/*WDJQ(document).bind("contextmenu",function(event){
 		alert('請尊重智慧財產權。');
 		return false;
 	});*/
@@ -53,21 +53,21 @@ function Select_Date(y_id,m_id,d_id,y_start,y_end)
 	
 	//年(year_start~今年)
 	for(var i = now.getFullYear() + y_end*1; i >= y_start*1; i--){
-	$('#'+y_id).
-	append($("<option></option>").
+	WDJQ('#'+y_id).
+	append(WDJQ("<option></option>").
 	attr("value",i).
 	text(i));
 	}
 	
 	//月
 	for(var i = 1; i <= 12; i++){
-	$('#'+m_id).
-	append($("<option></option>").
+	WDJQ('#'+m_id).
+	append(WDJQ("<option></option>").
 	attr("value",paddingLeft(i,2)).
 	text(paddingLeft(i,2)));
 	
-	$('#'+y_id).change( function () {onChang_date(y_id,m_id,d_id) });
-	$('#'+m_id).change( function () {onChang_date(y_id,m_id,d_id) });
+	WDJQ('#'+y_id).change( function () {onChang_date(y_id,m_id,d_id) });
+	WDJQ('#'+m_id).change( function () {onChang_date(y_id,m_id,d_id) });
 	
 }
 
@@ -75,27 +75,27 @@ function Select_Date(y_id,m_id,d_id,y_start,y_end)
 //年、月選單改變時
 function onChang_date(y_id,m_id,d_id)
 {
-	if($('#'+y_id).val() != -1 && $('#'+m_id).val() != -1){
+	if(WDJQ('#'+y_id).val() != -1 && WDJQ('#'+m_id).val() != -1){
 	
-	var date_temp = new Date($('#'+y_id).val(), $('#'+m_id).val()*1, 0);
+	var date_temp = new Date(WDJQ('#'+y_id).val(), WDJQ('#'+m_id).val()*1, 0);
 	
 	
 	//移除超過此月份的天數
-	$("#"+d_id+" option").each(function(){
-	if($(this).val()*1 != -1 && $(this).val()*1 > date_temp.getDate()) $(this).remove();
+	WDJQ("#"+d_id+" option").each(function(){
+	if(WDJQ(this).val()*1 != -1 && WDJQ(this).val()*1 > date_temp.getDate()) WDJQ(this).remove();
 	});                
 	
 	//加入此月份的天數
 	for(var i = 1; i <= date_temp.getDate(); i++){
-	if(!$("#"+d_id+" option[value='" + paddingLeft(i,2) + "']").length){
-	$('#'+d_id).
-	append($("<option></option>").
+	if(!WDJQ("#"+d_id+" option[value='" + paddingLeft(i,2) + "']").length){
+	WDJQ('#'+d_id).
+	append(WDJQ("<option></option>").
 	attr("value",paddingLeft(i,2)).
 	text(paddingLeft(i,2)));
 	}
 	}
 	} else {
-	$("#"+d_id+" option:selected").removeAttr("selected");
+	WDJQ("#"+d_id+" option:selected").removeAttr("selected");
 	}      
 	}
 }
@@ -106,7 +106,7 @@ function onChang_date(y_id,m_id,d_id)
 function Check_Repeat(table,row,value)
 {	
 	var _return; 
-	$.ajax( {
+	WDJQ.ajax( {
 		//傳遞目標頁面檔案
 		url: "ajx.php?call=check_repeat&table="+table+"&row="+row+"&value="+value,
 		type: 'GET',
@@ -178,10 +178,10 @@ function Pic_Size(width,height,width_set,height_set)
 
 //datepicker
 function Datepick(obj,mode,_min) {
-	
+
 	if(mode=='range')
 	{
-		$(obj).datepick({ 
+		WDJQ(obj).datepick({ 
 			rangeSelect: true,
 			dateFormat: 'yyyy,mm,dd',
 			showTrigger: "<img src='includes/js/datepick/calendar-blue.gif' >",
@@ -190,11 +190,15 @@ function Datepick(obj,mode,_min) {
 	}
 	else
 	{
-		$(obj).datepick({ 
-			dateFormat: 'yyyy-mm-dd',
-			showTrigger: "<img src='includes/js/datepick/calendar-blue.gif' >",
-			minDate:_min
-		});  	
+		alert('test');
+		WDJQ( obj ).datepicker({
+		  showOn: "button",
+		  dateFormat: 'yyyy-mm-dd',
+		  buttonImage: "includes/js/datepick/calendar-blue.gif",
+		  buttonImageOnly: true,
+		  buttonText: "Select date"
+		});
+	
 	}
 };
 
@@ -227,12 +231,12 @@ function paddingRight(str,lenght){
 //更換驗證碼圖片
 VerifyCode = function()
 {
-	$('img[src*="verifycode"]').each(function (idx,obj){
+	WDJQ('img[src*="verifycode"]').each(function (idx,obj){
 		
-		$(obj).removeAttr('onclick');
-		$(obj).click(function (){
+		WDJQ(obj).removeAttr('onclick');
+		WDJQ(obj).click(function (){
 				var d = new Date();
-				$(this)[0].src = $(this).attr("src").split('?')[0]+'?'+d.getTime();
+				WDJQ(this)[0].src = WDJQ(this).attr("src").split('?')[0]+'?'+d.getTime();
 		});
 	
 	});
@@ -244,7 +248,7 @@ VerifyCode = function()
 //驗證mail
 function isEmail(email){
 	if (email=="") return false;
-	reEmail=/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+	reEmail=/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+WDJQ/
 	return reEmail.test(email);
 }
 
@@ -331,6 +335,10 @@ function getPageCoord(element)
 //------------------------------------------------
 
 
+
+
+
+
 //-- ex: same to php now_url function 
 //-- 網址轉換
 function now_url(str) {
@@ -399,4 +407,40 @@ function now_url(str) {
     }
     temp_out_str = bk_url + '?' + temp_out_str;
     return temp_out_str;
+}
+
+
+
+
+/*
+	DataUri 縮圖處理
+	resizeImage(路由, 目標寬, 目標高, 返回函數(data) )
+	
+	注意此function 處理時非即時回應 結果
+*/
+function resizeImage(url, width, height, callback) {
+    var sourceImage = new Image();
+
+    sourceImage.onload = function(event) {
+
+        var canvas = document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+	
+	if (event.target.width>event.target.height){
+		var pr = width/event.target.width;
+		canvas.getContext("2d").drawImage(sourceImage, 0, 0, width, Math.ceil(event.target.height*pr));
+	}else{
+		var pr = height/event.target.height;
+		canvas.getContext("2d").drawImage(sourceImage, 0, 0, Math.ceil(event.target.width*pr), height);
+	}
+	
+        //canvas.getContext("2d").drawImage(sourceImage, 0, 0, width, height);
+
+	//--導回
+        callback(canvas.toDataURL());
+    }
+
+    sourceImage.src = url;
 }

@@ -2,16 +2,11 @@
 <script>
 $(document).ready(function(){
 	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
-	$('[name="daterange"]').val( Get("daterange") );
+	$('[name="daterange[]"]').each(function (idx,obj){
+		$(obj).val( Get("daterange%5B%5D")[idx] );
+	});
 
 	$('#SearchBtn').click(function(){
-		if( $('[name="daterange"]').val().split("-")[1]!=null)
-		{
-			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
-			
-			$('[name="daterange"]').val( daterange );
-		}
-		
 		$('#search_form').submit();
 	});
 
@@ -37,6 +32,7 @@ $(document).ready(function(){
 <form action="csv.php" method="post" id="csv" style="display:none;">
 	<input type="text" name="title" value="({$data.csv_title})">
     <input type="text" name="sql" value="({$data.csv_sql})">
+    <input type="text" name="rows" value="({$data.output_row_str})">
 </form>
 
 <div id="csv_div" title="匯出資料進階設定">
@@ -48,22 +44,25 @@ $(document).ready(function(){
     <font color="red">(項目可拖曳變換匯出順序)</font>
 </div>
 <script>
-    $( "#csv_div" ).dialog( {
+$( "#csv_div" ).dialog( {
 	  height:300,
       modal: true,
       buttons: {
         '取消': function() {$( this ).dialog( "close" );}
 		,'匯出': function() {
-			output_title = ''; output_sql = '';
+			output_title = ''; output_sql = ''; output_row = '';
 			$('.outrow').each(function (idx,obj){
 				if ($(obj).attr('checked')!=''&&$(obj).attr('checked')!=null){
 					if (output_title!='') output_title +=',';
 					if (output_sql!='') output_sql +=',';
+					if (output_row!='') output_row +='|__|';
 					output_title += $(obj).attr('alt');
 					output_sql += $(obj).val();
+					output_row += $(obj).val();
 				}
 			})
 			$('#csv [name="title"]').val(output_title);
+			$('#csv [name="rows"]').val(output_row);
 			$('#csv [name="sql"]').val('select ' + output_sql + ' from ({$data.cpos.table}) ({$data.cpos.tablelistwhere}) ({str_replace("'","\\'",$data.cpos.search_output)})');
 			$('#csv').append($('#csv_div .outrow:checked').clone());
 			$('#csv').submit();

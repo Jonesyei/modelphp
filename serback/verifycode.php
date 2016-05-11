@@ -6,14 +6,15 @@
 
 	[ Well Done and its suppliers. All rights reserved. ]
 */
-
+header("Pragma: no-cache");
+header("Cache-Control: no-cache");
 header("Content-type:image/png");
 header("Content-Disposition:filename=image_code.png");
 
+if (!isset($_SESSION)) { session_start(); }
+
 unset($_SESSION['serback__validate_code']);
 unset($_SESSION['vlcode']);
-
-if (!isset($_SESSION)) { session_start(); }
 
 //session_register('__validate_code');
 //if(array_key_exists('__validate_code', $_SESSION)){
@@ -63,7 +64,7 @@ imagefill($im,0,0,$bgColor);
 //參數
 
 //--edit by Jones 多字形選擇
-$jfont_array = array ('mywanderingheart.ttf','Comic Sandchez.ttf','ShellMuseum.ttf');
+$jfont_array = array ('mywanderingheart.ttf','Comic Sandchez.ttf','ShellMuseum.ttf','BeTrueToYourSchool-Regular.ttf');
 
 $multi_text_color = "#969696"; //#0a68dd,#f65c47,#8d32fd,#EE3B3B,#E066FF,#B452CD,#FF9900,
 $use_transparent_text = true;

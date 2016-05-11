@@ -18,6 +18,8 @@ $cpos["listorderby"] = "sort";
 $cpos["tablesearch"] = 'name';//搜尋關聯欄位
 $cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
 
+$cpos["file_check"] = array('pic','file');
+
 $close["insert"] =0;
 $close["add"]	= 0;
 $close["del"]	= 0;
@@ -41,119 +43,70 @@ if (($_POST["pic"][0]==''||$_POST["pic"][0]==NULL) && count($_POST["pic"])<=1) {
 	unset($_POST["pic"][0]);
 }
 
-if ($_FILES)
-switch ($_GET["class"]){
-	case "history_case": //--CSV匯入
-	$excel_array = array('b_name','detail');
-	$filename = $_FILES["file"]["tmp_name"];
-	//判斷是否有該檔案
-	if(file_exists($filename)){
-		$file = fopen($filename, "r");
-		if($file != NULL){
-			//當檔案未執行到最後一筆，迴圈繼續執行(fgets一次抓一行)
-			foreach ($excel_array as $k=>$v) $_POST[$v]=NULL;
-				
-			while (!feof($file)) {
-				$str_array = explode(',',fgets($file));
-				foreach ($str_array as $k=>$v){
-					if ($v!=NULL)
-					$_POST[$excel_array[$k]][]=iconv("BIG5","UTF-8",str_replace('"','',$v));
-				}
-			}
-			fclose($file);
-		}
-	}
-	break;
-}
 
 
+//--運行前處理
+
 switch ($_GET["class"]){
-	case "c_about":
-		$cpos["tablelistwhere"] .= " and b_name='".$_GET["tp"]."'";
-		if ($_GET["parent_id"]) 
-			$cpos["tablelistwhere"] .= " and parent_id='".$_GET["parent_id"]."'"; //--有母類別的話
-		else
-			$cpos["tablelistwhere"] .= " and parent_id is null"; //--有母類別的話
-	break;
-	case "c_form":
-		$cpos["tablelistwhere"] .= " and b_name='".$_GET["tp"]."'";
-	break;
-	case "c_EDM":
-		$cpos["tablelistwhere"] .= " and b_name='".$_GET["tp"]."'";
-		$cpos["tablewhere"] .=  " and b_name='".$_GET["tp"]."'";
+	default:
 	break;
 }
 
 
 include_once("centerpoes.php");
 
-switch ($_GET["class"])
-{
-	default:
-		$data["uploadfilemax"] = 50;//圖檔上傳上限	
-	break;
-}
-
-//---解魔術引號 以及替換文字函數
-function pg_change($value){
-	if (is_array($value))
-	foreach ($value as $k=>$v){
-		$v = str_replace('"',"'",$v);
-		$pri[$k] = deQuotes($v,-1);
-	}
-	return $pri;
-}
-
-
-
 
 //明細
 if($_SESSION["admin_info"]["view"]=="detail")
 {
 	$data["pic_size_title"] = "任意比例";
+	$data["uploadfilemax"] = 50;//圖檔上傳上限
 	
 	$data["one"]["pic"] = explode('|__|',$data["one"]["pic"]);
-	//計算圖片總數並判斷第一個是否為空值  空值等於 目前有的數量為0
-	$temp_pic_count = 0;
-	foreach ($data["one"]["pic"] as $k=>$v){
-		if ($v!=NULL && $v!=''){
-			$temp_pic_count +=1;
-		}
-	}
-	//$data_pic_count = $temp_pic_count;
 	
-
 	//-----語系為ch 使用的switch
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
 				$data["one"]["name"] = "首頁EDM";
 				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
-				//$data["button"]["href"]='1';				
-				//$data["uploadfilemax"] = 3-$data_pic_count;//圖檔上傳上限
-		break;
-		case "index":
-				$data["one"]["name"] = explode('|__|',$data["one"]["name"]);
-				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
-				$data["one"]["name"] = pg_change($data["one"]["name"]);
-				$data["uploadfilemax"] = 5-$data_pic_count;//圖檔上傳上限	
-				$data["order_html"] = '<tr><td align="right">右下方文字內容:</td><td><input type="text" name="name[]" value="'.$data["one"]["name"][0].'" size="70"></td></tr>';
-				$data["order_html"] .= '<tr><td align="right">中上方文字內容:</td><td><input type="text" name="name[]" value="'.$data["one"]["name"][1].'" size="70"></td></tr>';
-		break;
-		case "color":
+				
+				//--檔案上傳
+				$data["one"]["file"] = explode('|__|',$data["one"]["file"]);			//-檔案名稱(實體檔案)
+				$data["one"]["file_name"] = explode('|__|',$data["one"]["file_name"]);	//-檔案名稱(顯示用途)
+				$data["button"]["file"] = '10';											//-設定檔案上限(一旦設定後則開啟檔案上傳功能)
+				
+				//--關閉圖片功能
 				$data["close"]["pic"] ='1';
-				$data["order_html"] .= '<tr><td align="right">顏色:</td><td><input type="text" name="detail" value="'.$data["one"]["detail"].'" maxlength="7"></td></tr>';
+				
+				//--圖片功能資料設定
+				$data["pic_size_title"] = "任意比例";										//比例說明
+				$data["uploadfilemax"] = 50;											//圖檔上傳上限
+				
+				//--圖片功能相關參數
+				$data["button"]["href"]='1';											//啟用圖片附加連結功能
+				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);			//(必須把資料轉為陣列)
+				$data["button"]["name"]='名稱';											//啟用圖片附加命名功能
+				$data["one"]["name"] = explode('|__|',$data["one"]["name"]);			//(必須把資料轉為陣列)
+				//--圖片相關功能 自由命名多欄位
+				// array('other_name'=>'設立物件顯示名稱','other_obj'=>'設立物件命名欄位EX:name','other_data'=>array('陣列資料內容'));
+				$data["button"]["other"][] = array('other_name'=>$v,'other_obj'=>$k,'other_data'=>$data["one"][$k]);
+				
+				//--預設內容欄位功能 (預設為不開)
+				$data["button"]["detail"]='1';											//設立後開啟detail欄位內容
+				$data["button"]["fck"]='1';												//detail 內容欄位轉換為編輯器內容
+				
+				//--自由命名
+				$data["order_html"] .= '<tr><td align="right">欄位資料:</td><td><select name="class">'.Make_list($temp_array,$data["one"]["class"]).'</select></td></tr>';
 		break;
+
+		
 		case "about":
 				$data["close"]["pic"] ='1';
 				$data["button"]["detail"]='1';
 				$data["button"]["fck"]='1';
 		break;
-		case "service":
-				$data["close"]["pic"] ='1';
-				$data["button"]["detail"]='1';
-				$data["button"]["fck"]='1';
-		break;
+
 		case "we_product":
 				$data["one"]["detail"] = explode('|__|',$data["one"]["detail"]);
 				$data["one"]["name"] = explode('|__|',$data["one"]["name"]);
@@ -161,11 +114,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				$data["button"]["name"] = '名稱';
 				$data["button"]["change_detail"] = '子項說明';
 		break;
-		case "qa":
-				$data["close"]["pic"] = '1';
-				$data["button"]["detail"]='1';
-				$data["button"]["fck"]='1';
-		break;
+
 		case "product":
 				$data["button"]["file"] = 1;
 				//$data["button"]["size"]["name"] = 'size_name';
@@ -183,6 +132,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				$data["order_html"] .= '<tr><td align="right">產品說明:</td><td>'.Fck("detail[1]",'90%','450','../fckeditor/',$detail[1]).'</td></tr>';
 
 		break;
+		
 		case "news":
 				$data["close"]["pic"] = '1';
 				$data["button"]["detail"]='1';
@@ -190,13 +140,6 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				//$data["order_html"] .= '<tr><td align="right">消息分類:</td><td><select name="new_type">'.Make_list($_SETUP["new_tage"],$data["one"]["new_type"]).'</select></td></tr>';
 		break;
 		
-		case "about_design":
-		case "ac":
-		case "foor":
-				$data["close"]["pic"] = '1';
-				$data["button"]["detail"]='1';
-				$data["button"]["fck"]='1';
-		break;
 		case "history_case":
 				$data["order_html"] .= '<tr><td align="right">文字內容匯入:</td><td><input type="file" name="file">(匯入前請先將圖片排序好存檔，並請轉存csv檔案使用) <a href="test.csv">範例格式下載</a></td></tr>';
 			//---物件陣列
@@ -211,16 +154,6 @@ if($_SESSION["admin_info"]["view"]=="detail")
 					
 				}
 		break;
-		case "files_main":
-				$data["close"]["pic"] = '1';
-				$data["button"]["detail"]='1';
-				$data["button"]["fck"]='1';
-				if ($data["one"]["floor"]=="1") 
-					$str_true = "checked";
-				else
-					$str_false = "checked";
-				$data["order_html"] .= '<tr><td align="right">是否為下版內容:</td><td><input type="radio" name="floor" value="1" '.$str_true.'>是<input type="radio" name="floor" value="0" '.$str_false.'>否</td></tr>';
-		break;
 		
 		case "mode_background":
 		case "mode_pic":
@@ -231,16 +164,6 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			$data["order_html"] .= '<tr><td align="right">呈現方式:</td><td><select name="class2">'.Make_list($temp_array1,$data["one"]["class2"]).'</select></td></tr>';
 		break;
 		
-		case "bannerright":
-			$data["uploadfilemax"] = 3-$data_pic_count;//圖檔上傳上限	
-			$data["button"]["href"]='1';
-			$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
-		break;
-		case "bannerleft":
-			$data["uploadfilemax"] = 4-$data_pic_count;//圖檔上傳上限	
-			$data["button"]["href"]='1';
-			$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
-		break;
 		
 		case "gpic":
 		case "classic":
@@ -250,26 +173,6 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			$data["button"]["name"]='名稱';
 			$data["one"]["name"] = explode('|__|',$data["one"]["name"]);
 		break;
-
-		case "Customization":
-			$data["close"]["pic"] = '1';
-			$data["button"]["detail"]='1';
-			$data["button"]["fck"]='1';
-			//$data["order_html"] .= '<tr><td align="right">說明標題:</td><td><input type="text" name="name" value="'.$data["one"]["name"].'" size="100"></td></tr>';
-		break;
-		
-		case "gp":
-			$data["uploadfilemax"] = 1-$data_pic_count;//圖檔上傳上限	
-			$data["button"]["detail"]='1';
-			$data["button"]["fck"]='1';
-			$data["order_html"] = '<tr><td align="right">連結:</td><td><input type="text" name="href" value="'.$data["one"]["href"].'" size="100"></td></tr>';
-		break;
-
-		case "work":
-			$data["uploadfilemax"] = 9000-$data_pic_count;//圖檔上傳上限	
-			$data["button"]["name"]='作品名稱';
-			$data["one"]["name"] = explode('|__|',$data["one"]["name"]);
-		break;
 		
 		case "memberdesh":
 			$data["close"]["pic"] = '1';
@@ -277,15 +180,6 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			$data["order_html"] .= '<tr><td align="right">類型別名:</td><td><input type="text" name="new_type" value="'.dequotes($data["one"]["new_type"],-1).'" disabled="disabled"></td></tr>';
 			$data["order_html"] .= '<tr><td align="right">折扣率:</td><td><input type="text" name="detail" value="'.dequotes($data["one"]["detail"],-1).'"></td></tr>';
 			$data["order_html"] .= '<tr><td align="right">到達紅利限制:</td><td><input type="text" name="memo[]" value="'.dequotes($data["one"]["memo"][0],-1).'"> - <input type="text" name="memo[]" value="'.dequotes($data["one"]["memo"][1],-1).'"></td></tr>';
-		break;
-		
-		case "one_product":
-			$data["close"]["pic"] = '1';
-			$data["one"]["detail"] = explode('|__|',$data["one"]["detail"]);
-			$data["order_html"] .= '<tr><td align="right">大底板售價:</td><td><input type="text" name="detail[]" value="'.dequotes($data["one"]["detail"][0],-1).'"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">中底板售價:</td><td><input type="text" name="detail[]" value="'.dequotes($data["one"]["detail"][1],-1).'"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">小底板售價:</td><td><input type="text" name="detail[]" value="'.dequotes($data["one"]["detail"][2],-1).'"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">色豆片售價:</td><td><input type="text" name="detail[]" value="'.dequotes($data["one"]["detail"][3],-1).'"></td></tr>';
 		break;
 		
 		case "contact":
@@ -436,157 +330,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				$data["one"]["add_all"] = json_encode($data["one"]["add_all"]);
 		break;
 		
-		case "set_pro":
-			$data["close"]["pic"] = '1';
-			$data["one"]["detail"] = explode('|__|',$data["one"]["detail"]);
-			$status_html = array('1'=>'開啟','0'=>'關閉');
-			$data["order_html"] .= '<tr><td align="right">別名:</td><td><input type="text" name="b_name" value="'.$data["one"]["b_name"].'"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">紅利功能:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][0]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">尺寸庫存功能:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][1]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">優惠折扣功能:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][2]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">圖片上傳功能:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][3]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">商品圖片限制:</td><td><input type="text" name="detail[]" value="'.$data["one"]["detail"][4].'" size="3"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">加價購功能:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][5]).'</select></td></tr>';
-			$temp = $conn->GetArray("select * from ".PREFIX."category where parent_id='0' and lang='".LANG."'");
-			foreach ($temp as $k=>$v){
-				$temp_array[$v["id"]] = $v["name"];
-			}
-			$data["order_html"] .= '<tr><td align="right">對應分類模組:</td><td><select name="detail[]">'.Make_list($temp_array,$data["one"]["detail"][6]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">分頁筆數:</td><td><input type="text" name="detail[]" value="'.$data["one"]["detail"][7].'" size="3"></td></tr>';
-		break;
 		
-		case "set_about":
-			//---設定區域
-			$data["close"]["pic"] = '1';
-			$data["one"]["detail"] = explode('|__|',$data["one"]["detail"]);
-			$status_html = array('1'=>'開啟','0'=>'關閉');
-			$data["order_html"] .= '<tr><td align="right">別名:</td><td><input type="text" name="b_name" value="'.$data["one"]["b_name"].'"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">圖片上傳功能:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][0]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">商品圖片限制:</td><td><input type="text" name="detail[]" value="'.$data["one"]["detail"][1].'" size="3"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">階層數:</td><td><input type="text" name="detail[]" value="'.$data["one"]["detail"][2].'" size="3"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">分頁筆數:</td><td><input type="text" name="detail[]" value="'.$data["one"]["detail"][3].'" size="3"></td></tr>';
-			//--欄位區域
-			$data["one"]["b_value"] = explode('|__|',$data["one"]["b_value"]);
-			$data["one"]["memo"] = explode('|__|',$data["one"]["memo"]);
-			$data["one"]["new_type"] = explode('|__|',$data["one"]["new_type"]);
-			$txt_type = array('1'=>'一般文字輸入框','2'=>'多行文字輸入框','3'=>'編輯器物件');
-			if (count($data["one"]["b_value"])>0 && $data["one"]["b_value"][0]!='' && $data["one"]["b_value"]!=NULL)
-			foreach ($data["one"]["b_value"] as $k=>$v){
-				$temp = '<div>欄位名稱:<input type="text" name="b_value[]" value="'.$data["one"]["b_value"][$k].'"><br>
-				鍵值(英文 勿重複):<input type="text" name="memo[]" value="'.$data["one"]["memo"][$k].'"><br>
-				類別:<select name="new_type[]">'.Make_list($txt_type,$data["one"]["new_type"][$k]).'</select><br>
-				<input type="button" value="刪除欄位" onclick="del_memo(this);">
-				</div>';
-				$temp_memo .= $temp;
-			}
-			$data["order_html"] .= '<tr><td align="right">自定義欄位:</td><td id="td_meo"><input type="button" value=" 新增輸入欄位 " onclick="create_memo()">'.$temp_memo.'</td></tr>';
-			$data["order_html"] .= '<script>function del_memo(obj){$(obj).parent().remove();}</script>';//--刪除JS語法
-			$data["order_html"] .= '<script>function create_memo(){$(\'#td_meo\').append(\'<div>欄位名稱:<input type="text" name="b_value[]" value="'.$data["one"]["b_value"][$k].'"><br>				鍵值(英文 勿重複):<input type="text" name="memo[]" value="'.$data["one"]["memo"][$k].'"><br>類別:<select name="new_type[]">'.Make_list($txt_type,$data["one"]["new_type"][$k]).'</select><br>				<input type="button" value="刪除欄位" onclick="del_memo(this);"></div>\')}</script>';//--新增JS
-			$data["order_html"] .= '<script>$(document).ready(function (){
-									$( "#td_meo" ).sortable( {items: \'div\'} );
-									$( "#td_meo" ).disableSelection();})</script></tr>';
-		break;
-		
-		case "c_about":
-			$class = $_GET["tp"];
-			$check_data = $conn->GetRow("select * from ".PREFIX."data_list where type='set_about' and b_name='".$class."'");
-			if ($check_data){
-				$check_data["b_value"] = explode('|__|',$check_data["b_value"]);
-				$check_data["memo"] = explode('|__|',$check_data["memo"]);
-				$check_data["new_type"] = explode('|__|',$check_data["new_type"]);
-				$check_data["detail"] = explode('|__|',dequotes($check_data["detail"],-1));
-				//---欄位資料
-				foreach ($check_data["b_value"] as $k=>$v){
-					switch ($check_data["new_type"][$k]){
-						case "3":
-							$temp_html = Fck($check_data["memo"][$k],'90%','450','../fckeditor/',deQuotes($data["one"][$check_data["memo"][$k]],-1),"../../style/".$style.".css");
-						break;
-						case "2":
-							$temp_html = '<textarea name="'.$check_data["memo"][$k].'" rows="10" cols="50">'.$data["one"][$check_data["memo"][$k]].'</textarea>';
-						break;
-						case "1":
-							$temp_html = '<input type="text" name="'.$check_data["memo"][$k].'" value="'.$data["one"][$check_data["memo"][$k]].'">';
-						break;
-					}
-					$data["order_html"] .= '<tr><td align="right">'.$v.':</td><td>'.$temp_html.'</td></tr>';
-				}
-				
-				//--圖片上傳設定
-				if ($check_data["detail"][0]!='1') $data["close"]["pic"] = '1';
-				$data["uploadfilemax"] = $check_data["detail"][1]*1-$data_pic_count;//圖檔上傳上限	
-			}
-			$data["button"]["detail"] = '0';
-			$data["order_html"] .='<input type="hidden" name="b_name" value="'.$class.'">';
-			
-			//--判斷有母類別參數
-			if ($_GET["parent_id"]){
-				$temp = $conn->GetRow("select * from ".PREFIX."data_list where type='c_about' and b_name='".$class."' and id='".$_GET["parent_id"]."'");
-				if ($temp && $temp["depth"]*1<$check_data["detail"][2]*1){
-					$data["order_html"] .='<input type="hidden" name="parent_id" value="'.$_GET["parent_id"].'">';
-					$data["order_html"] .='<input type="hidden" name="depth" value="'.($temp["depth"]*1+1).'">';
-				}else{
-					alert('已是目錄底層無法建立項目!!',-1);
-					exit;
-				}
-			}
-			
-		break;
-	
-		case "set_form":
-			$data["close"]["pic"] = '1';
-			$data["order_html"] .= '<tr><td align="right">別名:</td><td><input type="text" name="b_name" value="'.$data["one"]["b_name"].'"></td></tr>';
-			if ($data["one"]) {
-				$data["order_html"] .= '<tr><td align="right">表單基本裝載語法:</td><td>&lt;form id="form" action="_form_mail.php" method="post"&gt;<br> [表單內容]<br> &lt;/form&gt;<br>({$form.'.$data["one"]["b_name"].'.script})</tr>';
-			}else{
-				$data["order_html"] .= '<tr><td align="right">:</td><td><input type="text" name="b_name" value="'.$data["one"]["b_name"].'"></td></tr>';
-			}
-		break;
-		
-		case "c_form":
-			$data["close"]["pic"] = '1';
-			$data["one"]["detail"] = explode('|__|',$data["one"]["detail"]);
-			$txt_type = array('1'=>'文字方框 (text)','2'=>'密碼欄位 (password)','3'=>'下拉式方塊 (select)','4'=>'文字輸入方塊 (textarea)','5'=>'單選按鈕 (radio)','6'=>'核取方塊 (checkbox)');
-			$data["order_html"] .= '<input type="hidden" name="b_name" value="'.$_GET["tp"].'">';
-			$data["order_html"] .= '<tr><td align="right">欄位鍵值(唯一值):</td><td><input type="text" name="memo" value="'.$data["one"]["memo"].'">(物件賦予 id 值 以及 name 值)</td></tr>';
-			$data["order_html"] .= '<tr><td align="right">作用模式:</td><td><select name="new_type">'.Make_list($txt_type,$data["one"]["new_type"]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">多項目輸入:</td><td><input type="text" name="b_value" size="100" value="'.$data["one"]["b_value"].'"><br>(適用於 下拉式方塊、單選按鈕、核取方塊 使用半型,(逗)號區隔)</td></tr>';
-			$data["order_html"] .= '<tr><td align="right">驗證規則:</td><td><textarea name="detail[]" cols="100" rows="20">'.dequotes($data["one"]["detail"][0],-1).'</textarea>(非必要留白即可)</td></tr>';
-			$data["order_html"] .= '<tr><td align="right">驗證規則說明:</td><td><textarea name="detail[]" cols="100" rows="20">'.dequotes($data["one"]["detail"][1],-1).'</textarea>(非必要留白即可)</td></tr>';
-			$data["order_html"] .= '<tr><td align="right">前端呈現方式:</td><td>範例:({$form.'.$_GET["tp"].'.[欄位鍵值]_output_obj_html})';
-			if ($data["one"]["id"]) {
-				$data["order_html"] .= '<br>實際:({$form.'.$_GET["tp"].'.'.$data["one"]["memo"].'_output_obj_html})</td></tr>';
-			}
-		break;
-		
-		case "set_edm":
-			$data["close"]["pic"] = '1';
-			$status_html = array('1'=>'開啟','0'=>'關閉');
-			$data["one"]["detail"] = explode('|__|',$data["one"]["detail"]);
-			$data["order_html"] .= '<tr><td align="right">別名:</td><td><input type="text" name="b_name" value="'.$data["one"]["b_name"].'"></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">圖片數量限制:</td><td><input type="text" name="b_value" size="3" value="'.$data["one"]["b_value"].'"><br></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">啟用附加連結:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][0]).'</select></td></tr>';
-			$data["order_html"] .= '<tr><td align="right">啟用附加文字內容:</td><td><select name="detail[]">'.Make_list($status_html,$data["one"]["detail"][1]).'</select></td></tr>';
-			
-		break;
-		
-		case "c_EDM":
-			$data["order_html"] .= '<input type="hidden" name="b_name" value="'.$_GET["tp"].'">';
-			$check_data = $conn->GetRow("select * from ".PREFIX."data_list where type='set_edm' and b_name='".$_GET["tp"]."' and status=1");
-			$data["uploadfilemax"] = $check_data["b_value"]-$data_pic_count;//圖檔上傳上限
-			$check_data["detail"] = explode('|__|',$check_data["detail"]);
-			
-			//是否啟用連結
-			if ($check_data["detail"][0]=='1'){
-				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
-				$data["button"]["href"]='1';				
-			}
-			
-			//是否啟用 標題
-			if ($check_data["detail"][1]=='1'){
-				$data["one"]["name"] = explode('|__|',$data["one"]["name"]);
-				$data["button"]["name"]='標題';				
-			}
-		break;
 		
 		default:
 
@@ -596,69 +340,15 @@ if($_SESSION["admin_info"]["view"]=="detail")
 }
 else//列表頁
 {
-	/* 匯入設定
-		$data["input_title"] = array('分類','創意商品名稱','產品分類編號','列表圖片','上板內容以及商品內容 兩個資料用|__|分開','啟用狀態'); //-顯示在選單中的標題
-		$data["input_row"] = array('type','name','class','title_pic','detail','status'); //-對應資料欄位
-		$data["input_sample"] = '<font color="blue">範例檔案下載:</font><a href="test.csv">下載</a>'; //-範例檔案下載
-		$data["cpos"] = $cpos;
-		$close["insert"] =0;
-	*/
 	
 	//--判斷有母類別參數
 	switch ($_GET["class"]){
-		case "c_about":
-			$class = $_GET["tp"];
-			$check_data = $conn->GetRow("select * from ".PREFIX."data_list where type='set_about' and b_name='".$class."'");
-			if ($check_data){
-				$check_data["b_value"] = explode('|__|',$check_data["b_value"]);
-				$check_data["memo"] = explode('|__|',$check_data["memo"]);
-				$check_data["new_type"] = explode('|__|',$check_data["new_type"]);
-				$check_data["detail"] = explode('|__|',dequotes($check_data["detail"],-1));
-				
-				if($data["list"])
-				foreach ($data["list"] as $k=>$v){
-					if ($v["depth"]*1<$check_data["detail"][2]*1-1){
-						$data["list"][$k]["name"] .= '<a href="about.php?class='.$_GET["class"].'&tp='.$class.'&parent_id='.$v["id"].'" ><font color="red" > [ 進入目錄 ] </font></a>';
-					}
-				}
-			}
+		default:
+
 		break;
 	}
 	
 }
-
-
-//---動態加載
-if ($_GET["ajax"]){
-	$temp_str = '';
-	$_SESSION["admin_info"]["page"] = str_replace('&ajax=1','',$_SESSION["admin_info"]["page"]);
-	if ($data["list"])
-	foreach ($data["list"] as $k=>$v){
-		$temp_str .= '
-<tr class="tr_sort" title="可拖曳進行排序" bgcolor="#FFFFFF">
-      <td align="right"><input type="checkbox" id="choose_id" value="'.$v["id"].'" name="choose_id"></td>
- 
-	  
-	  <td><a href="'.$_SESSION["admin_info"]["page"].'&id='.$v["id"].'">'.$v["name"].'</a></td>
-	  
-  
-	<td>
-		  <input type="text" name="sort_'.$v["id"].'" id="sort_'.$v["id"].'" size="2" value="'.$v["sort"].'" onmouseup="sort_act=2" onmousedown="sort_act=2">  
-		  </td>
-	
-	  
-	  <td><input name="status_'.$v["id"].'" type="radio" value="1" checked="checked">開啟<input name="status_'.$v["id"].'" type="radio" value="0">關閉</td>
-	  
-	  <td>'.$v["create_name"].' 於 '.$v["create_date"].'</td>
-	  
-	  <td>'.$v["upadate_name"].' 於 '.$v["update_date"].'</td>
-
-</tr>';
-	}
-	echo $temp_str;
-	exit;
-}
-
 
 
 

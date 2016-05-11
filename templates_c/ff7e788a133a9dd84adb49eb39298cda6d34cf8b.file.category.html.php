@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-15 15:41:58
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-21 15:31:07
          compiled from "D:\AppServ\www\modelphp\serback\templates\category.html" */ ?>
 <?php /*%%SmartyHeaderCode:10748559b5c0ceeacc9-86442669%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'ff7e788a133a9dd84adb49eb39298cda6d34cf8b' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\category.html',
-      1 => 1444894917,
+      1 => 1450683066,
       2 => 'file',
     ),
   ),
@@ -19,88 +19,107 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_559b5c0d2a0568_12542822',
   'variables' => 
   array (
-    'act' => 0,
     'admin_info' => 0,
     'close' => 0,
-    'mode' => 0,
-    's_query' => 0,
-    'setup' => 0,
-    'html' => 0,
     'data' => 0,
     'page_table_html' => 0,
-    'page' => 0,
-    'jdata' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_559b5c0d2a0568_12542822')) {function content_559b5c0d2a0568_12542822($_smarty_tpl) {?><?php if ($_smarty_tpl->tpl_vars['act']->value=="list"||$_smarty_tpl->tpl_vars['act']->value=='') {?>
+<?php if ($_valid && !is_callable('content_559b5c0d2a0568_12542822')) {function content_559b5c0d2a0568_12542822($_smarty_tpl) {?><?php if ($_smarty_tpl->tpl_vars['admin_info']->value['view']=='list') {?>
+<script>
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
+	$('[name="daterange"]').val( Get("daterange") );
+
+	$('#SearchBtn').click(function(){
+		if( $('[name="daterange"]').val().split("-")[1]!=null)
+		{
+			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
+			
+			$('[name="daterange"]').val( daterange );
+		}
+		
+		$('#search_form').submit();
+	});
+
+});
+</script>
 <div class="col-02"><!-- 右邊內容區塊 -->
        <div class="right-main">
        
 <div class="content-box" id="content_bg">
-	<h2 class="funtion-title"><?php echo $_smarty_tpl->tpl_vars['admin_info']->value['title'];?>
+
+         <h2 class="funtion-title"><?php echo $_smarty_tpl->tpl_vars['admin_info']->value['title'];?>
 <!-- 頁面標題 -->         </h2>
-  <div class="page-tool">
-  <?php if ($_smarty_tpl->tpl_vars['close']->value['add']!=1) {?><a href="?act=detail&mode=<?php echo $_smarty_tpl->tpl_vars['mode']->value;?>
-&s_query=<?php echo $_smarty_tpl->tpl_vars['s_query']->value;?>
-"><img src="images/icon06.png" width="32" height="32" alt="新增"/><?php echo $_smarty_tpl->tpl_vars['setup']->value['AddBtn'];?>
-</a><?php }?>
-  <?php if ($_smarty_tpl->tpl_vars['close']->value['edit']!=1) {?><a href="#" onclick="return checkAction('','U')"><img src="images/icon14.png" width="32" height="32" alt=""/><?php echo $_smarty_tpl->tpl_vars['setup']->value['EditBtn'];?>
-</a><?php }?>
-  <?php if ($_smarty_tpl->tpl_vars['close']->value['del']!=1) {?><a href="#" onclick="return checkAction('','D')"><img src="images/icon13.png" width="32" height="32" alt=""><?php echo $_smarty_tpl->tpl_vars['setup']->value['DelBtn'];?>
-</a><?php }?>
-  <!--div id="title"-->
-	</div>
-
-<!--SEARCH-->
+         <div class="page-tool">
+        <?php if ($_smarty_tpl->tpl_vars['close']->value['insert']!=1) {?><a href="<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['page'];?>
+&id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a><?php }?>
+        <?php if ($_smarty_tpl->tpl_vars['close']->value['edit']!=1) {?><a onclick="Edit('<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['page'];?>
+&id=')"><img src="images/icon14.png" width="32" height="32" alt=""/>編輯</a><?php }?><!-- 模組新增修改刪除列 -->
+        <?php if ($_smarty_tpl->tpl_vars['close']->value['edit']!=1) {?><a onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a><?php }?>
+        <a href="javascript:Del('<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['page'];?>
+&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
+         </div>
          
-<form action="" method="post" id="form" name="form">
-<div class="search-tool" id="search"><!-- 搜尋模組 -->
 
 
-名稱<input name="search_keyword" type="text"  id="search_keyword" value="<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['search_value']['keyword'];?>
-" size="30" />
+<!--SEARCH-->
+         <div class="search-tool" id="search"><!-- 搜尋模組 -->
+         <form action="" method="get" id="search_form" name="search_form">
 
+            <table height="19px">
+            <tr>
+            <td>關鍵字查詢</td>
+            <td width="200">
+            <input type="text" name="keyword" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['keyword'];?>
+" />
+            </td>
+            <td>
+            建立日期<input type="text" name="daterange"  readonly size="25" >
+            <script>Datepick('[name="daterange"]',"range","yyyy.mm.dd");</script>
             
-類別：<?php echo $_smarty_tpl->tpl_vars['html']->value['type_menu'];?>
-
             
-狀態：<?php echo $_smarty_tpl->tpl_vars['html']->value['status_menu'];?>
+            
+            
+            <select name="s_status" >
+                <?php echo $_smarty_tpl->tpl_vars['admin_info']->value['search']['status'];?>
 
-
-<img src="images/icon-search.png" width="18" height="18" onclick="document.getElementById('isSearch').click();"/>
-
-
-  <input name="isSearch" type="image" id="isSearch" src="images/search_btn.jpg"  value="查詢" style="display:none;"/> 
-</div>
-
+            </select>
+            
+              
+              <?php if ($_smarty_tpl->tpl_vars['data']->value['pageget']['class']!=null) {?><input type="hidden" name="class" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['class'];?>
+"><?php }?>
+              <?php if ($_smarty_tpl->tpl_vars['data']->value['pageget']['mode']!=null) {?><input type="hidden" name="mode" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['mode'];?>
+"><?php }?>
+              <?php if ($_smarty_tpl->tpl_vars['data']->value['pageget']['type']!=null) {?><input type="hidden" name="type" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['type'];?>
+"><?php }?>
+              <img src="images/icon-search.png" width="18" height="18" id="SearchBtn"/>
+              </td></tr></table>
+         </form>
+         </div>
 <!--SEARCH-->
 
 
-<div id="content_inside">
-
-  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
-  	<tr bgcolor="#EEEEEE">
-  		<th align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 
+<div id="content_inside" style="clear:both;">
+<input type="checkbox" id="colorbutton" onchange="color_button(this)"> 顏色識別層級
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+  	<tr>
+  		<th align="center" width="60">刪除 <input type="checkbox" id="allbox" name="allbox" 
 		onclick="CheckAll('allbox','choose_id')"/></th>
-  		<th>名稱</th>
-		
 
-		
-		<th>排序</th>
-
-		
+  		<th>標題</th>
+		<?php if ($_smarty_tpl->tpl_vars['close']->value['sort']!=1) {?><th>排序</th><?php }?>
 		<th>狀態</th>
 		<th>建立時間</th>
 		<th>維護時間</th>
 		
-		
 
   	</tr>
-	
 	<?php if (isset($_smarty_tpl->tpl_vars['smarty']->value['section']['idex'])) unset($_smarty_tpl->tpl_vars['smarty']->value['section']['idex']);
 $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['name'] = 'idex';
-$_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['loop'] = is_array($_loop=$_smarty_tpl->tpl_vars['data']->value) ? count($_loop) : max(0, (int) $_loop); unset($_loop);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['loop'] = is_array($_loop=$_smarty_tpl->tpl_vars['data']->value['list']) ? count($_loop) : max(0, (int) $_loop); unset($_loop);
 $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['show'] = true;
 $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['max'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['loop'];
 $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['step'] = 1;
@@ -122,207 +141,318 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['index_next'] = $_sma
 $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['first']      = ($_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['iteration'] == 1);
 $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['last']       = ($_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['iteration'] == $_smarty_tpl->tpl_vars['smarty']->value['section']['idex']['total']);
 ?>
-   <tr >
-      <td align="right" ><input type="checkbox" id="choose_id" value="<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+    
+   <tr class="tr_sort" listid="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+" parent_id="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['parent_id'];?>
+" depth="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['depth'];?>
+" title="可拖曳進行排序" onmouseover="changesortitem(this,<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['parent_id'];?>
+)" dir-role="open">
+      <td align="center" ><input type="checkbox" id="choose_id" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
 " name="choose_id" /></td>
 	  
 	  
-	  <td align="left" ><A href="#" onclick="checkAction('<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-','U');"><?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['show_text'];?>
-</A></td>
+	  <td >
+      <?php if ($_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['lft']*1+1<$_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['rgt']*1) {?>
+      <img src="images/closedir.png" width="20" onclick="toggdir(<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+);" dir>
+      <?php } else { ?>
+      <img src="images/wdir.png" width="20">
+      <?php }?>
+      <a href="<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['page'];?>
+&id=<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+"><?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['name'];?>
+</a></td>
 	  
-	  
- 	  <td align="left">
-	  <input type="text" name="sort<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-" id="sort<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-" size="2" 
-	  value="<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['sort'];?>
-" >&nbsp;&nbsp;<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['up_icon'];?>
-&nbsp;&nbsp;<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['down_icon'];?>
+<?php if ($_smarty_tpl->tpl_vars['close']->value['sort']!=1) {?>  
+	<td align="center">
+		  <input type="text" name="sort_<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+" id="sort_<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
+" size="2" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['sort'];?>
+" 
+		  onmouseup="sort_act=2" onmousedown="sort_act=2" sort/> <?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['up'];?>
+ <?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['down'];?>
 
-	  </td>
-	 
-	  
-	  <td align="center">
-	  <div id="edit_status<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-" class="ajax_edit"><?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['status']['text'];?>
-</div>
-	  <script>
-		//狀態
-		ajax_change_status( 'edit_status<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-' ,'<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['status']['option'];?>
-','<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['table'];?>
-','status', <?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-,1);
-		//排序
-		$("#sort"+<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-).blur(function() {
-			if($(this).val()!=<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['sort'];?>
-)
-			{
-				location="?val="+$(this).val()+"&val_before="+<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['sort'];?>
-+"&act=sort&id="+<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['id'];?>
-+"&pid="+<?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['parent_id'];?>
-+"&mode="+<?php echo $_smarty_tpl->tpl_vars['mode']->value;?>
-;
-			}
-		});				
-		</script>
-	  
-	  </td>
-	  
-	  <td align="center"><?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['create_name'];?>
- 於 <?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['create_date'];?>
-</td>
-	  
-	  <td align="center"><?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['update_name'];?>
- 於 <?php echo $_smarty_tpl->tpl_vars['data']->value[$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['update_date'];?>
-</td>
-	  
-	  
-
-    </tr>
-    <?php endfor; endif; ?>
+		  </td>
+<?php }?>
 	
-  </table>
+	  
+	  <td ><?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['status_html'];?>
+</td>
+	  
+	  <td ><?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['create_name'];?>
+ 於 <?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['create_date'];?>
+</td>
+	  
+	  <td ><?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['update_name'];?>
+ 於 <?php echo $_smarty_tpl->tpl_vars['data']->value['list'][$_smarty_tpl->getVariable('smarty')->value['section']['idex']['index']]['update_date'];?>
+</td>
+	  
+	  
 
-<br>
-<!--page列 start-->
+  </tr>
+    <?php endfor; endif; ?>
+
+  </table>
+  
+  <br>
 <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['page_table_html']->value, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, null, array(), 0);?>
 
-
-<!--page列 end-->
-
-
+  <div class="page-tool-note">排序規則：數字由小字大順序排序1.2.3.4.5 &nbsp;<br>
+         更新排序：拖曳該欄位進行排序，或者在排序輸入框中填入位置後存檔</div>
+  <input name="act" type="hidden" value="all" />
+  </form>
 </div><!--div id="content_inside"-->
 
+<script>
+var laterobj;
+function changesortitem(mainobj,data){
+	if ($(laterobj)[0]==$(mainobj)[0]) return;
+	laterobj=mainobj;
+	$(sortmain+' '+sortrow).each(function (idx,obj){
+		$(obj).off("mouseover");
+		$(obj).off("mouseout");
+	});
+	
+	sortrow = '.tr_sort[parent_id="'+data+'"]:not(.ui-sortable-placeholder)'; //--可以移動的項目
 
-<input name="act" type="hidden" id="act" value="<?php echo $_smarty_tpl->tpl_vars['act']->value;?>
-">
-  <input name="id" type="hidden" id="id" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['id'];?>
-">
-  <input type="hidden" name="mode" id="mode" value="<?php echo $_smarty_tpl->tpl_vars['mode']->value;?>
-"/>
-  <input type="hidden" name="del_id" id="del_id" value="" />
-  <input type="hidden" name="page" id="page" value="<?php echo $_smarty_tpl->tpl_vars['page']->value;?>
-" />
-  <input type="hidden" name="repeat" id="repeat" value="0" />
-  <input type="hidden" name="s_query" id="s_query" value="<?php echo $_smarty_tpl->tpl_vars['s_query']->value;?>
-" />
+	 $( sortmain ).sortable( "option", "items", sortrow );
+	 dosortable();
+	 $(mainobj).mouseover();
+}
+</script>
+
+<script>
+var sortnow = '<?php echo $_smarty_tpl->tpl_vars['data']->value['list'][0]['sort'];?>
+'*1;//--本頁排序起始值
+var sortcount = '<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['idex']['index'];?>
+'*1;//--項目數量
+var sortmain = ".table-style01"; //-列表主體
+var sortrow = '.tr_sort[parent_id="1"]:not(.ui-sortable-placeholder)'; //--可以移動的項目
+var sort_act = 0;
+var sortlastobj;
+$(function() {
+	$( sortmain ).sortable( {items: sortrow, stop: function( event, ui ) {cps();},
+		change: function (e,ui){
+		  $(ui.placeholder).hide().slideDown();
+		}
+	 } );
+	//$( sortmain ).disableSelection();
+});
+
+dosortable();
+
+function cps(){
+	var prevobj=null;
+	$(sortmain+' '+sortrow).each(function(idx,obj){
+		$(obj).find('input[type="text"]').val(sortnow+idx);
+	});
+	
+	//--另外處理跟目錄以下的資料連動拖曳
+	if ($(sortlastobj).prev().length>0) prevobj = $(sortlastobj).prev();
+	
+	deepsort($(sortlastobj).attr('listid'));
+	
+	if (prevobj!=null) {
+	  sortlastobj = prevobj;
+	  deepsort($(sortlastobj).attr('listid'));
+	}
+}
   
-  
-  <input name="isSearch" type="hidden" id="isSearch" value="1" />
+function dosortable(){
+	//console.log(sortmain+' '+sortrow);
+	$(sortmain+' '+sortrow).each(function(idx,obj){
+	  $(obj).on("mouseup",function (){
+		sortlastobj = this;
+	  });
+	  $(obj).on("mouseover",function (){ //--滑鼠移入加入顯示黑色方框式樣
+			_td_style = "border-bottom:1px solid #000000;border-top:1px solid #000000;";
+	 		$(obj).find('td').attr("style",_td_style);
+			$(obj).find('td:first').attr("style",_td_style+"border-left:1px solid #000000;");
+			$(obj).find('td:last').attr("style",_td_style+"border-right:1px solid #000000;");
+	  });
+	  $(obj).on("mouseout",function (){ //--滑鼠移出移除所有式樣
+			$(obj).find('td').removeAttr("style");
+	  });
+  });
+}
+//--重新排序位置
+function deepsort(parent_id){
+	if ($('tr[parent_id="'+$(sortlastobj).attr('listid')+'"]').length>0){
+		$('tr[parent_id="'+$(sortlastobj).attr('listid')+'"]').each(function (idx,obj){
+			$(sortlastobj).after($(obj));
+			sortlastobj = obj;
+			deepsort($(obj).attr('listid'));
+		});
+	}
+}
 
-</form>
+//-排序上下按鈕
+sortbutton = function (){
+	$(sortmain).find('.tr_sort').each(function (idx,obj){
+		$(obj).find('input[sort]').eq(0).parent().append('<img src="images/up_btn.jpg" style="cursor:pointer" onclick="changesort(\'up\');" > <img src="images/down_btn.jpg" style="cursor:pointer" onclick="changesort(\'down\');" >');
+	});
+}
+changesort = function (type){
+	switch (type){
+		case "up":
+			if ($(event.target).parent().find('input[sort]').val()*1>1)
+			$(event.target).parent().find('input[sort]').val($(event.target).parent().find('input[sort]').val()*1-1.5);
+		break;
+		case "down":
+			$(event.target).parent().find('input[sort]').val($(event.target).parent().find('input[sort]').val()*1+1.5);
+		break;
+	}
+	$('#form').submit();
+}
+sortbutton();
 
+
+//-開闔目錄
+var dir_status = null;
+function toggdir(parent_id){
+	toggdir2(parent_id)
+	dir_status = null;
+}
+function toggdir2(parent_id){
+	if (dir_status==null) {
+		dir_status = $('tr[listid="'+parent_id+'"]').attr('dir-role');
+		switch (dir_status){
+				case "open":
+					$('tr[listid="'+parent_id+'"]').attr('dir-role','close').find('img[dir]').attr('src','images/moredir.png');
+				break;
+				case "close":
+					$('tr[listid="'+parent_id+'"]').attr('dir-role','open').find('img[dir]').attr('src','images/closedir.png');
+				break;
+		}
+	}
+		
+	if ($('tr[parent_id="'+parent_id+'"]').length>0){
+		$('tr[parent_id="'+parent_id+'"]').each(function (idx,obj){			
+			switch (dir_status){
+				case "open":
+					$(obj).attr('dir-role','close').hide().find('img[dir]').attr('src','images/moredir.png');
+				break;
+				case "close":
+					$(obj).attr('dir-role','open').show().find('img[dir]').attr('src','images/closedir.png');
+				break;
+			}
+			toggdir2($(obj).attr('listid'));
+		});
+	}
+}
+</script>
 
 
 
 </div><!--div id="content_bg"-->
 </div>
 </div>
-
 <script>
-page_initial('table_content');
+//page_initial('table-style01');
+function color_button(toobj){
+	if ($(toobj)[0].checked == true){
+		$(sortmain).find('tr').each(function (idx,obj){
+			var color_data = (255-($(obj).attr('depth')-1)*20);
+		  $(obj).css("background",'rgb('+color_data+','+color_data+','+color_data+')');  
+		})
+	}else{
+		$(sortmain).find('tr').css('background','none');
+	}
+}
 </script>
 
 
 <!--頁數呈現table-->
 
-	
 
 
-<?php } elseif ($_smarty_tpl->tpl_vars['act']->value=="add"||$_smarty_tpl->tpl_vars['act']->value=="edit") {?>
+</div>
+<?php }?>
+
+
+
+<?php if ($_smarty_tpl->tpl_vars['admin_info']->value['view']=='detail') {?>
+<script language="javascript" src="../includes/js/jquery-ui.js"></script>
 <div class="col-02"><!-- 右邊內容區塊 -->
        <div class="right-main">
        
 <div class="content-box" id="content_bg">
-	<h2 class="funtion-title"><?php echo $_smarty_tpl->tpl_vars['admin_info']->value['title'];?>
+
+         <h2 class="funtion-title"><?php echo $_smarty_tpl->tpl_vars['admin_info']->value['title'];?>
 <!-- 頁面標題 -->         </h2>
-    <div class="page-tool">
-    <a href="?page=<?php echo $_smarty_tpl->tpl_vars['page']->value;?>
-&mode=<?php echo $_smarty_tpl->tpl_vars['mode']->value;?>
-&s_query=<?php echo $_smarty_tpl->tpl_vars['s_query']->value;?>
-"><img src="images/icon14.png" width="32" height="32" alt="返回"/><?php echo $_smarty_tpl->tpl_vars['setup']->value['BackBtn'];?>
-</a>
-    <?php if ($_smarty_tpl->tpl_vars['close']->value['edit']!=1) {?><a href="Javascript:$('#form').submit();" ><img src="images/icon05.png" width="32" height="32" alt="儲存"/><?php echo $_smarty_tpl->tpl_vars['setup']->value['SaveBtn'];?>
-</a><?php }?>
-     </div>
-       <!--div id="title"-->
-     
+         <div class="page-tool">
+        <a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>
+
+        <?php if ($_smarty_tpl->tpl_vars['data']->value['one']['id']!=null) {?>
+          <?php if ($_smarty_tpl->tpl_vars['close']->value['edit']!=1) {?><a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a><?php }?>
+         <?php } else { ?>
+          <?php if ($_smarty_tpl->tpl_vars['close']->value['add']!=1) {?><a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a><?php }?>
+        <?php }?>
+         </div>
+         
+ <!--div id="title"-->
+
+
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
 <div id="content_inside">
-		<div class="container">
-			<div class="validate">請在必填欄位，填入正確格式：</div>
-			<ol></ol>
-		</div>
-
-<form action="" method="post" id="form" name="form" enctype="multipart/form-data">
-
-
-  <table width="100%" border="0" cellpadding="5" cellspacing="0" class="table_content" >
-          <tr>
-            <td align="right" class="table_content_left" width="10%">目錄：</td>
-            <td width="711" align="left" class="table_content_left">
-			<?php echo $_smarty_tpl->tpl_vars['html']->value['cate_menu'];?>
-			</td>
-          </tr>
-          <tr>
-            <td align="right" class="table_content_left">名稱：</td>
-            <td align="left" class="table_content_left"><input name="edit_name" type="text" id="edit_name" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['name'];?>
-" size="20" /></td>
-          </tr>
-		 
-		 
-		 
-<!--
-          <tr>
-            <td align="right" class="table_content_left">品牌介紹：</td>
-            <td align="left" class="table_content_left">
-			<?php echo $_smarty_tpl->tpl_vars['data']->value['detail_fck'];?>
-
-			</td>
-          </tr>
--->
-		 
-		 
-		 
-
-          <!--
-		  <tr>
-            <td align="right" class="table_content_left">
-			上傳圖檔：<br />
-			<?php echo $_smarty_tpl->tpl_vars['html']->value['size_memo'];?>
-
-			</td>
-            <td align="left"  class="table_content_left"><?php echo $_smarty_tpl->tpl_vars['html']->value['file_menu'];?>
-</td>
-          </tr>
-		  -->
-		  
-		  
-			
-			
-		<!---	
-		 <?php if ($_smarty_tpl->tpl_vars['mode']->value==2) {?>		 
-          <tr>
-            <td align="right" class="table_content_left">事件代表顏色：</td>
-            <td align="left" class="table_content_left">
-			<script src="../includes/js/iColorPicker.js" type="text/javascript"></script>
-			<input id="edit_memo" name="edit_memo" type="text" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['memo'];?>
-" class="iColorPicker" />
-			</td>
-		 <?php } else { ?>
-          <tr>
-            <td align="right" class="table_content_left">備註：</td>
-            <td align="left" class="table_content_left"><textarea name="edit_memo" cols="40" rows="2" id="edit_memo" ><?php echo $_smarty_tpl->tpl_vars['data']->value['memo'];?>
-</textarea></td>		 
-		 <?php }?>
-          </tr>
-          --->
 
 
 
-<?php if ($_smarty_tpl->tpl_vars['data']->value['depth']==$_smarty_tpl->tpl_vars['jdata']->value['pic_depth']) {?>
+<form action="" method="post" id="form" name="form" enctype="multipart/form-data" onsubmit="checkform();">
+<div id="tabs">
+<ul>
+	<li><a href="#tabs-1">詳細內容</a></li>
+    <!--<li><a href="#tabs-2">按鈕設定</a></li>-->
+</ul>
+
+<div id="tabs-1">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+
+	<tr>
+	<td width="110" align="right" >標題：</td>
+		  <td >
+		  <input type="text" name="name" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['name'];?>
+" size="48" />
+          
+        
+		   </td>
+	</tr>
+	<tr>
+	<td width="110" align="right" >上層：</td>
+		  <td >
+		  <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['parent_id_html'];?>
+
+          
+        	<script>
+			$(document).ready(function (){
+				//--選擇時設立還原資料
+				$('[name="parent_id"]').on('focus',function(e){
+					$(e.target).attr('defvalue',$(e.target).val());
+				});
+				//--離開時判斷是否異動資料詢問
+				$('[name="parent_id"]').on('blur',function(e){
+					if ($(e.target).attr('defvalue')!=$(e.target).val()){
+						if (confirm('是否要異動此分類樹下?\n如確定則需建立新頁面資訊')){
+							window.location.href='?mode=<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['mode'];?>
+&parent_id='+$(e.target).val()+'&id=<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['id'];?>
+';
+						}else{
+							$(e.target).val($(e.target).attr('defvalue'));
+						}
+					}
+				});
+			});
+			</script>
+		   </td>
+	</tr>
+	
+<?php if ($_smarty_tpl->tpl_vars['data']->value['close']['pic']==null) {?>
 <tr>
 	<td align="right" >圖片：</td>
 	  <td >
@@ -364,7 +494,7 @@ $(document).ready(
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){
@@ -376,8 +506,8 @@ $(document).ready(
 					//$('form').submit();
 				},
 				'onComplete'  : function(event, ID, fileObj, response, data)
-				{
-						upload_one(response);
+				{	
+					upload_one(response);
 				},
 				'onSelect'    : function(event,ID,fileObj)
 				{
@@ -402,8 +532,11 @@ function valcheck(obj){
 function upload_one(response){
 					var filename = response.split('/');
 					if (filename.length<=1) return alert(response);
+					
 					filename = filename[filename.length-1];div_file = filename.split('.')[0];
-					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"><div style="float:right;">此圖片尚未存檔</div></div>');//--增加一個選項
+					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"></div>');//--增加一個選項
+					var max_idxtopic = $('#piclist>div.ui-state-default').length;
+					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" id="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'#pic_sort_'+(max_idxtopic-1)+'\').val());"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+(max_idxtopic-1)+');"></div>');
 					$('#picspan_'+div_file).append('<img src="<?php echo $_smarty_tpl->tpl_vars['data']->value['file_url'];?>
 '+filename+'" height="150px"><br>');
 				 	$('#picspan_'+div_file).append('<input type="hidden" name="pic[]" value="'+filename+'">');
@@ -446,7 +579,15 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['other']['last']       = ($_s
 :<input type="text" name="detail[]" placeholder="在此輸入<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['change_detail'];?>
 "  onclick="valcheck(this)">');<?php }?>
 					$('#picspan_'+div_file).append('<input type="button" onclick="picdel('+div_file+')" value="刪除'+filename+'圖片"><br><br>');
-					$('input[type="hidden"][name="pic"],input[type="hidden"][name="name"],input[type="hidden"][name="href"]').remove();
+					$('[name="pic"]').remove();
+					<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['name']!=null) {?>$('[name="name"]').remove();<?php }?>
+					<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['href']=='1') {?>$('[name="href"]').remove();<?php }?>
+					
+					//--定義最後一個賦予排序					
+					$('#piclist div[class="ui-state-default"][id]:last').on("mouseup",function(event){
+						if (event.srcElement.className!='')	window.setTimeout("re_sort()",50);
+					})
+					
 }
 </script>
 <script>
@@ -465,20 +606,6 @@ function picdel(d){
 	<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['name']!=null) {?>$('#fileQueue_list').append('<input type="hidden" name="name" value="">');<?php }?>
  	<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['href']=='1') {?>$('#fileQueue_list').append('<input type="hidden" name="href" value="">');<?php }?>
 	}
-}
-function pic_sort(obj_id,moveto){
-	if (moveto*1==1){
-		if ($('#piclist div[id] div input[type="text"][id]:eq(0)')[0]==$('#picspan_'+obj_id).find('div input[type="text"][id]')[0])
-		return alert('目前已位於最上方');
-	}
-	if ($('#picspan_'+obj_id)[0]==$('#piclist div[id]:eq('+(moveto-1)+')')[0]) return alert('無法移動跟目前一樣的位置');
-	$('#picspan_'+obj_id).insertBefore($('#piclist div[id]:eq('+(moveto-1)+')'));
-	re_sort();
-}
-function re_sort(){
-	$('#piclist div[id]').each(function (idx,obj){
-		$(obj).find('div input[type="text"][id]').val(idx+1);
-	})
 }
 </script>
 
@@ -572,12 +699,13 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
 <?php }?>
 <?php endfor; endif; ?>
 </div>
+
 <font color="red">(上列圖片可拖曳排序位置)</font>
 
 
-    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;">
+    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;" onclick="if ($(event.target)[0]==$(this)[0]) aes('ff');">
     拖曳圖片到此處上傳 <BR>( IE瀏覽器不支援 請使用上傳套件上傳 )
-    <div id="up_progress" ></div> <script></script>
+    <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
     <div id="fileQueue_list"></div>
@@ -585,7 +713,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
  <BR>
 <input type="file" name="uploadify" id="uploadify"/>
 	<BR />
-	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyUpload()">批次上傳圖片</a>&nbsp;|&nbsp;<?php }?>
+	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:ajxupload();$('#uploadify').uploadifyUpload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;<?php }?>
 	<?php if ($_smarty_tpl->tpl_vars['data']->value['uploadfilemax']>1) {?><a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;<?php }?>建議比例:<?php echo $_smarty_tpl->tpl_vars['data']->value['pic_size_title'];?>
 <BR />
     </div>
@@ -595,62 +723,244 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
 ';var drag_count = <?php echo $_smarty_tpl->tpl_vars['data']->value['uploadfilemax'];?>
 ;</script>
     <script src="../includes/project/js/drag_file.js"></script>
-    
+    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
+    <script>
+	function ajxupload(){
+		if ($('#ff')[0].files.length>0)
+		 $.ajaxFileUpload
+            (
+                {
+                    url: '../includes/project/js/Jones_upload.php'+file_upload,
+                    secureuri: false, //加密
+                    fileElementId: 'ff', //objid
+                    dataType: 'json', 
+                    success: function (data, status)  
+                    {
+						$('#ff').val(null);
+                        for (ee in data)
+							upload_one(data[ee]);
+                    }
+                }
+            );
+	}
+	function aes (dname){
+		$('[name="'+dname+'[]"]').click();
+	}
+	</script>
+    <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
 	</td>
 	</tr>
     
 <?php }?>
-                    
-          <?php if (0) {?>
-          <tr>
-            <td align="right" class="table_content_left">內容：</td>
-            <td align="left" class="table_content_left"><?php echo $_smarty_tpl->tpl_vars['data']->value['detail_fck'];?>
-</td>
-          </tr>	  
-          <?php }?>
+<?php if ($_smarty_tpl->tpl_vars['data']->value['button']['file']!=null) {?>
+<tr>
+	<td width="110" align="right" >夾帶檔案：</td>
+	   <td>
           
-          <tr>
-            <td align="right" class="table_content_left">狀態：</td>
-            <td align="left" class="table_content_left"><?php echo $_smarty_tpl->tpl_vars['html']->value['status_menu'];?>
-</td>
-          </tr>	  
-          <?php if ($_smarty_tpl->tpl_vars['data']->value['id']!='') {?>		  
-          <tr>
-            <td align="right" class="table_content_left">排序：</td>
-            <td align="left" class="table_content_left">
-			<input name="edit_sort" type="text" id="edit_sort" maxlength="10" style="text-align:right; width:30px" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['sort'];?>
-"/>			</td>
-          </tr>	          
-		  <tr>
-            <td align="right" class="table_content_left">維護：</td>
-            <td align="left" class="table_content_left"><?php echo $_smarty_tpl->tpl_vars['data']->value['update_user'];?>
- 於 <?php echo $_smarty_tpl->tpl_vars['data']->value['update_date'];?>
- 維護</td>
-          </tr>
-		  <?php }?>
-        </table>
-		<input name="edit_pre_sort" type="hidden" id="edit_pre_sort" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['sort'];?>
-">
+       	  <input type="button" value=" 增加一個夾帶檔案 " onclick="add_file();"><br><br>
+          
+          <div id="file_list">
+          <?php if (is_array($_smarty_tpl->tpl_vars['data']->value['one']['file'])) {?>
+          <?php if (isset($_smarty_tpl->tpl_vars['smarty']->value['section']['c1'])) unset($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['name'] = 'c1';
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop'] = is_array($_loop=$_smarty_tpl->tpl_vars['data']->value['one']['file']) ? count($_loop) : max(0, (int) $_loop); unset($_loop);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show'] = true;
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['max'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'] = 1;
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['start'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'] > 0 ? 0 : $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop']-1;
+if ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show']) {
+    $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['loop'];
+    if ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'] == 0)
+        $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show'] = false;
+} else
+    $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'] = 0;
+if ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['show']):
 
- 
+            for ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['start'], $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] = 1;
+                 $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] <= $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total'];
+                 $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] += $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'], $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration']++):
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['rownum'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index_prev'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] - $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index_next'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['index'] + $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['step'];
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['first']      = ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] == 1);
+$_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['last']       = ($_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['iteration'] == $_smarty_tpl->tpl_vars['smarty']->value['section']['c1']['total']);
+?>
+          <?php if ($_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']]!=null&&trim($_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']])!='') {?>            
+          <div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;margin:5px;" id="<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+_file_name">
+              檔案名稱：<input type="text" name="file_name[]" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file_name'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']];?>
+" /><br>
+              
+              <?php if ($_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']]!=null) {?>
+              <span id="<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+_file">
+                <input type="hidden" name="file[]" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']];?>
+">已含有檔案 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['file'][$_smarty_tpl->getVariable('smarty')->value['section']['c1']['index']];?>
+ 檔案<br> 
+                <a href="javascript:del_file(<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+);"><font color="#FF0000">刪除請點此</font></a><br>
+              </span>
+              <?php }?>
+              
+              <input type="file" name="file[]" onchange="file_change(<?php echo $_smarty_tpl->getVariable('smarty')->value['section']['c1']['index'];?>
+)" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
+          </div>
+          <?php }?>
+          <?php endfor; endif; ?>
+          <?php } else { ?>
+          	請設定參數 $data["one"]["file"] 轉型陣列 explode('|__|',$data["one"]["file"])
+            請設定參數 $data["one"]["file_name"] 轉型陣列 explode('|__|',$data["one"]["file_name"])
+          <?php }?>
+          </div>
+         
+	   </td>
+	</tr>
+    <script>
+    function del_file(file_type){
+        $('#'+file_type+'_file_name').remove();
+		if($('#file_list >div').length == 0){
+			$('#file_list').append('<input type="hidden" name="file_name[]" value="" /><input type="hidden" name="file[]" value="" />');
+		}
+    }
+	function file_change(file_type){
+		$('#'+file_type+'_file').remove();
+	}
+	function add_file(){
+		if($('#file_list >div').length >= '<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['file'];?>
+'*1){
+			alert('附加檔案超過<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['file'];?>
+個!!');
+		}else{
+			$('#file_list').append('<div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;">檔案名稱：<input type="text" name="file_name[]" /><br><input type="file" name="file[]" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)</div><br>')
+		}
+	}
+	$(function() {
+		$( "#file_list" ).sortable();
+		$( "#file_list" ).disableSelection();
+	});
+    </script>
+<?php }?>
+    
+    <?php echo $_smarty_tpl->tpl_vars['data']->value['order_html'];?>
+
+   
+    <?php if ($_smarty_tpl->tpl_vars['data']->value['button']['detail']=='1') {?>
+	<tr >
+	  <td  align="right" >內容：</td>
+	  <td > 
+      <?php if ($_smarty_tpl->tpl_vars['data']->value['button']['fck']=='1') {?>
+      <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['detail_fck'];?>
+
+      <?php } else { ?>
+		<textarea rows="5" name="detail" style="width:300px;"> <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['detail'];?>
+</textarea>
+	  <?php }?>
+	  </td>
+	</tr>
+	<?php }?>
+    
+    
+    
+    
+    <?php if ($_smarty_tpl->tpl_vars['data']->value['button']['size']!=null) {?>
+    <tr >
+      <td align="right" ><?php if ($_smarty_tpl->tpl_vars['data']->value['button']['title']!=null) {?><?php echo $_smarty_tpl->tpl_vars['data']->value['button']['title'];?>
+<?php } else { ?>尺寸規格設定<?php }?>：</td>
+      <td ><input type="button" value=" 新增 " onclick="size_div_add()">
+		<div id="size_div">
+        
+        </div>
+	 </td>
+    </tr>
+    <script>
+	var obj_name_data = '<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['size_name'];?>
+';//--資料來源
+	var obj_value_data = '<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['size_value'];?>
+';//--資料來源
+	var obj_name = '<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['size']['name'];?>
+';//--物件名稱
+	var obj_value = '<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['size']['value'];?>
+';//--物件名稱
+	var pro_obj = '#size_div';//--容器
+	
+	$(function() {
+    $(pro_obj).sortable();
+    $(pro_obj).disableSelection();
+	});
+	
+	
+	$(document).ready(function(){
+		obj_name_data = obj_name_data.split('|__|');
+		obj_value_data = obj_value_data.split('|__|');
+		for (aa in obj_name_data)
+			if (obj_name_data[aa]!=''&&obj_name_data[aa]!=null)
+			$(pro_obj).append('<div id="class_'+aa+'"><input type="text" name="'+obj_name+'[]" value="'+obj_name_data[aa]+'"<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['width'];?>
+> : <input type="text" name="'+obj_value+'[]" value="'+obj_value_data[aa]+'"<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['width'];?>
+><input type="button" value="刪除" onclick="$(this).parent().remove();"></div>')
+	});
+	
+	function size_div_add(){
+		obj_rang = Math.ceil(Math.random()*9999+1); //--1~9999
+		for (obji = 0 ;obji<9999;obji++)
+			if ($('#size_div #class_'+obj_rang).length<=0) { //--判斷物件是否存在
+				$(pro_obj).append('<div id="class_'+obj_rang+'"><input type="text" name="'+obj_name+'[]"<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['width'];?>
+> : <input type="text" name="'+obj_value+'[]"<?php echo $_smarty_tpl->tpl_vars['data']->value['button']['width'];?>
+><input type="button" value="刪除" onclick="$(this).parent().remove();"></div>');
+				break;
+			}
+	}
+	</script>
+    <?php }?>
+    
+    
+    
+  </table>
+	</div><!-- tabs-1 -->
+</div>
+
+<br>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+	 <tr >
+      <td align="right" width="150">狀態：</td>
+      <td >
+	<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['status_html'];?>
+
+	 </td>
+    </tr>
+
+
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['create_name'];?>
+ 於 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['create_date'];?>
+ 建立
+	 </td>
+    </tr>
+
+
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['update_name'];?>
+ 於 <?php echo $_smarty_tpl->tpl_vars['data']->value['one']['update_date'];?>
+ 維護
+	 </td>
+    </tr>
+	
+	
+	<?php if ($_smarty_tpl->tpl_vars['data']->value['pageget']['class']!=null) {?><input name="type" type="hidden" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['class'];?>
+<?php echo $_smarty_tpl->tpl_vars['data']->value['pageget']['design'];?>
+" /><?php }?>
+	<input name="act" type="hidden" value="submit" />
+	<input name="id" type="hidden" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['one']['id'];?>
+" />
+    <input name="member_id" type="hidden" value="<?php echo $_smarty_tpl->tpl_vars['admin_info']->value['member']['id'];?>
+">
+	<?php echo $_smarty_tpl->tpl_vars['data']->value['tages'];?>
+
+    </table>
   <br />
-  
-  <input name="act" type="hidden" id="act" value="<?php echo $_smarty_tpl->tpl_vars['act']->value;?>
-">
-  <input name="id" type="hidden" id="id" value="<?php echo $_smarty_tpl->tpl_vars['data']->value['id'];?>
-">
-  <input type="hidden" name="mode" id="mode" value="<?php echo $_smarty_tpl->tpl_vars['mode']->value;?>
-"/>
-  <input type="hidden" name="del_id" id="del_id" value="" />
-  <input type="hidden" name="page" id="page" value="<?php echo $_smarty_tpl->tpl_vars['page']->value;?>
-" />
-  <input type="hidden" name="repeat" id="repeat" value="0" />
-  <input type="hidden" name="s_query" id="s_query" value="<?php echo $_smarty_tpl->tpl_vars['s_query']->value;?>
-" />
-  
-  
-  <input name="isSearch" type="hidden" id="isSearch" value="1" />
-  
 </form>
 
 </div>
@@ -663,52 +973,58 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['lo']['last']       = ($_smar
 </div>
 </div>
 
-
 <script>
 page_initial('table_content');//tr交互顯示顏色
-//$('#tabs').tabs();
+$('#tabs').tabs();
 
-//防重複送出表單
-var sumbit=false;
-$(document).ready(function(){
-	//表單驗證
-	var container = $('div.container');	
-	var validator=$('#form').validate( {
-		errorContainer: container,
-		errorLabelContainer: $("ol", container),
-		wrapper: 'li',    
-		event: "keyup",
-		debug:  false,              
-		rules:{
-			edit_name:{required:true}, 
-			file:{accept:true}, 
-			edit_status:{required:true},
-			edit_sort:{required:true,digits:true}		
-		},
-		messages:{
-			edit_name:{required:"名稱 : 尚未填寫!"},	
-			file:{accept:"上傳圖檔 : 接受格式 jpg、png、gif"}, 	
-			edit_status:{required:"狀態 : 請選擇!"},
-			edit_sort:{required:"排序 : 請輸入!",digits:"排序 : 請輸入整數值"}			
-		},
-		submitHandler:function(form){	//送出前的自訂處理
-			if(sumbit==false)
-			{
-				form.submit();
-				$("#save_text").html("傳送中...");
-				sumbit=true;
+function checkform(){
+	//--絕對路徑連結
+	if ($('[name="href[]"]').length>0){
+		$('[name="href[]"]').each(function (idx,obj){
+			if ($(obj).val()!=null && $(obj).val()!=''){
+				if ($(obj).val().split('//').length != 2){
+					$(obj).val('//'+$(obj).val());
+				}
 			}
-			
+		});
+	}
+	if ($('[name="href"]').length>0 && $('[name="href"]').val()!=null && $('[name="href"]').val()!=''){
+		if ($('[name="href"]').val().split('//').length != 2){
+			$('[name="href"]').val('//'+$('[name="href"]').val());
 		}
-	});	
-});
+	}
+
+}
+
+$('#piclist div[class="ui-state-default"][id]').on("mouseup",function(event){
+	sort_event = event;
+	if (event.srcElement.className!='')
+	window.setTimeout("re_sort()",50);
+})
 
 
-
+//-指定排序 於多少後面
+function pic_sort(obj_id,moveto){
+	if (moveto*1==1){
+		if ($('#piclist div[id] div input[type="text"][id]:eq(0)')[0]==$('#picspan_'+obj_id).find('div input[type="text"][id]')[0])
+		return alert('目前已位於最上方');
+	}
+	if ($('#picspan_'+obj_id)[0]==$('#piclist div[id]:eq('+(moveto-1)+')')[0]) return alert('無法移動跟目前一樣的位置');
+	$('#picspan_'+obj_id).insertBefore($('#piclist div[id]:eq('+(moveto-1)+')'));
+	re_sort();
+}
+function re_sort(){
+	$('#piclist div[id]').each(function (idx,obj){
+		$(obj).find('div input[type="text"][id]').val(idx+1);
+	})
+}
 </script>
+
+
 
 <?php }?>
 
 
 
-  <?php }} ?>
+
+<?php }} ?>

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-07-07 12:56:09
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-09 14:01:58
          compiled from "D:\AppServ\www\modelphp\serback\templates\login.html" */ ?>
 <?php /*%%SmartyHeaderCode:10876559b5be9455e41-29983648%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'af2c16827e9e72c339120fceb14605d5434fc1c8' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\login.html',
-      1 => 1427160818,
+      1 => 1449640900,
       2 => 'file',
     ),
   ),
@@ -15,20 +15,22 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.18',
+  'unifunc' => 'content_559b5be94d1032_82077653',
   'variables' => 
   array (
+    'set' => 0,
     'data' => 0,
     'link' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.18',
-  'unifunc' => 'content_559b5be94d1032_82077653',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_559b5be94d1032_82077653')) {function content_559b5be94d1032_82077653($_smarty_tpl) {?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>網動廣告科技</title>
+<title><?php echo $_smarty_tpl->tpl_vars['set']->value[0]['detail'];?>
+::後台管理系統</title>
 
 <script type="text/javascript" src="../includes/js/jquery.js"></script>
 <script type="text/javascript" src="../includes/js/jquery-ui.js"></script>
@@ -40,6 +42,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <script type="text/javascript" src="../includes/js/datepick/jquery.datepick-zh-TW.js"></script><!--datepick-->
 <script type="text/javascript" src="../includes/js/ui/ui.core.js"></script><!--tabs分頁用-->
 <script type="text/javascript" src="../includes/js/func_back_js.js" ></script><!--自定後台js-->
+
 
 
 <link href="style/ui.all.css" rel="stylesheet" type="text/css" /><!--tabs分頁用-->
@@ -60,8 +63,12 @@ $_valid = $_smarty_tpl->decodeProperties(array (
    SYSTEM</div>
    <div class="login-power-by"><a href="http://www.vipcase.net" target="_blank">Power by vipcase</a></div>
   <div class="login-box">
+  
+  
+  
+  
      <div style="position:relative;">
-         <form name="form" id="form" method="post" action="index.php" enctype="multipart/form-data">
+         <form name="form" id="form" method="post" action="index.php" enctype="multipart/form-data" >
      <ul>
      <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
      <li><img src="images/login-key.png" width="15" height="15" /> <input name="password" id="password" type="password" class="login-id" placeholder="後台管理密碼" style="width:180px" /></li>
@@ -69,7 +76,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
      <img src="verifycode.php" onclick="$(this).attr('src',$(this).attr('src'));"> <input name="code" type="text" class="login-id" placeholder="CODE" style="width:60px;" /></li>
      <li class="fotget" style="padding-left:20px;">
          <input type="checkbox" name="checkbox" id="checkbox" />
-     記住密碼
+     記住登入訊息
      <img src="images/login-forget.png" width="15" height="15"/><a href="javascript:forgotpw();" class="fotget"> 忘記密碼</a></li>
      </ul>
     <script>
@@ -156,6 +163,28 @@ $( "#dialog-confirm" ).dialog( "close" );
 <script>
 window.name = "serback"; //---幫視窗取名字來判斷是否當個登入頁面
 
+//--表單記憶功能
+$(window).bind('load',function (){
+	$('#form').bind('submit',function (){
+		if ($('#checkbox:checked').length>0){
+			localStorage.setItem('serback_account',$('[name="account"]').val());
+			localStorage.setItem('serback_password',$('[name="password"]').val());
+			localStorage.setItem('serback_lang',$('[name="lang"]').val());
+			localStorage.setItem('serback_saveaccount','checked');
+		}else{
+			localStorage.removeItem("serback_account");
+			localStorage.removeItem("serback_password");
+			localStorage.removeItem("serback_lang");
+			localStorage.removeItem("serback_saveaccount")
+		}
+	});
+	$('[name="account"]').val(localStorage.getItem('serback_account'));
+	$('[name="password"]').val(localStorage.getItem('serback_password'));
+	$('[name="lang"]').val(localStorage.getItem('serback_lang'));
+	if (localStorage.getItem('serback_saveaccount')!=null){
+		$('#checkbox')[0].checked=true;
+	}
+});
 </script>
 
 </html>

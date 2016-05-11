@@ -45,6 +45,8 @@ if($call=="category_select")
 
 
 
+
+
 //重寄會員認證信
 if($call=="registered_send")
 {

@@ -60,23 +60,17 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-//$baseUrl = '/ckfinder/userfiles/';
-
-
 session_start();
 
 if (!isset($_SESSION["admin_info"]["id"])) {echo '無權限訪問!!,請連繫網動廣告科技相關工程人員處理!!';exit;}
-//if ($_SESSION["member_info"]["loginaccount"]!=NULL){
-//	$baseUrl = '/upload/member_self_file/'.$_SESSION["member_info"]["loginaccount"]["id"].'/';
-//}else{
-	$temp_url = explode('ckfinder',$_SERVER['PHP_SELF']);
-	if (count($temp_url)>1) {
-		$temp_url = $temp_url[0];
-		$baseUrl = $temp_url.'upload/';
-	}else{
-		$baseUrl = '/upload/';
-	}
-//}
+
+$temp_url = explode('ckfinder',$_SERVER['PHP_SELF']);
+if (count($temp_url)>1) {
+	$temp_url = $temp_url[0];
+	$baseUrl = $temp_url.'upload/';
+}else{
+	$baseUrl = '/upload/';
+}
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the

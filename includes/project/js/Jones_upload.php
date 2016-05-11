@@ -63,6 +63,8 @@ if ($_FILES){
 	
 	//--記憶暫存資料 edit by Jones 20150707
 	foreach ($name_array["ff"] as $k=>$v){
+		$v = explode('/',$v);
+		$v = $v[count($v)-1];
 		$_SESSION["upload_temp"][] = $v;
 	}
 	

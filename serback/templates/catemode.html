@@ -2,16 +2,11 @@
 <script>
 $(document).ready(function(){
 	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
-	$('[name="daterange"]').val( Get("daterange") );
+	$('[name="daterange[]"]').each(function (idx,obj){
+		$(obj).val( Get("daterange%5B%5D")[idx] );
+	});
 
 	$('#SearchBtn').click(function(){
-		if( $('[name="daterange"]').val().split("-")[1]!=null)
-		{
-			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
-			
-			$('[name="daterange"]').val( daterange );
-		}
-		
 		$('#search_form').submit();
 	});
 
@@ -159,7 +154,7 @@ page_initial('table_content');
 	<tr>
 	<td width="110" align="right" >最大層數設定：</td>
 		  <td >
-		  <input type="text" name="max_count" value="({if $data.one.max_count})({$data.one.max_count})({else})1({/if})" size="2">
+		  <input type="text" name="max_count" value="({if $data.one.max_count})({$data.one.max_count})({else})1({/if})" size="2" onkeyup="this.value=this.value.replace(/\D/g,'');">
 		   </td>
 	</tr>
 

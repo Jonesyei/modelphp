@@ -2,7 +2,7 @@
  * CKFinder
  * ========
  * http://cksource.com/ckfinder
- * Copyright (C) 2007-2013, CKSource - Frederico Knabben. All rights reserved.
+ * Copyright (C) 2007-2015, CKSource - Frederico Knabben. All rights reserved.
  *
  * The software, this file, and its contents are subject to the CKFinder
  * License. Please read the license.txt file before using, installing, copying,
@@ -228,7 +228,9 @@ CKFinder.lang['en'] =
 	300 : 'Moving file(s) failed.',
 	301 : 'Copying file(s) failed.',
 	500 : 'The file browser is disabled for security reasons. Please contact your system administrator and check the CKFinder configuration file.',
-	501 : 'The thumbnails support is disabled.'
+	501 : 'The thumbnails support is disabled.',
+	901: '主機空間已達限制!! 請連絡網動廣告科技 工程人員處理',
+	902: '無權限操作'
 	},
 
 	// Other Error Messages.
@@ -303,5 +305,10 @@ CKFinder.lang['en'] =
 		removeAndExtract	: 'Remove existing and extract',
 		extractAndOverwrite	: 'Extract overwriting existing files',
 		extractSuccess		: 'File extracted successfully.'
+	},
+
+	Search :
+	{
+		searchPlaceholder : 'Search'
 	}
 };

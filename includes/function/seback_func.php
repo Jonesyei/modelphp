@@ -131,7 +131,7 @@ function Auth_check($conn)
 									$sett = explode('=',$v2);
 									if (in_array($sett[0],$unset_array,0)) continue;
 								}
-								if (stripos($v2,'id=',0)!==false) continue;
+								if (stripos($v2,'id=',0)!==false || stripos($v2,'page=',0)!==false ||  stripos($v2,'s_',0)!==false) continue;
 								if($temp[0]==$tmp[0] && in_array($v2,$tmp2)==true)
 								{
 									$url_set = 1;
@@ -222,241 +222,7 @@ function Auth_check($conn)
 	return $pass;
 }
 
-function mode_menu($conn){
-	$menu_html = 
-	'<div id="left_nav">
-	<a onclick="Open_menu();" href="index.php"><img src="images/top.jpg"></a>
-		<div style="height:20px;text-align:center;"><strong>功能快速檢索 </strong><input id="menu_search" type="text" value="" onkeyup="menu_search();"  placeholder="輸入想找尋的功能名稱"  x-webkit-speech lang="zh-tw"></div>
-	<ul>
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'0\')"><font color="black"><strong>會員資料管理</strong></font></a>
-		</li>
-		<ul class="sub" style="display:none" id="0">
-				<li>
-				<a class="menu" href="member.php">
-				<strong>會員管理</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="preferential.php">
-				<strong>訂單管理</strong>
-				</a>
-				</li>
-		</ul>
-		';
-	
-	//---取出建立的清單資料 #一般文章
-	$temp_array = $conn->GetArray("select * from ".PREFIX."data_list where type='set_about' and status=1 order by sort");
-	if ($temp_array){
-		$menu_html .='
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K1\')"><font color="black"><strong>文章型資料管理</strong></font></a>
-		</li>
-		<ul class="sub" style="display:none" id="K1">
-		';
-		foreach ($temp_array as $k=>$v){
-			$menu_html .= '
-			<li>
-			<a class="menu" href="about.php?class=c_about&tp='.$v["b_name"].'">
-			<strong>'.$v["name"].'</strong>
-			</a>
-			</li>
-			';
-		}
-		$menu_html .='</ul>';
-	}
-	//---取出建立的清單資料 #商品模組
-	$temp_array = $conn->GetArray("select * from ".PREFIX."data_list where type='set_pro' and status=1 order by sort");
-	if ($temp_array){
-		$menu_html .='
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K2\')"><font color="black"><strong>商品型資料管理</strong></font></a>
-		</li>
-		<ul class="sub" style="display:none" id="K2">
-		';
-		foreach ($temp_array as $k=>$v){
-			$menu_html .= '
-			<li>
-			<a class="menu" href="products2.php?mode='.$v["b_name"].'">
-			<strong>'.$v["name"].'</strong>
-			</a>
-			</li>
-			';
-		}
-		$menu_html .='</ul>';
-	}
-	
-	//---分類模組
-	$temp_array = $conn->GetArray("select * from ".PREFIX."category where parent_id='0' and lang='".LANG."' order by sort");
-	if ($temp_array){
-		$menu_html .='
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K3\')"><font color="black"><strong>商品分類資料管理</strong></font></a>
-		</li>
-		<ul class="sub" style="display:none" id="K3">
-		';
-		foreach ($temp_array as $k=>$v){
-			$menu_html .= '
-			<li>
-			<a class="menu" href="category.php?mode='.$v["id"].'">
-			<strong>'.$v["name"].'</strong>
-			</a>
-			</li>
-			';
-		}
-		$menu_html .='</ul>';
-	}
-	
-	//---表單模組
-	$temp_array = $conn->GetArray("select * from ".PREFIX."data_list where type='set_form' and status=1 and lang='".LANG."' order by sort");
-	if ($temp_array){
-		$menu_html .='
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K4\')"><font color="black"><strong>表單欄位資料設定</strong></font></a>
-		</li>
-		<ul class="sub" style="display:none" id="K4">
-		';
-		foreach ($temp_array as $k=>$v){
-			$menu_html .= '
-			<li>
-			<a class="menu" href="about.php?class=c_form&tp='.$v["b_name"].'">
-			<strong>'.$v["name"].'</strong>
-			</a>
-			</li>
-			';
-		}
-		$menu_html .='</ul>';
-	}
 
-	//
-	$temp_array = $conn->GetArray("select * from ".PREFIX."data_list where type='set_EDM' and status=1 and lang='".LANG."' order by sort");
-	if ($temp_array){
-		$menu_html .='
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K5\')"><font color="black"><strong>EDM設定</strong></font></a>
-		</li>
-		<ul class="sub" style="display:none" id="K5">
-		';
-		foreach ($temp_array as $k=>$v){
-			$menu_html .= '
-			<li>
-			<a class="menu" href="about.php?class=c_EDM&tp='.$v["b_name"].'&id=lang">
-			<strong>'.$v["name"].'</strong>
-			</a>
-			</li>
-			';
-		}
-		$menu_html .='</ul>';
-	}
-
-	if ($_SESSION["admin_info"]["control"]=='0'){
-		$menu_html .= '
-		<br>
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K83\')"><font color="blue"><strong>類組設定</strong></font></a>
-		</li>
-		<ul class="sub" style="display: none;" id="K83">
-				<li>
-				<a class="menu" href="about.php?class=set_about">
-				<strong>文章類組設定</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="about.php?class=set_pro">
-				<strong>產品類組設定</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="catemode.php">
-				<strong>產品分類設定</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="about.php?class=set_form">
-				<strong>表單模組設定</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="about.php?class=set_edm">
-				<strong>EDM模組設定</strong>
-				</a>
-				</li>
-		</ul>
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K82\')"><font color="blue"><strong>版面設定</strong></font></a>
-		</li>
-		<ul class="sub" style="display: none;" id="K82">
-				<li>
-				<a class="menu" href="design.php?type=main">
-				<strong>主板塊設定</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="design.php?type=ban">
-				<strong>子板塊設定</strong>
-				</a>
-				</li>
-				<li>
-				<a class="menu" href="design.php?type=css">
-				<strong>式樣設定</strong>
-				</a>
-				</li>
-		</ul>
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K84\')"><font color="blue"><strong>其他管理</strong></font></a>
-		</li>
-		<ul class="sub" style="display: none;" id="K84">
-				<li>
-				<a class="menu" href="self.php">
-				<strong>使用者管理</strong>
-				</a>
-				</li><li>
-				<a class="menu" href="system_temp.php">
-				<strong>後台操作記錄</strong>
-				</a>
-				</li><li>
-				<a class="menu" href="language.php">
-				<strong>語系管理</strong>
-				</a>
-				</li><li>
-				<a class="menu" href="setting.php">
-				<strong>網站設定</strong>
-				</a>
-				</li><li>
-				<a class="menu" href="about.php?class=smtp_mail&amp;id=lang">
-				<strong>smtp郵件伺服器</strong>
-				</a>
-				</li><li>
-				<a class="menu" href="url_rewrite.php">
-				<strong>主機網域跳轉設定</strong>
-				</a>
-				</li>
-		</ul>
-		';
-	}
-		
-		
-		
-	$menu_html .= '
-		<li class="global_nav">
-		<a class="menu" onclick="Open_menu(\'K81\')"><font color="black"><strong>後台帳號管理</strong></font></a>
-		</li>
-		<ul class="sub" style="display: none;" id="K81">
-				<li>
-				<a class="menu" href="admin.php">
-				<strong>後台帳號清單</strong>
-				</a>
-				</li><li>
-				<a class="menu" href="admin_group.php">
-				<strong>後台帳號群組清單</strong>
-				</a>
-				</li>
-		</ul>
-	</ul>
-	<div id="menu_bg" ><img src="images/menu_bg.jpg" width="259" height="263"><!--height="263"--></div>
-	</div>';
-	return $menu_html;
-}
 
 
 //從mysql select出資料 再組出menu的html 
@@ -479,7 +245,22 @@ function Make_menu($conn)
 	$menu_html = '
 	<div class="col-01">
 
+<div class="left-menu-design">
+       <h3 class="design">後台個人風格
+	   <div style="float:right;margin-right:20px;">
+	   <select serback_style>
+		<option value="default">傳統</option>
+		<option value="org">橘色</option>
+		<option value="blue">藍色</option>
+		</select>
+		</div>
+		</h3>
+		
+     </div>
+
+
 <div class="left-menu">
+<div class="interval"></div>
        <h3 class="set">功能快速檢索</h3>
 		<input id="menu_search" type="text" value="" onkeyup="menu_search();" placeholder="輸入想找尋的功能名稱" x-webkit-speech lang="zh-tw" style="margin:0 0 0 30px;" >
      </div>
@@ -574,6 +355,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 		if($_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
 		{
 			
+			if ($_POST)
 			if (md5($checkcode)!=$_SESSION["serback__validate_code"]){
 				alert("驗證碼錯誤!!",-1);
 				exit;		
@@ -605,7 +387,12 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 					$_SESSION["admin_info"]["auth"] = $temp["auth_ch"];
 				}
 				
-				
+				//--判斷是否有設定好EMAIL 否者導向設定頁面
+				if ($detail["email"]=='') {
+					echo "
+					<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+					<script>if (confirm('您還未設定後台管理者EMAIL信箱，為避免忘記密碼是否要前往設定，以利收到忘記密碼通知函')) window.location.href='./admin.php?id=lang'</script>";
+				}
 			}	
 		}
 		else
@@ -1541,40 +1328,7 @@ function Data_List_Pic($pic)
 
 
 
-/** INI file 處理*/
-function write_php_ini($array, $file)
-{
-    $res = array();
-    foreach($array as $key => $val)
-    {
-        if(is_array($val))
-        {
-            $res[] = "[$key]";
-            foreach($val as $skey => $sval) $res[] = "$skey = ".(is_numeric($sval) ? $sval : '"'.$sval.'"');
-        }
-        else $res[] = "$key = ".(is_numeric($val) ? $val : '"'.$val.'"');
-    }
-    safefilerewrite($file, implode("\r\n", $res));
-}
-function safefilerewrite($fileName, $dataToSave)
-{    if ($fp = fopen($fileName, 'w'))
-    {
-        $startTime = microtime(TRUE);
-        do
-        {            $canWrite = flock($fp, LOCK_EX);
-           // If lock not obtained sleep for 0 - 100 milliseconds, to avoid collision and CPU load
-           if(!$canWrite) usleep(round(rand(0, 100)*1000));
-        } while ((!$canWrite)and((microtime(TRUE)-$startTime) < 5));
 
-        //file was locked so now we can store information
-        if ($canWrite)
-        {            fwrite($fp, $dataToSave);
-            flock($fp, LOCK_UN);
-        }
-        fclose($fp);
-    }
-
-}
 
 
 

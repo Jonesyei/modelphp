@@ -1,6 +1,5 @@
 <?php
 include_once("head.php");
-include_once("member_class.php");
 
 $include = true;
 
@@ -9,10 +8,11 @@ $templates_page = "templates.html";
 ///▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇引用與設定Start▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇
 //## 會員
 $member = new member($conn,PREFIX."member");
+$member->work();
+
 //## 購物車
 $shopping_car = new order($conn,PREFIX."shopping_car",PREFIX."shopping_car_list",PREFIX."products");
-
-
+$shopping_car->work();
 
 //--運費設定
 $post_fee = $conn->GetRow("select * from ".PREFIX."setting WHERE type='post_fee' and lang = '".quotes($lang)."'");//--運費
@@ -126,7 +126,7 @@ if ($member->getinfo()){
 
 
 //-結帳資料
-if ($_POST && $_POST['submit']){
+if ($_POST && $_REQUEST['submit']){
 	
 	//--自訂訂單編號
 	$shopping_car->order_auto_set('JSP');
@@ -136,10 +136,7 @@ if ($_POST && $_POST['submit']){
 		alert('付款結帳失敗!!'.$shopping_car->erromsg,'?list=1');
 		exit;
 	}else{
-		$temp = $shopping_car->esun_pay_send($pay_bill);
-		if ($temp){
-			alert($temp,-1);
-		}
+		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路徑');
 	}
 	linkto('index.jsx');
 }else{
@@ -193,15 +190,10 @@ if ($_SESSION["temp_other_shopping_car"]){
 		$o_value = explode(',',$_SESSION["temp_other_shopping_car"]["value"]);
 		$o_count = explode(',',$_SESSION["temp_other_shopping_car"]["count"]);
 		foreach ($o_name as $k=>$v){
-			if ($o_name[$k]!='大底板'){
-				//echo $o_name[$k].' '.$o_detail[$k].' '.$o_value[$k].' '.$o_count[$k];
-				$shopping_car->addother('color-'.$o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
-			}else{
 				$shopping_car->addother($o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$$sort);
-			}
 		}
 		unset($_SESSION["temp_other_shopping_car"]);//-刪除暫存記憶
-		linkto('?list=1&oadd=1');
+		linkto('?list=1');
 		//print_r($_SESSION["temp_other_shopping_car"]);
 }
 if ($_REQUEST["addoth"]){
@@ -211,11 +203,7 @@ if ($_REQUEST["addoth"]){
 	$o_value = explode(',',$_REQUEST["value"]);
 	$o_count = explode(',',$_REQUEST["count"]);
 	foreach ($o_name as $k=>$v){
-		if ($o_name[$k]!='大底板'){
-			$shopping_car->addother('color-'.$o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
-		}else{
 			$shopping_car->addother($o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
-		}
 	}
 	if ($_REQUEST["ajax"]){
 		echo $_REQUEST["name"].'已加入購物車!!';
@@ -294,12 +282,7 @@ if ($_GET["del"] && $_GET["del"]!=''){
 if ($_GET["payorder"]){
 	$pay_bill = $shopping_car->getorder(" where id='".$_GET["payorder"]."'");
 	if ($pay_bill["pay_status"]!='1'){
-		//$temp = $shopping_car->homyn_pay_send($pay_bill);
-		//$temp = $shopping_car->neweb_pay_send($pay_bill);
-		$temp = $shopping_car->esun_pay_send($pay_bill);
-		if ($temp){
-			alert($temp,-1);
-		}
+		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路由');
 	}else{
 		alert('此筆交易已經成功付款了，無需再次付款!!',-1);
 		exit;

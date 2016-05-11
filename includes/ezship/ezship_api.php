@@ -1,7 +1,7 @@
 <?php
 $temp_nowurl = explode('includes',__file__);
 include_once($temp_nowurl[0]."includes/main_inc.php");
-include_once($temp_nowurl[0]."member_class.php");
+
 
 // Set to 0 once you're ready to go live
 define("account", 'jsp@ktunival.com.tw');

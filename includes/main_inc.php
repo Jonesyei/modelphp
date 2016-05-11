@@ -54,16 +54,25 @@ $mail->CharSet = "utf-8";                       // 設定郵件編碼
 $mail->Encoding = "base64";
 $mail->WordWrap = 50;                           // 每50個字元自動斷行
 
+
+
+//網站設定 $web_set
+$sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
+$tmp = $conn->GetArray($sql);
+$web_set["all"] = $tmp;
+$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
+$web_set["keyword"] = deQuotes($tmp["1"]["detail"],-1);
+$web_set["receive_email"] = $tmp["2"]["detail"];
+$web_set["default_email_title"] = $tmp["3"]["detail"];
+$web_set["send_email"] = $tmp["4"]["detail"];
+$web_set["selfurl"] = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; //本頁面URL
+
+
+
+
 $smtp_set = $conn->GetRow("select * from ".PREFIX."data_list where type='smtp_mail' and status=1");
 //--啟用 SMTP模式
 if ($smtp_set){
-	//--網站設定	
-	$sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
-	$tmp = $conn->GetArray($sql);	
-	$web_set["all"] = $tmp;
-	$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
-	$web_set["send_email"] = $tmp["4"]["detail"];
-	
 	$smtp_set["detail"] = explode('|__|',$smtp_set["detail"]);
     $mail->IsSMTP();                                // 設定使用SMTP方式寄信        
     $mail->SMTPAuth = true;                         // 設定SMTP需要驗證
@@ -75,4 +84,7 @@ if ($smtp_set){
     $mail->Username = $smtp_set["detail"][3];     // 設定驗證帳號        
     $mail->Password = $smtp_set["detail"][4];              // 設定驗證密碼          
 }
+
+//各類別庫
+include_once(APP_PATH."class/class.php");
 ?>

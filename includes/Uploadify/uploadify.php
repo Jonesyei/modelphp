@@ -71,6 +71,13 @@ if (!empty($_FILES)) {
 		$height="1000";
 		ImageResize($targetFile,$targetFile,$width,$height);
 		*/
+		/*
+		if ($_GET["watermark"]){
+			if (!$_GET["act"]) $_GET["act"] = true;
+			//print_r(array($targetFile,str_replace('//','/',$targetPath).$_GET["watermark"],NULL,$_GET["act"]));
+			watermark($targetFile,str_replace('//','/',$targetPath).$_GET["watermark"],NULL,$_GET["act"]);
+		}
+		*/
 		
 		//--記憶暫存資料 add by Jones 20150707
 		$file_temp_dpie = explode('/',$targetFile);
@@ -159,6 +166,70 @@ function getResizePercent($source_w, $source_h, $inside_w, $inside_h)
     return ($w_percent > $h_percent) ? $h_percent : $w_percent;
 }
 //縮圖function end
+
+
+
+
+
+//---水印function
+/*
+exsample:
+原圖,mark,輸出,圖片類型是否為透明圖
+ watermark(‘source.jpg’, ‘watermark.png’, ‘s-and-w.jpg’);
+*/
+function watermark($from_filename, $watermark_filename, $save_filename=NULL,$act=true)
+{
+    $allow_format = array('jpeg', 'png', 'gif');
+    $sub_name = $t = '';
+
+	//--判斷目標圖片空值則取代原圖
+	if ($save_filename==NULL) $save_filename = $from_filename;
+	
+	
+    // 原圖
+    $img_info = getimagesize($from_filename);
+    $width    = $img_info['0'];
+    $height   = $img_info['1'];
+    $mime     = $img_info['mime'];
+
+    list($t, $sub_name) = explode('/', $mime);
+    if ($sub_name == 'jpg')
+        $sub_name = 'jpeg';
+
+    if (!in_array($sub_name, $allow_format))
+        return false;
+
+    $function_name = 'imagecreatefrom' . $sub_name;
+    $image     = $function_name($from_filename);
+
+    // 浮水印
+    $img_info = getimagesize($watermark_filename);
+    $w_width  = $img_info['0'];
+    $w_height = $img_info['1'];
+    $w_mime   = $img_info['mime'];
+
+    list($t, $sub_name) = explode('/', $w_mime);
+    if (!in_array($sub_name, $allow_format))
+        return false;
+
+    $function_name = 'imagecreatefrom' . $sub_name;
+    $watermark = $function_name($watermark_filename);
+
+    $watermark_pos_x = abs($width  - $w_width);
+    $watermark_pos_y = abs($height - $w_height);
+
+	if (!$act){
+		//--非透明背景圖
+	    imagecopymerge($image, $watermark, $watermark_pos_x, $watermark_pos_y, 0, 0, $w_width, $w_height, 100);
+	}else{
+		// 浮水印的圖若是透明背景、透明底圖, 需要用下述兩行
+		imagesetbrush($image, $watermark);
+		imageline($image, $watermark_pos_x, $watermark_pos_y, $watermark_pos_x, $watermark_pos_y, IMG_COLOR_BRUSHED);
+	}
+	
+	imageinterlace($image, 1); //--將圖片轉換為漸進式模
+    return imagejpeg($image, $save_filename);
+}
 
 
 ?>

@@ -1,6 +1,15 @@
 <?php
 include_once("../includes/main_back_inc.php");
 
+function br_replace($str){
+	$search = array(
+				'/\r/',
+				'/\n/'
+	); 	
+	$str = str_replace('"','""',dequotes($str,-1)); 
+	
+	return preg_replace($search, '', $str); 
+}
 
 /**
   * fgetcsv
@@ -66,6 +75,14 @@ if ($_FILES["file"]["name"]!=''||$_FILES["file"]["name"]!=NULL){
 }
 
 
+//資料表內所有id
+$tmp_id = $conn->GetArray("SELECT id FROM ".$_POST["data_table"]);
+$all_id = array();
+foreach($tmp_id AS $k=>$v){
+	$all_id[$k] = $v['id'];
+}
+
+
 $dbname=$cpos["file_url"].$temp_file_name;
 if ( !$fp = fopen($dbname,"r") ) {
 	alert("匯入檔案失敗 來源可能遺失或損毀",-1);
@@ -87,48 +104,57 @@ if ( !$fp = fopen($dbname,"r") ) {
 			$temp = explode(':',$v);
 			$defrow_array[$temp[0]] = $temp[1];
 		}
-		
+	
 	while($temp=fgetcsv($fp,$size,",")){
-		if ($row>0){
-			$title=explode(",",$_POST["title"]);
-			foreach ($title as $k=>$v){ //--寫入資料欄位
-				$upd[$v] = iconv('big5','utf-8',$temp[$k*1]);
-			}
-			
-			foreach ($all_row as $k=>$v){ 
-				if ($defrow_array[$v[0]]==NULL || $defrow_array[$v[0]]==''){//--判斷是否有預設資料欄位 	
-					if (strtolower($v["Null"])!="yes" && !in_array(strtolower($v[0]),$title)){//--判斷該資料表非NULL欄位是否都已填入資料
-						$ttt_row=explode("(",$v["Type"]);
-							switch (strtolower($ttt_row[0])){
-								case "int":
-									$upd[$v[0]] = 0;
-								break;
-								case "datetime":
-									$upd[$v[0]] = date("Y-m-d H:i:s");
-								break;
-								case "tinyint":
-									$upd[$v[0]] = 0;
-								break;
-								default:
-									$upd[$v[0]] = '';
-								break;
+		//--移除空白陣列
+		if(count(array_filter($temp)) > 0){			
+			if ($row>0){
+				$title=explode(",",$_POST["title"]);
+								
+				foreach ($title as $k=>$v){ //--寫入資料欄位
+					$upd[$v] = iconv('big5','utf-8',$temp[$k*1]);					
+					$upd[$v] = str_replace('""','"',$upd[$v]);
+				}
+				
+				//有重複id時更新資料
+				if(in_array($upd["id"],$all_id)){
+					$avalue = $conn->AutoExecute($_POST["data_table"],$upd,"UPDATE","id='".$upd["id"]."'");
+				}else{	
+					foreach ($all_row as $k=>$v){ 
+						if ($defrow_array[$v[0]]==NULL || $defrow_array[$v[0]]==''){//--判斷是否有預設資料欄位 	
+							if (strtolower($v["Null"])!="yes" && !in_array(strtolower($v[0]),$title)){//--判斷該資料表非NULL欄位是否都已填入資料
+								$ttt_row=explode("(",$v["Type"]);
+									switch (strtolower($ttt_row[0])){
+										case "int":
+											$upd[$v[0]] = 0;
+										break;
+										case "datetime":
+											$upd[$v[0]] = date("Y-m-d H:i:s");
+										break;
+										case "tinyint":
+											$upd[$v[0]] = 0;
+										break;
+										default:
+											$upd[$v[0]] = '';
+										break;
+									}
 							}
-						
+						}else{
+							$upd[$v[0]] = $defrow_array[$v[0]];
+						}
 					}
-				}else{
-					$upd[$v[0]] = $defrow_array[$v[0]];
+					unset($upd["id"]);
+		
+					$avalue = $conn->AutoExecute($_POST["data_table"],$upd,"INSERT");
 				}
 			}
-			unset($upd["id"]);
-
-			$avalue = $conn->AutoExecute($_POST["data_table"],$upd,"INSERT");
+			$row=$row+1;
 		}
-		$row=$row+1;
 	}
 	fclose($fp);
 	
 	unlink($dbname);//--刪除檔案
-	alert("已完成匯入 共計匯入筆數 ".$row." 筆",-1);
+	alert("已完成匯入 共計匯入筆數 ".($row-1)." 筆",-1);
 } 
 
 	
@@ -151,11 +177,12 @@ if ($_POST){
 	$csv["title"] = explode(',',$_POST["title"]);
 	$csv["sql"] = $_POST["sql"];
 	if ($_POST['rows']) {
+		$_POST['rows'] = explode('|__|',$_POST['rows']);
 		foreach ($_POST['rows'] as $k=>$v){
 			if (!get_magic_quotes_gpc()) {
-				$temp_data = json_decode(str_replace("'",'"',$v));
+				$temp_data = json_decode(str_replace("'",'"',$v),true);
 			}else{
-				$temp_data = json_decode(str_replace("'",'"',dequotes($v,-1)));
+				$temp_data = json_decode(str_replace("'",'"',dequotes($v,-1)),true);
 			}
 			if (gettype($temp_data)!="NULL" && gettype($temp_data)!='string'){
 				foreach ($temp_data as $a=>$b){
@@ -167,8 +194,7 @@ if ($_POST){
 			}
 		}
 		$csv['sql'] = explode('from',strtolower($csv['sql']));
-		unset($csv['sql'][0]);
-		$csv["sql"] = 'select '.implode(',',$newrow).' from '.implode(' from ',$csv['sql']);
+		$csv["sql"] = 'select '.implode(',',$newrow).' from '.$csv['sql'][1];
 	}
 }else{
 	if (!is_array($csv["title"]) && $csv["title"]!=NULL) $csv["title"] = explode(',',$csv["title"]);
@@ -183,8 +209,6 @@ foreach ($csv["title"] as $k=>$v){
 }
 $main.="\n";
 
-
-
 //-內容
 $csv_list = $conn->GetArray(dequotes($csv["sql"],-1));
 
@@ -195,17 +219,16 @@ foreach ($csv_list as $k=>$v) { //---row
 			if (!is_numeric($n)){ //--判斷key是否為數值
 				if (isset($nrowi) && count($nrowi)>0 && isset($nrowi[$n])){
 					$nn = str_replace(',',' ',$nrowi[$n][$nn]); //內容逗點換空白 避免多劃一格
-					$nn = iconv('utf-8','big5',$nn); //--編碼轉換
+					$nn = iconv('utf-8','big5',br_replace($nn)); //--編碼轉換
 				}else{
 					$nn = str_replace(',',' ',$nn); //內容逗點換空白 避免多劃一格
-					$nn = iconv('utf-8','big5',$nn); //--編碼轉換
+					$nn = iconv('utf-8','big5',br_replace($nn)); //--編碼轉換
 				}
 				if ($row_main=='') {$row_main='"'.$nn.'"';}else{$row_main.=',"'.$nn.'"';}
 			}
 	}
 	$main .= $row_main."\n";
 }
-
 
 $filename=date("YmdHis");
 

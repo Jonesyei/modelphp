@@ -236,12 +236,30 @@
 		   </td>
 		</tr>
 		<tr>
-		<td width="120" align="right" >容量已滿顯示詞：</td>
+		<td width="120" align="right" >網站容量<br>已滿顯示詞：</td>
 		  <td >
 			  <input type="text" name="upload_full_msg" value="({$ini_webset.web_set.upload_full_msg})" />
 		   </td>
 		</tr>
-        <tr><th colspan="2" style="text-align:center;">網站參數管理</th></tr>
+        <tr>
+		<td width="120" align="right" >資料庫最大容量(bytes)：</td>
+		  <td >
+			  <input type="text" name="db_max_size" value="({$ini_webset.web_set.db_max_size})" /> bytes <br>( 1024bytes = 1MB , 1024MB = 1GB , 1024GB = 1TB)
+		   </td>
+		</tr>
+		<tr>
+		<td width="120" align="right" >資料庫容量<br>已滿顯示詞：</td>
+		  <td >
+			  <input type="text" name="db_full_msg" value="({$ini_webset.web_set.db_full_msg})" />
+		   </td>
+		</tr>
+        <tr>
+		<td width="120" align="right" >首頁訊息<BR>自動更新參照：</td>
+		  <td >
+			  <input type="text" name="info_page" value="({$ini_webset.web_set.info_page})" style="width:80%;" />
+		   </td>
+		</tr>
+        <tr><th colspan="2" style="text-align:center;">網站參數狀態</th></tr>
 		<tr>
 		<td width="120" align="right" >運費設定顯示：</td>
 		  <td >

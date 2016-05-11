@@ -7,7 +7,7 @@ $include = true;//不讓 index.php display的參數
 $table = PREFIX."admin";
 $group_table = PREFIX."admin_group";
 
-$id = quotes($_GET["id"]);
+$id = quotes(strtolower($_GET["id"])=="lang" ? $_SESSION["admin_info"]["id"]:$_GET["id"]);
 $act = $_POST["act"];
 $del_id = quotes($_GET["del_id"]);
 

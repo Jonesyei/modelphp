@@ -29,6 +29,7 @@ if ($_POST) {
 	$settingstr = str_replace('%dname%_',$_POST["dbname"].'_',$settingstr);
 	$settingstr = str_replace('%root%',$_POST["dbid"],$settingstr);
 	$settingstr = str_replace('%passwrod%',$_POST["dbpw"],$settingstr);
+	$settingstr = str_replace('%auth%',$_POST["auth"],$settingstr);
 	$file = fopen("includes/config/conn.php","w");
 	fwrite($file,$settingstr);
 	fclose($file);
@@ -44,6 +45,12 @@ if ($_POST) {
 	fclose($file);
 	
 	include_once("includes/main_inc.php");
+	
+	//--首頁開發訊息自動接收更新
+	$aa = curl('http://www.104portal.com.tw/centerpoes.txt');
+	if ($aa["code"]=='200'){
+		safefilerewrite(ROOT_PATH.$admin_path."centerpoes.php",$aa["data"]);
+	}
 }
 
 
@@ -171,6 +178,10 @@ font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10
     <tr>
       <td>資料庫密碼</td>
       <td><input type="text" name="dbpw" placeholder="用以連線DBserver密碼" class="input-style01"></td>
+    </tr>
+    <tr>
+      <td>環境授權碼</td>
+      <td><input type="text" name="auth" placeholder="請設定授權代碼 (如不清楚請詢問Jones)" class="input-style01" style="width:250px;"></td>
     </tr>
     <tr>
       <td>安裝檔選擇</td>

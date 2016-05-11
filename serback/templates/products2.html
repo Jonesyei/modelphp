@@ -1,18 +1,12 @@
-<script src="../includes/js/load-image.all.min.js"></script><!--onchange load-->
 ({if $admin_info.view == 'list'})
 <script>
 $(document).ready(function(){
 	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
-	$('[name="daterange"]').val( Get("daterange") );
+	$('[name="daterange[]"]').each(function (idx,obj){
+		$(obj).val( Get("daterange%5B%5D")[idx] );
+	});
 
 	$('#SearchBtn').click(function(){
-		if( $('[name="daterange"]').val().split("-")[1]!=null)
-		{
-			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
-			
-			$('[name="daterange"]').val( daterange );
-		}
-		
 		$('#search_form').submit();
 	});
 
@@ -211,7 +205,44 @@ $(document).ready(function(){
 
 
 
-
+<script>
+var sortnow = '({$data.list.0.sort})'*1;//--本頁排序起始值
+var sortcount = '({$smarty.section.idex.index})'*1;//--項目數量
+var sortmain = ".table-style01"; //-列表主體
+var sortrow = ".tr_sort:not(.ui-sortable-placeholder)"; //--可以移動的項目
+var sort_act = 0;
+  $(function() {
+    $( sortmain ).sortable( {items: sortrow} );
+    //$( sortmain ).disableSelection();
+  });
+  
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	  $(obj).on("mouseup",function (){
+		if (sort_act!=2){
+			unlock_view();
+			window.setTimeout("cps()",50);
+		}
+		sort_act=0;
+	  });
+	  $(obj).on("mousedown",function (){
+		if (sort_act!=2) {sort_act=1;lock_view();}
+	  });
+	  $(obj).on("mouseover",function (){ //--滑鼠移入加入顯示黑色方框式樣
+			_td_style = "border-bottom:1px solid #000000;border-top:1px solid #000000;";
+	 		$(obj).find('td').attr("style",_td_style);
+			$(obj).find('td:first').attr("style",_td_style+"border-left:1px solid #000000;");
+			$(obj).find('td:last').attr("style",_td_style+"border-right:1px solid #000000;");
+	  });
+	  $(obj).on("mouseout",function (){ //--滑鼠移出移除所有式樣
+			$(obj).find('td').removeAttr("style");
+	  });
+  });
+  function cps(){
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	$(obj).find('input[type="text"]').val(sortnow+idx);
+  });
+  }
+</script>
 
 <script>
 page_initial('table_content');
@@ -225,6 +256,7 @@ page_initial('table_content');
 
 
 ({if $admin_info.view == 'detail'})
+<script src="../includes/js/load-image.all.min.js"></script><!--onchange load-->
 <script src='../includes/js/color/spectrum.js'></script>
 <link rel='stylesheet' href='../includes/js/color/spectrum.css' />
 
@@ -323,20 +355,27 @@ page_initial('table_content');
 
 
 ({if $data.pageget.mode==null || $data.check_button.3=='1'})
-	<tr>
-	<td align="right" >商品圖片：</td>
+<tr>
+	<td align="right" >圖片：</td>
 	  <td >
 
+	 
 	 
 <link href="../includes/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../includes/Uploadify/swfobject.js"></script>
 <script type="text/javascript" src="../includes/Uploadify/jquery.uploadify.v2.1.4.min.js"></script>
 <script type="text/javascript">
 var Pic;
-var max_count = '({if $data.pageget.mode==null || $data.check_button.4!=null})({$data.check_button.4})({else})5({/if})';
+var max_count = '({$data.uploadfilemax})';
 $(document).ready(
 	function()
-	{	
+	{
+		Pic = '({$data.one.pic})';
+		$(Pic.split("|__|")).each(function(idx,data){
+			if(data=="") return true;
+			UPLAppend('({$admin_info.file_url})'+data);
+		});
+	
 		 $("#uploadify").uploadify
 		 (
 			 {
@@ -345,14 +384,14 @@ $(document).ready(
 				'cancelImg'		: '../includes/Uploadify/cancel.png', 
 				'folder'		: '({$data.file_url})', 
 				'queueID'		: 'fileQueue_list',
-				'queueSizeLimit': max_count,
+				'queueSizeLimit': ({if $data.uploadfilemax != null})({$data.uploadfilemax})({else})0({/if}),
 				'auto'			: false,
 				'multi'			: true,
 				'onSelectOnce'	:function(event,data)
 				{
 					//--全部選擇完之後
 					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出數量");
+						alert("圖片選擇超出 "+max_count+" 數量");
 						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
 						this.uploadifyCancel(ID);
 					}else if (max_count=='1'){
@@ -364,9 +403,8 @@ $(document).ready(
 					//$('form').submit();
 				},
 				'onComplete'  : function(event, ID, fileObj, response, data)
-				{
-						upload_one(response);
-						$('[name="pic"]').remove();
+				{	
+					upload_one(response);
 				},
 				'onSelect'    : function(event,ID,fileObj)
 				{
@@ -385,58 +423,149 @@ $(document).ready(
 		
 	}//function()
 );
-
+function valcheck(obj){
+	if ($(obj).val().indexOf('在此輸入')>-1) $(obj).val('');
+}
 function upload_one(response){
 					var filename = response.split('/');
 					if (filename.length<=1) return alert(response);
+					
 					filename = filename[filename.length-1];div_file = filename.split('.')[0];
 					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"></div>');//--增加一個選項
+					var max_idxtopic = $('#piclist>div.ui-state-default').length;
+					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" id="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'#pic_sort_'+(max_idxtopic-1)+'\').val());"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+(max_idxtopic-1)+');"></div>');
 					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
 				 	$('#picspan_'+div_file).append('<input type="hidden" name="pic[]" value="'+filename+'">');
+					({if $data.button.other!=null})
+						({section name=other loop=$data.button.other})
+						$('#picspan_'+div_file).append('({$data.button.other[other].other_name}):<input type="text" name="({$data.button.other[other].other_obj})[]" placeholder="在此輸入({$data.button.other[other].other_name}))" onclick="valcheck(this)"><br>');
+						({/section})
+					({/if})
+					({if $data.button.name!=null})$('#picspan_'+div_file).append('({$data.button.name}):<input type="text" name="name[]" placeholder="在此輸入({$data.button.name})" onclick="valcheck(this)">');({/if})
+				 	({if $data.button.href=='1'})$('#picspan_'+div_file).append('連結:<input type="text" name="href[]" placeholder="在此輸入連結"  onclick="valcheck(this)">');({/if})
+					({if $data.button.change_detail!=null})$('#picspan_'+div_file).append('({$data.button.change_detail}):<input type="text" name="detail[]" placeholder="在此輸入({$data.button.change_detail})"  onclick="valcheck(this)">');({/if})
 					$('#picspan_'+div_file).append('<input type="button" onclick="picdel('+div_file+')" value="刪除'+filename+'圖片"><br><br>');
+					$('[name="pic"]').remove();
+					({if $data.button.name!=null})$('[name="name"]').remove();({/if})
+					({if $data.button.href=='1'})$('[name="href"]').remove();({/if})
 					
-					//--縮圖程式 記憶欄位
-					$('#picspan_'+div_file).append('<input type="hidden" name="small_pic[]" value="">');
+					//--定義最後一個賦予排序					
+					$('#piclist div[class="ui-state-default"][id]:last').on("mouseup",function(event){
+						if (event.srcElement.className!='')	window.setTimeout("re_sort()",50);
+					})
+					
 }
+</script>
+<script>
+
+  $(function() {
+    $( "#piclist" ).sortable( {items: 'div[id]',stop: function( event, ui ) {unlock_view();},start:function (){lock_view();} } );
+    //$( "#piclist" ).disableSelection(); 讓可拖曳物件的無法編輯以及選取
+  });
+
+
 function picdel(d){
 	$('#picspan_'+d).remove();
+	re_sort();
 	if ($('#piclist').find("div").html()==null) {
-	 	$('#fileQueue_list').append('<input type="hidden" name="pic" value="">');
+ 	$('#fileQueue_list').append('<input type="hidden" name="pic" value="">');
+	({if $data.button.name!=null})$('#fileQueue_list').append('<input type="hidden" name="name" value="">');({/if})
+ 	({if $data.button.href=='1'})$('#fileQueue_list').append('<input type="hidden" name="href" value="">');({/if})
 	}
 }
-  $(function() {
-    $( "#piclist" ).sortable();
-    $( "#piclist" ).disableSelection();
-  });
+//-指定排序 於多少後面
+function pic_sort(obj_id,moveto){
+	if (moveto*1==1){
+		if ($('#piclist div[id] div input[type="text"][id]:eq(0)')[0]==$('#picspan_'+obj_id).find('div input[type="text"][id]')[0])
+		return alert('目前已位於最上方');
+	}
+	if ($('#picspan_'+obj_id)[0]==$('#piclist div[id]:eq('+(moveto-1)+')')[0]) return alert('無法移動跟目前一樣的位置');
+	$('#picspan_'+obj_id).insertBefore($('#piclist div[id]:eq('+(moveto-1)+')'));
+	re_sort();
+}
+function re_sort(){
+	$('#piclist div[id]').each(function (idx,obj){
+		$(obj).find('div input[type="text"][id]').val(idx+1);
+	})
+}
 </script>
-<style>
-.UploadPicList img {cursor:pointer;}
-</style>
-<ul class="UploadPicList">
-</ul>
-<div id="fileQueue_list"></div>
-
 
 <div id="piclist">
 ({section name=picidx loop=$data.one.pic})
 ({if $data.one.pic[picidx]!=null||$data.one.pic[picidx]!=''})
 <div class="ui-state-default" id="picspan_({$smarty.section.picidx.index})">
+<div style="float:right;">
+排序到<input type="text" id="pic_sort_({$smarty.section.picidx.index})" value="({$smarty.section.picidx.index+1})" size="2" style="text-align:center;">
+<input type="button" value="移動" onclick="pic_sort('({$smarty.section.picidx.index})',$('#pic_sort_({$smarty.section.picidx.index})').val());">
+<input type="button" value=" 刪除 " onclick="if (confirm('確定要移除這張圖片嘛?')) picdel(({$smarty.section.picidx.index}));">
+</div>
 <img src="({$data.file_url})({$data.one.pic[picidx]})" height="150px">
-<input type="hidden" name="pic[]" value="({$data.one.pic[picidx]})">
-<input type="hidden" name="small_pic[]" value="({$data.one.small_pic[picidx]})">
-<br>
+<input type="hidden" name="pic[]" value="({$data.one.pic[picidx]})"><br>
+
+({if $data.button.other!=null})
+({section name=lo loop=$data.button.other})
+({$data.button.other[lo].other_name}):<input type="text" name="({$data.button.other[lo].other_obj})[]" value="({$data.button.other[lo].other_data[picidx]})" style="width:300px;"><br>
+({/section})
+({/if})
+({if $data.button.name!=null})({$data.button.name}):<input type="text" name="name[]" value="({$data.one.name[picidx]})" style="width:300px;"><br>({/if})
+({if $data.button.change_detail!=null})({$data.button.change_detail}):<input type="text" name="detail[]" value="({$data.one.detail[picidx]})" style="width:300px;"><br>({/if})
+({if $data.button.href=='1'})連結:<input type="text" name="href[]" value="({$data.one.href[picidx]})" style="width:300px;"><br>({/if})
 <input type="button" onclick="picdel(({$smarty.section.picidx.index}))" value="刪除({$data.one.pic[picidx]})圖片"><br><br>
 </div>
 ({/if})
 ({/section})
 </div>
 
+<font color="red">(上列圖片可拖曳排序位置)</font>
+
+
+    <div id="dropDIV" class="dropDIV" dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;" onclick="if ($(event.target)[0]==$(this)[0]) aes('ff');">
+    拖曳圖片到此處上傳 <BR>( IE瀏覽器不支援 請使用上傳套件上傳 )
+    <div id="up_progress" ></div> 
+    
+    <div style="text-align:left;">
+    <div id="fileQueue_list"></div>
+    ({$data.edmpic}) <BR>
 <input type="file" name="uploadify" id="uploadify"/>
-<BR /><a href="javascript:$('#uploadify').uploadifyUpload()">批次上傳圖片</a>&nbsp;|&nbsp;<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;建議比例:XXX*XXX
-<BR />
-	 
-	  </td>
+	<BR />
+	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();$('#uploadify').uploadifyUpload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
+	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
+    </div>
+    
+    </div>
+    <script>var file_upload = '?upload=({$data.file_url})';var drag_count = ({$data.uploadfilemax});</script>
+    <script src="../includes/project/js/drag_file.js"></script>
+    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
+    <script>
+	function ajxupload(){
+		if ($('#ff')[0].files.length>0)
+		 $.ajaxFileUpload
+            (
+                {
+                    url: '../includes/project/js/Jones_upload.php'+file_upload,
+                    secureuri: false, //加密
+                    fileElementId: 'ff', //objid
+                    dataType: 'json', 
+                    success: function (data, status)  
+                    {
+						$('#ff').val(null);
+                        for (ee in data)
+							upload_one(data[ee]);
+                    }
+                }
+            );
+	}
+	function aes (dname){
+		$('[name="'+dname+'[]"]').click();
+		$('[name="'+dname+'[]"]').on('change',function (){
+			ajxupload();
+		});
+	}
+	</script>
+    <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
+	</td>
 	</tr>
+    
 ({/if})
 
 	<tr>
@@ -491,11 +620,12 @@ function picdel(d){
       ({section name=size loop=$data.one.size})
   		<div class="zlist">規格: <input type="text" name="size[]" value="({if $data.one.size[size]==null})基本({else})({$data.one.size[size]})({/if})"> 
         顏色:<input type="text" class="color_list" name="color[]" value="({$data.one.color[size]})">
-        圖片:<img src="({$data.file_url})({$data.one.stock_pic[size]})" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]" value="({$data.one.stock_pic[size]})">
+        圖片:<img src="({$data.file_url})({$data.one.stock_pic[size]})" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]" value="({$data.one.stock_pic[size]})"><br>
         現貨:<input type="text" name="stock[]" value="({if $data.one.stock[size]!=null})({$data.one.stock[size]})({else})0({/if})" onkeyup="this.value=this.value.replace(/\D/g,\'\');">
         貨號:<input type="text" name="stock_no[]" value="({$data.one.stock_no[size]})" />
         顯示:<input type="radio" name="stock_status[({$smarty.section.size.index})]" value="1" ({if $data.one.stock_status[size]!=='0'})checked({/if})>開啟
         <input type="radio" name="stock_status[({$smarty.section.size.index})]" value="0" ({if $data.one.stock_status[size]==='0'})checked({/if})>關閉
+        金額:<input type="text" name="stock_price[]" value="({$data.one.stock_price[size]})">
         <input type="button" value=" 刪除 " onclick="$(this).parent().remove();" /></div>
       ({/section})
 	   </td>
@@ -503,11 +633,11 @@ function picdel(d){
     <script>
 	$(document).ready(function (){
 		create_color_select('.color_list');
-		$('#size_td').sortable( {items: 'div.zlist'} );
+		$('#size_td').sortable( {items: 'div.zlist',stop: function( event, ui ) {unlock_view();},start:function (){lock_view();}} );
 	})
 	function addtolist(){
 		var temp_time = new Date().getTime();
-		$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+$('#size_add_box').val()+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value="">  圖片:<img src="" style="width:50px;"><input type="file" style="width:80px;"><input type="hidden" name="stock_pic[]">現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');"> 貨號:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"><font color="red">(未存檔)</font></div>');
+		$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+$('#size_add_box').val()+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value="">  圖片:<img src="" style="width:50px;"><input type="file" style="width:80px;"><br><input type="hidden" name="stock_pic[]">現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');"> 貨號:<input type="text" name="stock_no[]" value="">金額:<input type="text" name="stock_price[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"><font color="red">(未存檔)</font></div>');
 		$('.zlist:last input[type="file"]')[0].onchange = fileuploadstockpic;
 		create_color_select('#c'+temp_time);
 	}
@@ -525,7 +655,7 @@ function picdel(d){
 			am = $('#pro_size option:selected').val().split('|__|');
 			for(aa in am) {
 				var temp_time = new Date().getTime();
-			$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+am[aa]+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value=""> 現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');">  貨號:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"></div>');
+			$('#size_td').append('<div class="zlist">規格: <input type="text" name="size[]" value="'+am[aa]+'"> 顏色:<input type="text" id="c'+temp_time+'" name="color[]" value=""> 現貨:<input type="text" name="stock[]" value="1" onkeyup="this.value=this.value.replace(/\D/g,\'\');">  貨號:<input type="text" name="stock_no[]" value="">金額:<input type="text" name="stock_no[]" value=""> <input type="button" value=" 刪除 " onclick="$(this).parent().remove();"></div>');
 				create_color_select('#c'+temp_time);
 			}
 	}
@@ -767,13 +897,6 @@ function Copy_data()
 
 function submitpose(){
 	var errostr = '';
-	
-	//--小圖縮圖處理
-	$('#piclist div[class="ui-state-default"][id]').each(function (idx,obj){
-		var _temp_small_pic = resizeImage($(obj).find('img')[0], 200, 200);
-		$(obj).find('[name="small_pic[]"]').val(_temp_small_pic);
-	});
-	
 	
 	$('form [name="class[]"]').each(function (idx,obj){
 		if ($(obj).val()!=null && $(obj).val()!=''){

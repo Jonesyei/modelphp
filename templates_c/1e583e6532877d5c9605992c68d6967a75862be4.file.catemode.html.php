@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-15 15:37:16
+<?php /* Smarty version Smarty-3.1.18, created on 2016-01-07 11:46:32
          compiled from "D:\AppServ\www\modelphp\serback\templates\catemode.html" */ ?>
 <?php /*%%SmartyHeaderCode:30496561f5770cde374-10677977%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1e583e6532877d5c9605992c68d6967a75862be4' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\catemode.html',
-      1 => 1444894635,
+      1 => 1452138389,
       2 => 'file',
     ),
   ),
@@ -227,7 +227,7 @@ page_initial('table_content');
 	<td width="110" align="right" >最大層數設定：</td>
 		  <td >
 		  <input type="text" name="max_count" value="<?php if ($_smarty_tpl->tpl_vars['data']->value['one']['max_count']) {?><?php echo $_smarty_tpl->tpl_vars['data']->value['one']['max_count'];?>
-<?php } else { ?>1<?php }?>" size="2">
+<?php } else { ?>1<?php }?>" size="2" onkeyup="this.value=this.value.replace(/\D/g,'');">
 		   </td>
 	</tr>
 

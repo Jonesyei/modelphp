@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.18, created on 2015-10-15 16:00:09
+<?php /* Smarty version Smarty-3.1.18, created on 2015-12-02 15:08:31
          compiled from "D:\AppServ\www\modelphp\serback\templates\setting.html" */ ?>
 <?php /*%%SmartyHeaderCode:18142559b9ac95eb616-77649322%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '2c7ac060a051c28949caa4af0ace73f6f3a180af' => 
     array (
       0 => 'D:\\AppServ\\www\\modelphp\\serback\\templates\\setting.html',
-      1 => 1444895338,
+      1 => 1449040109,
       2 => 'file',
     ),
   ),
@@ -447,9 +447,23 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['file']['last']       = ($_sm
 		   </td>
 		</tr>
 		<tr>
-		<td width="120" align="right" >容量已滿顯示詞：</td>
+		<td width="120" align="right" >網站容量<br>已滿顯示詞：</td>
 		  <td >
 			  <input type="text" name="upload_full_msg" value="<?php echo $_smarty_tpl->tpl_vars['ini_webset']->value['web_set']['upload_full_msg'];?>
+" />
+		   </td>
+		</tr>
+        <tr>
+		<td width="120" align="right" >資料庫最大容量(bytes)：</td>
+		  <td >
+			  <input type="text" name="db_max_size" value="<?php echo $_smarty_tpl->tpl_vars['ini_webset']->value['web_set']['db_max_size'];?>
+" /> bytes <br>( 1024bytes = 1MB , 1024MB = 1GB , 1024GB = 1TB)
+		   </td>
+		</tr>
+		<tr>
+		<td width="120" align="right" >資料庫容量<br>已滿顯示詞：</td>
+		  <td >
+			  <input type="text" name="db_full_msg" value="<?php echo $_smarty_tpl->tpl_vars['ini_webset']->value['web_set']['db_full_msg'];?>
 " />
 		   </td>
 		</tr>
