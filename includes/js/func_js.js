@@ -236,10 +236,7 @@ VerifyCode = function()
 		WDJQ(obj).removeAttr('onclick');
 		WDJQ(obj).click(function (){
 				var d = new Date();
-				if (WDJQ(this)[0].src.search('=')>=0)
-					WDJQ(this)[0].src = WDJQ(this).attr("src").split('&t')[0]+'&t'+d.getTime();
-				else
-					WDJQ(this)[0].src = WDJQ(this).attr("src").split('?')[0]+'?'+d.getTime();
+				WDJQ(this)[0].src = WDJQ(this).attr("src").split('?')[0]+'?'+d.getTime();
 		});
 	
 	});
@@ -251,7 +248,7 @@ VerifyCode = function()
 //驗證mail
 function isEmail(email){
 	if (email=="") return false;
-	reEmail=/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+	reEmail=/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+WDJQ/
 	return reEmail.test(email);
 }
 

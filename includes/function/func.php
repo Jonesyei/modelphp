@@ -405,7 +405,7 @@ function Ckedit($name,$value,$style='normal',$bodyclass='')
 
 
 function datepicker($name,$value,$attr='',$format=array()){
-	$tmp = '<input type="text" name="'.$name.'" id="'.$name.'" value="'.$value.'" '.$attr.' />';
+	$tmp = '<input type="text" name="'.$name.'" id="'.$name.'" '.$attr.' />';
 	$tmp .= "
 	<script>
 	if (typeof($.fn.datepicker)=='function') {

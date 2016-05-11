@@ -148,7 +148,6 @@ if ($_POST && $_REQUEST['submit']){
 if ($_GET["addpro"]){
 	$temp_addpro = explode(',',$_GET["addpro"]);
 	$temp_size = explode(',',$_GET["size"]);
-	$temp_price = explode(',',$_GET["price"]);
 	
 	if (!$_GET["count"]) $_GET["count"] = 1;
 	
@@ -168,10 +167,7 @@ if ($_GET["addpro"]){
 		if (!$_GET["size"]){
 			$shopping_car->addpro($v,$_GET["count"]);
 		}else{
-			if ($_GET["price"])
-				$shopping_car->addpro($v,$_GET["count"],false,$temp_size[$k],$temp_price[$k]);
-			else
-				$shopping_car->addpro($v,$_GET["count"],false,$temp_size[$k]);
+			$shopping_car->addpro($v,$_GET["count"],false,$temp_size[$k]);
 		}
 	}
 		

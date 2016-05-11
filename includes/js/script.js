@@ -53,7 +53,7 @@ serback_editor = function (){
                 }
             });
 	//--上版描述
-	WDJQ('body').prepend('<div style="position: fixed;z-index: 9999;top: 0;text-align: center;width: 100%;font-size: 18px;color: white;background: red; left:0;">後台編輯模式<BR><input type="button" value="點此正常瀏覽網站" onclick="window.localStorage.removeItem(\'serback_editor\');"></div>');
+	WDJQ('body').prepend('<div style="position: fixed;z-index: 9999;top: 0;text-align: center;width: 100%;font-size: 18px;color: white;background: red;">後台編輯模式<BR><input type="button" value="點此正常瀏覽網站" onclick="window.localStorage.removeItem(\'serback_editor\');"></div>');
 	
 	if (_menu_data!=null && _menu_data.length>0){
 		for (aa in _menu_data){
@@ -131,17 +131,10 @@ windowload = function (){
 	
 	//--驗證碼reload
 	if (WDJQ('img[src*="verifycode"]').length>0){
-		
 		var temp_time = new Date();
 		var temp_str = WDJQ('img[src*="verifycode"]').attr('src').split('?');
 		if (temp_str.length>0)
-		WDJQ('img[src*="verifycode"]').each(function (idx,obj){
-			if (WDJQ(obj)[0].src.search('=')>=0){
-				WDJQ(obj)[0].src = WDJQ(obj).attr("src").split('&t')[0]+'&t'+temp_time.getTime();
-			}else{
-				WDJQ(obj).attr('src',temp_str[0]+'?'+temp_time.getTime());
-			}
-		})
+		WDJQ('img[src*="verifycode"]').attr('src',temp_str[0]+'?'+temp_time.getTime());
 	}
 
 	//--帳號自動轉英數
