@@ -114,6 +114,7 @@ function SearchSql($db,$table,$get,$keyword_ary = array(),$table_as = "")
 
 
 //加密 解密 str 加密資料 key 金鑰 mode 加= encode 解= decode
+/*
 function Code($string,$key,$operation = "encode")
 {
 	$expiry = 0;
@@ -176,52 +177,8 @@ function Code($string,$key,$operation = "encode")
         // 因為加密後的密文可能是一些特殊字元，複製過程可能會丟失，所以用base64編碼
         return $keyc.str_replace('=', '', base64_encode($result));
     }
-
-
-/*
-	$md5_key = md5($key);
-	$md5_n = "";
-	$md5_a = "";
-	
-	for($i=0;$i<strlen($md5_key);$i++)
-	{
-		$sub_key = substr($md5_key,$i,1);
-		$sub_key_ary[$i] = $sub_key;
-		
-		if( is_numeric($sub_key) && $md5_n=="") $md5_n = $i;//抓取md5key 第一個數字
-		if( !is_numeric($sub_key) && $md5_a=="") $md5_a = $sub_key;//抓取md5key 第一個字母
-	}
-	
-	for($i=0;$i<strlen($base64_str = base64_encode($str));$i++)
-	{
-		$sub_str = substr($base64_str,$i,1);
-		$sub_str_ary[$i] = $sub_str;		
-	}
-
-
-	if($mode=="encode")
-	{
-		for($i=0;$i<strlen($md5_key);$i++)
-		{
-			$_return .= $sub_key_ary[$i];
-			
-			if($i==$md5_n) $_return .= $base64_str;
-			
-		}
-		return $_return.$md5_a.strlen($base64_str);
-	}
-	elseif($mode=="decode")
-	{
-		for($i=0;$i<strlen($str);$i++) if( substr($str,$i,1)==$md5_a ) $md5_n_len = $i;
-
-
-		$_return = substr($str,$md5_n+1, substr($str,$md5_n_len+1,strlen($str)) );
-		
-		return base64_decode($_return);
-	}
-*/
 }
-
+*/
 
 
 
@@ -405,7 +362,7 @@ function Ckedit($name,$value,$style='normal',$bodyclass='')
 
 
 function datepicker($name,$value,$attr='',$format=array()){
-	$tmp = '<input type="text" name="'.$name.'" id="'.$name.'" '.$attr.' />';
+	$tmp = '<input type="text" name="'.$name.'" id="'.$name.'" value="'.$value.'" '.$attr.' />';
 	$tmp .= "
 	<script>
 	if (typeof($.fn.datepicker)=='function') {
