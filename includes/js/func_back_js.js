@@ -473,12 +473,12 @@ function CheckAll(name,list)
 	var ck = this.form.elements[list]; 	
 	if(!ck.length)
 	{
-		ck.checked = ckAll.attr("checked");	
+		ck.checked = ckAll[0].checked;	
 	}
 	else
 	{
 		for (var i=0;i<ck.length;i++) 
-			ck[i].checked = ckAll.attr("checked");
+			ck[i].checked = ckAll[0].checked;
 	}
 
 	return 0;

@@ -125,13 +125,19 @@ page_initial('table_content');
 	<script>
 	function Check(lv)
 	{
-		if( $('#auth_'+lv).attr("checked")=="checked" || $('#auth_'+lv).attr("checked")==true )
+		if( $('#auth_'+lv+':checked').length>0 )
 		{
 			$('.auth_'+lv).attr("checked","checked");
+			$('.auth_'+lv).each(function (idx,obj){
+				$(obj)[0].checked=true;
+			});
 		}
 		else
 		{
 			$('.auth_'+lv).removeAttr("checked");
+			$('.auth_'+lv).each(function (idx,obj){
+				$(obj)[0].checked=false;
+			});
 		}
 	
 		//if($('#'+parents).attr("checked")==true)
