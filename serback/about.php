@@ -68,6 +68,8 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
+		break;
+		case "test":
 				$data["one"]["name"] = "首頁EDM";
 				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);
 				
@@ -100,6 +102,8 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				$data["order_html"] .= '<tr><td align="right">欄位資料:</td><td><select name="class">'.Make_list($temp_array,$data["one"]["class"]).'</select></td></tr>';
 		break;
 
+		
+		
 		
 		case "about":
 				$data["close"]["pic"] ='1';

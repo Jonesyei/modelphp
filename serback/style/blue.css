@@ -185,7 +185,7 @@ h2.funtion-title { background:url(../images/title-icon.png) top left no-repeat; 
 .footer a:hover { color: #FFE874;}
 
 
-.table-style01 th { background:#00BBFF; font-size:15px; color:#FFF9E2; padding:5px 10px; border-left:1px #fff solid; text-align:center;}
+.table_content th, .table-style01 th { background:#00BBFF; font-size:15px; color:#FFF9E2; padding:5px 10px; border-left:1px #fff solid; text-align:center;}
 
 
 .ui-widget-header { border: 1px solid #aaaaaa; background: #8CB4F3  50% 50% repeat-x; color: #222222; font-weight: bold; }

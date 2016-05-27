@@ -86,6 +86,8 @@ class order_center
 		var $order_mail_msg_top; //訂單信件上版訊息 array('paymode'=>'msg');
 		var $order_mail_msg_foot; //訂單信件下版訊息 array('paymode'=>'msg');
 		
+		var $order_mail_pay_body; //已完成訂單信件內容 array('paymode'=>'msg');
+		
 		//*任選活動設定*/
 		var $active_any_other = 0;//-任選活動是否不包含其他商品同時結帳 0 不使用 1使用
 		var $active_group_count; //--訂單可擁有的活動項目數量限制
@@ -163,6 +165,12 @@ class order_center
 			$sql = "DELETE `".$this->table."`,`atb`,`carl` FROM ".$this->table." ".$left_join." where ".$this->table.".create_date<='". date('Y-m-d H:i:s',strtotime("-".($this->not_member_car_time)." seconds"))."'";
 			$sql .= " and ".$this->table.".member_id='0' and step='1'";
 			$this->conn->Execute($sql);
+			
+			
+			//--回覆已到期的庫存項目
+			$this->reset_stock();
+			
+			$this->conn->Execute("UPDATE ".$this->table." set create_date='".date("Y-m-d H:i:s")."' where id = '".$this->order["id"]."'");
 		}
 		
 		/* 訂單編號自定義  標頭,長度,開始值 */
@@ -1120,10 +1128,56 @@ class order_center
 		function paycheck($order_no){
 			$carlist["pay_status"] = 1; //--付款狀態
 			$carlist["paymode_status"] = 1;//--金流付款狀態
+			$this->ispay_mail($order_no);
 			return $this->conn->AutoExecute($this->table,$carlist,"UPDATE","order_no='".$order_no."'");
 		}
 		
 		
+		//--訂單成功信件
+		function ispay_mail($order_no){
+			global $mail; //-smtp
+			global $smtp_set; //-smtp資料設定
+			global $web_set;
+			global $tpl; //-樣板
+			global $lang; //-語系
+			global $_SETUP;
+			
+			//網站設定 $web_set
+			$sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
+			$tmp = $this->conn->GetArray($sql);
+			$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
+			$web_set["keyword"] = deQuotes($tmp["1"]["detail"],-1);
+			$web_set["receive_email"] = $tmp["2"]["detail"];
+			$web_set["send_email"] = $tmp["4"]["detail"];
+			$web_set["favorite_url"] = "http://".$_SERVER["HTTP_HOST"];
+			
+			
+			//--前段網址取得
+			$temp = explode('/',substr($_SERVER['PHP_SELF'],1));
+			$temp_url = explode('/',$_SERVER['SERVER_PROTOCOL']);
+			$temp_url = $temp_url[0].'://'.$_SERVER["HTTP_HOST"].'/';
+			if (count($temp)>1) {
+				for ($i=0;$i<count($temp)-1;$i++){
+					$temp_url .= $temp[$i].'/';
+				}
+			}
+			
+			$temp = $this->conn->GetRow("select * from ".$this->table." where order_no='".$order_no."'");
+			
+			
+			$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
+			$mail->AddAddress($temp["recive_email"]);
+			$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
+			$mail->Subject = $this->data_mail_insert($temp,$web_set["title"].' [訂單編號] 訂單付款完成通知信件');    // 設定郵件標題        
+			$mail->Body = $this->data_mail_insert($temp,($this->order_mail_pay_body[$temp['paycardmode']] ? $this->order_mail_pay_body[$temp['paycardmode']]:"訂單:[訂單編號] 訂單總額:[購物總額] 已付款完成!!"));
+			$mail->Send();
+			$mail->ClearAddresses();
+			$temp_mail = explode(',',$web_set["receive_email"]);
+			foreach ($temp_mail as $k=>$v){
+				$mail->AddAddress($v);
+			}
+			$mail->Send();
+		}
 		
 		//--訂購信件 (訂單資料,導回 )
 		function order_mail_send($pay_bill,$callback=NULL){
@@ -1182,6 +1236,9 @@ class order_center
 			$tpl->display(ROOT_PATH.'templates/MAIL_shopp.html');
 			$cache_string = ob_get_contents(); //接收快取頁面
 			ob_end_clean(); //關閉快取
+			
+			//--寫入發送次數
+			$this->conn->Execute("UPDATE ".$this->table." SET ismailsend=ismailsend+1 where id='".$pay_bill["id"]."'");
 
 			//---關閉錯誤訊息
 			$mail->SMTPDebug = false;
@@ -1190,9 +1247,10 @@ class order_center
 			$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
 			$mail->AddAddress($pay_bill["recive_email"]);
 			$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
-			$mail->Subject = $subject;    // 設定郵件標題        
+			$mail->Subject = ($pay_bill['ismailsend']*1>0 ? "(補發)":"").$subject;    // 設定郵件標題        
 			$mail->Body = $cache_string;
 			$mail->Send();
+			
 			
 			//--分開寄送給管理者
 			$mail->ClearAddresses();

@@ -73,7 +73,7 @@ function unlock_view(){
 function Get(sv)
 {
 	var value = [];
-	var get = window.location.href.toString().split(window.location.host)[1];
+	var get = window.location.href.toString().split(window.location.host)[1].replace(/\+/g,'%20');
 	get = get.split("?")[1];
 	if(get==null) return value;
 	

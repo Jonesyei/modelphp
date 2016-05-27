@@ -259,6 +259,7 @@ CREATE TABLE `datasetup_shopping_car` (
   `recive_zip` varchar(50) default NULL,
   `recive_sex` varchar(50) default NULL,
   `recive_takemode` varchar(20) default NULL COMMENT '取貨方式',
+  `invoice` varchar(10) default NULL COMMENT '發票類型',
   `unity_no` varchar(40) default NULL COMMENT '統一編號',
   `unity_title` varchar(20) default NULL,
   `checksum` varchar(50) default NULL COMMENT '金流md5檢查碼',
@@ -275,6 +276,15 @@ CREATE TABLE `datasetup_shopping_car` (
   `update_name` varchar(20) default NULL,
   `ATMcode` text COMMENT 'ATM轉帳後四碼',
   `order_img` longtext COMMENT '訂單圖像',
+  `ismailsend` int(11) NOT NULL default '0' COMMENT '訂單確認信件發送次數',
+  `buy_name` varchar(100) default NULL COMMENT '購買人姓名',
+  `buy_sex` varchar(2) default NULL COMMENT '購買人性別',
+  `buy_email` varchar(100) default NULL COMMENT '購買人信箱',
+  `buy_phone` varchar(20) default NULL COMMENT '購買人電話',
+  `buy_cellphone` varchar(20) default NULL COMMENT '購買人手機',
+  `buy_zipcode` varchar(10) default NULL COMMENT '購買人郵遞區號',
+  `buy_address` varchar(200) default NULL COMMENT '購買人地址',
+  `buy_memo` text COMMENT '購買人備註說明',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
