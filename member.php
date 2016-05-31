@@ -17,7 +17,7 @@ $member2->clone_of($member,'member2');
 */
 
 //--設定認證信功能
-//$member->check_mail = 1;
+$member->check_mail = 1;
 //--信箱title設定 (不使用SMTP也要設定)
 $member->set_mail($web_set['title'],$web_set["send_email"]);
 //smtp設定

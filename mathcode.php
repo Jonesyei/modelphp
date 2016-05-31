@@ -1,1 +1,82 @@
-<?php $_F=__FILE__;$_X='P1NQPzxlPA1JRSoNSQkzSGNVT2NWOV1WcHZaY2oNSQnngI/opr3kurrmlbjoqIjoqIjmlbjlmajpoa/npLoNSSpFDUkNSWVjVXpjSCgiL0hVSj5VOlZadi19VX1lYyIpOw1JZWNVemNIKCIzVX1lYy0zdlpPSHZ7OlZadi19VX1lYyIpOw1JZWNVemNIKCIzdlpPY1pPLU9dPGM6Qz5VSmNFPFpKIik7DUllY1V6Y0goIjN2Wk9jWk8tdUNqPHZqQ09Ddlo6bEN7Y1pVPmNCPlVPZV99dnpjODxaSiIpOw1JDUkNSQ1JJH12bVpPX2xDe2NWQlZsdjxjWigifXZtWk84T1RPIiwiSCIpOw1JJD5delVPVVZCVmxKY09qKCR9dm1aT19sQ3tjKTsNSWx9e3ZqYygkfXZtWk9fbEN7Yyk7DUkkfXZtWk9fbEN7Y1ZCVmx2PGNaKCJ9dm1aTzhPVE8iLCJ3KyIpOw1JbDxtT2ooJH12bVpPX2xDe2MsKCQ+XXpVT1UqMisyKSk7DUlsfXt2amMoJH12bVpPX2xDe2MpOw1JDUkNSSRVe3tfe2NaVkJWJ1snOwkJCQkJCQkJCUVFLS3lrZfmrrXnuL3plbfluqZWKFVtT3bliYfoh6rli5UpDUlDbFYoJFV7e197Y1ohQidVbU92Jyl5DUkJJE1jSENsQ31VT0N2Wl9famNqakN2WlZCVmpPSF88VXooKCQ+XXpVT1UqMisyKSxWJFV7e197Y1oqMixWIjQiLFZRYgpfL2t1X3RETGIpOw1Jb2N7amN5DUkJJE1jSENsQ31VT0N2Wl9famNqakN2WlZCVigkPl16VU9VKjIrMik4Jyc7DUlvDUkkPWx2Wk9fVUhIVV1WQlZVSEhVXVYoJy9DVGN7LXt9ei0+VX1lQ1pjOE9PbCcpO1ZFRS0t5aSa6Ieq5Z6L6YG45pOHDUkkbHZaT19qQ1JjVkJWRzQ7DUkkT2NUT19VWkp7Y18+Q1pDPm0+VkJWNDsNSSRPY1RPX1VaSntjXz5VVEM+bT5WQlY0Ow1JJE9jVE9fPlVUQz5tPl96Q2pPVVp9Y1ZCVlhbOw1JJE9jVE9fPkNaQz5tPl96Q2pPVVp9Y1ZCVkc0Ow1JJE9PbF9sQ3tjVkJWIjhFbHZaT0UiOCQ9bHZaT19VSEhVXWFIVVp6KDQsfXZtWk8oJD1sdlpPX1VISFVdKS0yKTY7VkVFRS0t5a2X6auU6Lev5b6RDUkkT2NUT19UX2pPVUhPVkJWfWNDeygkbHZaT19qQ1JjRUcpOw1JJEM+VUpjX2VjQ0plT19VenpWQlZHOw1JDUkNSUVFLS3lr6zpq5jluqboh6rli5XoqIjnrpcNSSRqT0h7Y1pWQlZqT0h7Y1ooJE1jSENsQ31VT0N2Wl9famNqakN2Wik7DUkkQz5VSmMxY0NKZU9WQlYoJGx2Wk9fakNSYykrJEM+VUpjX2VjQ0plT19VenoqWDsNSSRDPlVKYy5Dek9lVkJWKCRqT0h7Y1oqJE9jVE9fPkNaQz5tPl96Q2pPVVp9Yyk7VglFRS0t5ZyW5YOP5a+s5bqmDUkkVFZCViRPY1RPX1Rfak9VSE87DUkkXVZCViRDPlVKYzFjQ0plTy0oJEM+VUpjMWNDSmVPRVgpKygkbHZaT19qQ1JjRVgpLSRDPlVKY19lY0NKZU9fVXp6Ow1JDUkNSQ1JDUkkQz5VSmMxY0NKZU9WK0JWJEM+VUpjX2VjQ0plT19Veno7DUlFRS0t5ZyW5YOP5bu656uLDUkkQz5WQlZAQz5VSmN9SGNVT2NPSG1jfXZ7dkgoJEM+VUpjLkN6T2UsViRDPlVKYzFjQ0plTykNSXZIVnpDYygi54Sh5rOV5bu656uL5ZyW54mH77yBIik7DUkNSSQ5SjN2e3ZIVkJWQz5VSmN9dnt2SFV7e3Z9VU9jKCRDPixWNCw0LDQpOwkJCQlFReiDjOaZrwpmRuiJsuW9qQ1JJGx2Wk9ffXZ7dkhWQlZDPlVKY312e3ZIVXt7dn1VT2MoJEM+LFZYbm4sWG5uLFhubik7CQlFReWtl+mrlApmRuiJsuW9qQ1JDUlDPlVKY2xDe3soJEM+LDQsNCwkOUozdnt2SCk7DUkNSSRVXzxDVF88VXp6Q1pKVkJWfWNDeygkT2NUT19UX2pPVUhPKTsNSWx2SCgkQ1ZCVjQ7ViRDVlBWJGpPSHtjWjtWKyskQylWeQ1JCUBDPlVKY09PbE9jVE8oJEM+LFYkbHZaT19qQ1JjLFYkT2NUT19VWkp7Y18+Q1pDPm0+LFYkVCxWJF0sViRsdlpPX312e3ZILFYkT09sX2xDe2MsViRNY0hDbEN9VU9DdlpfX2pjampDdlphJEM2KTsNSQkNSQlDbFYoJENTNClWeQ1JCQkkVV9jWnpWQlYoJFQrJE9jVE9fPkNaQz5tPl96Q2pPVVp9YyktJE9jVE9fVF9qT1VITzsNSQlvY3tqY3kNSQkJJFVfak9VSE9WQlYkVC0kVV88Q1RfPFV6ekNaSjsNSQkJJFVfY1p6VkJWKCRUKyRPY1RPXz5DWkM+bT5fekNqT1VafWMpLSRPY1RPX1Rfak9VSE87DUkJbw1JCUNsVigkQ0JCJGpPSHtjWi0yKVYkVV9jWnpWQlYkQz5VSmMuQ3pPZS0yOw1JCUVF6YKK5qGGDUkJJDl2SHpjSDN2e3ZIQkM+VUpjfXZ7dkhVe3t2fVVPYygkQz4sJ1hubicsJ1hubicsJ1hubicpOw1JCUM+VUpjSGN9T1VaSntjKCRDPiwkVV9qT1VITyw0LCRVX2NaeiwkQz5VSmMxY0NKZU8tMiwkOXZIemNIM3Z7dkgpOw1JCQ1JCSRVX2pPVUhPVkJWJFVfY1p6Ow1JCSRUVitCViRPY1RPXz5DWkM+bT5fekNqT1VafWM7VkVFLS3llq7lrZfkvY3np7sNSW9WRUVsdkhWe3Z2PA1JDUkNSUM+VUpjPFpKKCRDPik7DUlDPlVKY3pjak9Idl0oJEM+KTsNSQ1JP1MNSQ==';$_D=strrev('edoced_46esab');eval($_D('JF9YPWJhc2U2NF9kZWNvZGUoJF9YKTskX1g9c3RydHIoJF9YLCc8dnAufXUgbkR3M0hZbVB5ZEJqL11mTWJsNkF0SUs0c1p6a1RhaXE3cjI+RjE1UzlMb0NKZXtjTlhoCkc4MD1ReFJnW1VPV1ZFJywncG9KV2NENzVFd0NyWHU8e1E9c1B5R3ZUZl1ZTApNMDZuZEF4WzlJVmsxbUJITj5iRn1pZ2hsZU8yWlIzLnFqU0t6NDhhdFUgLycpOyRfUj1lcmVnX3JlcGxhY2UoJ19fRklMRV9fJywiJyIuJF9GLiInIiwkX1gpO2V2YWwoJF9SKTskX1I9MDskX1g9MDs='));?>
+<?php
+/*
+	Create by Jones
+	瀏覽人數計計數器顯示
+*/
+
+header("Pragma: no-cache");
+header("Cache-Control: no-cache");
+header("Content-type:image/png");
+header("Content-Disposition:filename=math_code.png");
+
+
+
+$count_file = fopen("count.txt","r");
+$mydata = fgets($count_file);
+fclose($count_file);
+$count_file = fopen("count.txt","w+");
+fputs($count_file,($mydata*1+1));
+fclose($count_file);
+
+
+$all_len = '8';									//--字段總長度 (auto則自動)
+if ($all_len!='auto'){
+	$verification__session = str_pad(($mydata*1+1), $all_len*1, "0", STR_PAD_LEFT);
+}else{
+	$verification__session = ($mydata*1+1).'';
+}
+$jfont_array = array ('Pixel-lcd-machine.ttf'); //--多自型選擇
+$font_size = 30;
+$text_angle_minimum = 0;
+$text_angle_maximum = 0;
+$text_maximum_distance = 28;
+$text_minimum_distance = 30;
+$ttf_file = "./font/".$jfont_array[rand(0,count($jfont_array)-1)]; ///--字體路徑
+$text_x_start = ceil($font_size/3);
+$image_height_add = 3;
+
+
+//--寬高度自動計算
+$strlen = strlen($verification__session);
+$imageHeight = ($font_size)+$image_height_add*2;
+$imageWidth = ($strlen*$text_minimum_distance); 	//--圖像寬度
+$x = $text_x_start;
+$y = $imageHeight-($imageHeight/2)+($font_size/2)-$image_height_add;
+
+
+
+
+$imageHeight += $image_height_add;
+//--圖像建立
+$im = @imagecreatetruecolor($imageWidth, $imageHeight)
+or die("無法建立圖片！");
+
+$bgColor = imagecolorallocate($im, 0,0,0);				//背景RGB色彩
+$font_color = imagecolorallocate($im, 255,255,255);		//字體RGB色彩
+
+imagefill($im,0,0,$bgColor);
+
+$a_pix_padding = ceil($text_x_start);
+for($i = 0; $i < $strlen; ++$i) {
+	@imagettftext($im, $font_size, $text_angle_minimum, $x, $y, $font_color, $ttf_file, $verification__session[$i]);
+	
+	if ($i>0) {
+		$a_end = ($x+$text_minimum_distance)-$text_x_start;
+	}else{
+		$a_start = $x-$a_pix_padding;
+		$a_end = ($x+$text_minimum_distance)-$text_x_start;
+	}
+	if ($i==$strlen-1) $a_end = $imageWidth-1;
+	//邊框
+	$borderColor=imagecolorallocate($im,'255','255','255');
+	imagerectangle($im,$a_start,0,$a_end,$imageHeight-1,$borderColor);
+	
+	$a_start = $a_end;
+	$x += $text_minimum_distance; //--單字位移
+} //for loop
+
+
+imagepng($im);
+imagedestroy($im);
+
+?>

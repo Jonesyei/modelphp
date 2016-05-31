@@ -82,6 +82,16 @@ if ($page_name == "index"){
 			$temp = $conn->GetRow("select * from ".PREFIX."setting where type='demo_show'".$lang);
 			if ($temp)
 				echo dequotes($temp["detail"],-1);
+				echo dequotes('<mn id=\"dtn\"></mn> 秒後進入首頁 <script>
+					var _aaaa = 5;
+					function togohome(){
+					_aaaa--;
+					document.getElementById(\'dtn\').innerHTML = _aaaa;
+					if (_aaaa==0) window.location.href=\'index.php\';
+					}
+					togohome();
+					window.setInterval(\"togohome()\",1000);
+					</script>',-1);
 			exit;
 		break;
 		
@@ -141,6 +151,11 @@ $tpl->display(ROOT_PATH.'templates/'.$templates_page);
 $smarty_output = ob_get_contents(); //接收快取頁面
 ob_end_clean();
 
+//--檔案授權參數
+$_SESSION['file_auth']['jones_demo'] = '1';
+$_SESSION["fileauth_array"]['jones_demo']=array();
+$_SESSION["fileauth_time_array"]['jones_demo']=array();
+
 
 //--seo處理
 header('Last-Modified: '.gmdate('D, d M Y').' 00:00:00'.' GMT', true, 200); //--最後頁面編輯時間
@@ -148,7 +163,6 @@ header('Date: '.gmdate('D, d M Y H:i:s').' GMT', true, 200);
 header('Expires: '.gmdate('D, d M Y H:i:s',mktime(0,0,0,1,1,1998)).' GMT', true, 200); //--快取時間
 echo html2txt($smarty_output);
 $conn->close();
-
 
 
 function html2txt($document){ 
