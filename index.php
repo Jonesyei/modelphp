@@ -104,6 +104,11 @@ if ($page_name == "index"){
 			//edm			
 			$temp = $conn->GetRow("select * from ".PREFIX."data_list where type='EDM'".$lang);
 			$data["EDM"] = explode('|__|',dequotes($temp["pic"],-1));
+			
+			
+			//QRCODE DEMO
+			QRcode::png('測試訊息','upload/demo.png', QR_ECLEVEL_L); 
+			echo '<img src="upload/demo.png" />'; 
 		break;
 	}
 
