@@ -1,5 +1,4 @@
 <?php
-ini_set('date.timezone','Asia/Shanghai');
 session_start();
 
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));
@@ -18,6 +17,8 @@ include_once(APP_PATH."includes/config/config.php");
 
 //---Jones 函數
 include_once(APP_PATH."includes/project/function.php");
+//---qrcode
+include_once(APP_PATH."includes/phpqrcode/qrlib.php");
 
 include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
 
