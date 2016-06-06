@@ -56,9 +56,11 @@ if ($_POST["act"]=="insert"){
 /*
 	csv 輸入
 	
-	pos => $_POST["title"]
-			$_POST["data_table"]
-				
+	pos => $_POST["title"]	//-標題
+			$_POST["data_table"]	//--資料表
+		 	$_POST["defrow"]	//--預設欄位
+			$_POST["keyrow"]	//--預設唯一值 (用以判斷新增或是修改)
+			
 	$csv["title"] = 欄位名稱 EX: 'aaa,bbb,ccc' 字串格式 自動轉換陣列 要對應下方擷取語法的欄位值
 	$csv["data_table"] = 來源資料表
 	
@@ -75,12 +77,7 @@ if ($_FILES["file"]["name"]!=''||$_FILES["file"]["name"]!=NULL){
 }
 
 
-//資料表內所有id
-$tmp_id = $conn->GetArray("SELECT id FROM ".$_POST["data_table"]);
-$all_id = array();
-foreach($tmp_id AS $k=>$v){
-	$all_id[$k] = $v['id'];
-}
+
 
 
 $dbname=$cpos["file_url"].$temp_file_name;
@@ -90,6 +87,14 @@ if ( !$fp = fopen($dbname,"r") ) {
 }else{
 	//--取得資料表所有欄位資訊
 	$all_row = $conn->GetArray("desc ".$_POST["data_table"]);
+	
+	if (!$_POST["keyrow"]) $_POST["keyrow"] = 'id';
+	//資料表內所有id
+	$tmp_id = $conn->GetArray("SELECT ".$_POST["keyrow"]." FROM ".$_POST["data_table"]);
+	$all_id = array();
+	foreach($tmp_id AS $k=>$v){
+		$all_id[$k] = $v[$_POST["keyrow"]];
+	}
 	
 	// 過濾反斜線 \ 
 	$current = file_get_contents($file_path);       
@@ -114,11 +119,12 @@ if ( !$fp = fopen($dbname,"r") ) {
 				foreach ($title as $k=>$v){ //--寫入資料欄位
 					$upd[$v] = iconv('big5','utf-8',$temp[$k*1]);					
 					$upd[$v] = str_replace('""','"',$upd[$v]);
+					$upd[$v] = preg_replace(array('/\r/','/\n/'),'|__|', $upd[$v]);
 				}
 				
 				//有重複id時更新資料
-				if(in_array($upd["id"],$all_id)){
-					$avalue = $conn->AutoExecute($_POST["data_table"],$upd,"UPDATE","id='".$upd["id"]."'");
+				if(in_array($upd[$_POST["keyrow"]],$all_id)){
+					$avalue = $conn->AutoExecute($_POST["data_table"],$upd,"UPDATE",$_POST["keyrow"]."='".$upd[$_POST["keyrow"]]."'");
 				}else{	
 					foreach ($all_row as $k=>$v){ 
 						if ($defrow_array[$v[0]]==NULL || $defrow_array[$v[0]]==''){//--判斷是否有預設資料欄位 	
@@ -144,7 +150,6 @@ if ( !$fp = fopen($dbname,"r") ) {
 						}
 					}
 					unset($upd["id"]);
-		
 					$avalue = $conn->AutoExecute($_POST["data_table"],$upd,"INSERT");
 				}
 			}
@@ -220,9 +225,11 @@ foreach ($csv_list as $k=>$v) { //---row
 				if (isset($nrowi) && count($nrowi)>0 && isset($nrowi[$n])){
 					$nn = str_replace(',',' ',$nrowi[$n][$nn]); //內容逗點換空白 避免多劃一格
 					$nn = iconv('utf-8','big5',br_replace($nn)); //--編碼轉換
+					$nn = str_replace("|__|","\n",$nn);
 				}else{
 					$nn = str_replace(',',' ',$nn); //內容逗點換空白 避免多劃一格
 					$nn = iconv('utf-8','big5',br_replace($nn)); //--編碼轉換
+					$nn = str_replace("|__|","\n",$nn);
 				}
 				if ($row_main=='') {$row_main='"'.$nn.'"';}else{$row_main.=',"'.$nn.'"';}
 			}

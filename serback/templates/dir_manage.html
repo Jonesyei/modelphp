@@ -1,0 +1,198 @@
+<script>
+var _rr = new Object();
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) ).on('keyup',function (){
+		if ($(this).val()!=null && $(this).val()!=""){
+			$('[search_tr]').hide().each(function (idx,obj){
+				_rr[idx] = obj;
+				$(obj).find('td:contains('+$('[name="keyword"]').val()+')').parent().show();
+			});
+		}else{
+			$('[search_tr]').show();
+		}
+	});
+
+	$('#SearchBtn').click(function(){
+		$('#search_form').submit();
+	});
+
+});
+</script>
+
+
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+	<h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+  <div class="page-tool">
+	  <a href="javascript:;" onclick="$('#csv_div3').dialog('open');" style=" float:left;"><img src="images/icon06.png" width="32" height="32" alt="上傳檔案匯入"/>新增目錄</a>
+	  <a href="javascript:;" onclick="$('#csv_div2').dialog('open');" style=" float:left;"><img src="images/icon06.png" width="32" height="32" alt="上傳檔案匯入"/>上傳檔案匯入</a>
+      <a href="javascript:downloadzip();" style=" float:left;"><img src="images/icon05.png" width="32" height="32" alt="上傳檔案匯入"/>站台資料下載</a>
+	  ({if $data.pageget.dir!=null})<a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>({/if})
+      <a href="javascript:Del_file();"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
+  </div>
+  <!--div id="title"-->
+
+<script>
+function downloadzip(){
+		$.ajax( {
+			url: "dir_manage.php?addzip=1",
+			data: {},
+			type:"GET",
+			dataType:'text',
+			async: false,
+			success: function(msg){
+				window.location.href='../back.zip';
+			}
+		});
+}
+</script>
+
+<!--SEARCH-->
+         <div class="search-tool" id="search"><!-- 搜尋模組 -->
+<form action="" method="get" id="search_form" name="search_form">
+
+
+
+關鍵字查詢<input type="text" name="keyword" />
+
+  
+  <input type="hidden" name="dir" value="({$data.dir})">
+
+ </form>
+  </div>
+
+<!--SEARCH-->
+
+<div id="csv_div2" title="相關檔案匯入">
+<form action method="post" id="csv2" style="" enctype="multipart/form-data">
+    <font color="blue">步驟一:</font>選擇檔案 <input type="file" name="zip">
+    <br>
+    <font color="blue">匯入的路徑(目前對應所在路徑):</font><br>({$data.dir})<br>
+    <font color="blue">匯入注意事項:</font>
+    請勿匯入以下相關目錄及檔案<br>
+    ({section name=m loop=$data.check_file})
+    /({$data.check_file[m]})<br>
+    ({/section})
+</form>
+<!--
+<br>
+	<font color="blue">步驟二:</font>請對應你的檔案內容排序位置<font color="red">(可拖曳)</font>
+    -->
+</div>
+<script>
+ $( "#csv_div2" ).dialog( {
+	  height:300,
+      modal: true,
+      buttons: {
+        '取消': function() {$( this ).dialog( "close" );}
+		,'匯入': function() {
+			$('#csv2').submit();
+			$( this ).dialog( "close" );
+		}
+      }
+    });
+	$( "#csv_div2" ).dialog("close");
+	$('#csv_div2').parent().css('position','absolute');
+</script>
+
+
+<div id="csv_div3" title="新增目錄">
+<form action method="GET" id="ndir" style="" enctype="multipart/form-data">
+   <input type="hidden" name="dir" value="({$data.pageget.dir})">
+   請輸入目錄名稱:<input type="text" name="create_dir" value="" onkeyup="this.value=this.value.replace(/\W/g,'');">
+</form>
+<!--
+<br>
+	<font color="blue">步驟二:</font>請對應你的檔案內容排序位置<font color="red">(可拖曳)</font>
+    -->
+</div>
+<script>
+ $( "#csv_div3" ).dialog( {
+	  height:300,
+      modal: true,
+      buttons: {
+        '取消': function() {$( this ).dialog( "close" );}
+		,'新增': function() {
+			$('#ndir').submit();
+			$( this ).dialog( "close" );
+		}
+      }
+    });
+	$( "#csv_div3" ).dialog("close");
+	$('#csv_div3').parent().css('position','absolute');
+	function Del_file(){
+		if (confirm('是否刪除項目?'))
+		$('#form').submit();
+	}
+</script>
+
+
+<div id="content_inside">
+<div>目前路徑: 
+({section name=m loop=$data.dir_exp})<a href="javascript:;" onclick="dirlink(this);">({$data.dir_exp[m]})/</a>({/section})
+<script>
+function dirlink(obj){
+	var nurl = '';
+	while ($(obj).length>0){
+		nurl = $(obj).html()+nurl;
+		obj = $(obj).prev()[0];
+	}
+	window.location.href = '?dir='+nurl;
+}
+</script>
+</div>
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  	<tr bgcolor="#EEEEEE">
+  		<th align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></th>
+		<!--<td width="5%">編號</td>-->
+  		<th>名稱</th>
+        <th>顯示</th>
+        <th>樣板引用完整路徑</th>
+        <th>檔案大小</th>
+		
+  	</tr>
+	
+	({section name=idex loop=$data.list})
+   <tr search_tr>
+      <td align="right" >
+      <input type="checkbox" id="choose_id" value="({$data.list[idex].name})" name="del[]" /></td>	  
+      <!--<td> ({$data.list[idex].id}) </td>-->
+	  ({if $data.list[idex].isdir=='1'})
+	  <td ><a href="?dir=({$data.dir})({$data.list[idex].name})/" style="color:green;font-weight:bold;">({$data.list[idex].name})</a>
+      </td>
+      ({else})
+	  <td >({$data.list[idex].name})
+      </td>
+      ({/if})
+      <td ><a href="({$data.dir})({$data.list[idex].name})" target="_blank"><img src="({$data.dir})({$data.list[idex].name})" width="50" style=" float:left;"></a></td>
+      <td >({str_replace('..','.',$data.dir)})({$data.list[idex].name})</td>
+      <td>({$data.list[idex].size})</td>
+    </tr>
+    ({/section})
+	
+  </table>
+  <br />
+  <input name="act" type="hidden" value="all" />
+</form>
+</div><!--div id="content_inside"-->
+
+
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+<script>
+page_initial('table_content');
+</script>
+
+
+<!--頁數呈現table-->
+
+
+

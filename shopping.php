@@ -330,6 +330,9 @@ if ($data["addpro"])
 			}
 	}
 
+
+
+$tploutput = $design->load("shopping");
 include_once("index.php");
 
 ?>

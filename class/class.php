@@ -6,6 +6,9 @@
 //--mailer 信件套件
 include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
 
+//-設計版面模組
+include_once(APP_PATH."class/design_class.php");
+
 //-會員套件
 include_once(APP_PATH."class/member_class.php");
 

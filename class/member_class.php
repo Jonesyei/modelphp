@@ -281,8 +281,9 @@ class member
 			$data["point"] = $point;
 			$data["create_date"] = $data["update_date"] = date("Y-m-d H:i:s");
 			$this->row_have_check($data); //-欄位資料判斷是否建立
+			$am = $this->conn->AutoExecute($this->table,$data,"INSERT");
+			$data = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
 			
-
 			//--判斷是否需要寄出認證信函
 			if ($this->check_mail!=0){
 				if ($this->send_check_mail($data)){
@@ -292,7 +293,6 @@ class member
 					return '發送驗證信時發生錯誤!!,請確認郵件資訊是否正確';
 				}
 			}else{
-				$am = $this->conn->AutoExecute($this->table,$data,"INSERT");
 				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
 				return $this->session;
 			}

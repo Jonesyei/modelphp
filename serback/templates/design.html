@@ -1,0 +1,565 @@
+({if $admin_info.view == 'list'})
+<script>
+$(document).ready(function(){
+	$('[name="keyword"]').val( decodeURIComponent(Get("keyword")) );
+	$('[name="daterange"]').val( Get("daterange") );
+
+	$('#SearchBtn').click(function(){
+		if( $('[name="daterange"]').val().split("-")[1]!=null)
+		{
+			var daterange = $.trim( $('[name="daterange"]').val().split("-")[0] ) + "-" + $.trim( $('[name="daterange"]').val().split("-")[1] );
+			
+			$('[name="daterange"]').val( daterange );
+		}
+		
+		$('#search_form').submit();
+	});
+
+});
+</script>
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        ({if $close.insert!=1})<a href="({$admin_info.page})&id=0"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+        ({if $close.edit!=1})<a onclick="Edit('({$admin_info.page})&id=')"><img src="images/icon14.png" width="32" height="32" alt=""/>編輯</a>({/if})<!-- 模組新增修改刪除列 -->
+        ({if $close.edit!=1})<a onClick="javescript:$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+        <a href="javascript:Del('({$admin_info.page})&del_id=');"><img src="images/icon13.png" width="32" height="32" alt="">刪除</a>
+         </div>
+         
+
+
+<!--SEARCH-->
+         <div class="search-tool" id="search"><!-- 搜尋模組 -->
+         <form action="" method="get" id="search_form" name="search_form">
+
+            <table height="19px">
+            <tr>
+            <td>關鍵字查詢</td>
+            <td width="200">
+            <input type="text" name="keyword" value="({$data.pageget.keyword})" />
+            </td>
+            <td>
+            建立日期<input type="text" name="daterange"  readonly size="25" >
+            <script>Datepick('[name="daterange"]',"range","yyyy.mm.dd");</script>
+            
+            
+            
+            
+            <select name="s_status" >
+                ({$admin_info.search.status})
+            </select>
+            
+              
+              ({if $data.pageget.class!=null})<input type="hidden" name="class" value="({$data.pageget.class})">({/if})
+              ({if $data.pageget.mode!=null})<input type="hidden" name="mode" value="({$data.pageget.mode})">({/if})
+              ({if $data.pageget.type!=null})<input type="hidden" name="type" value="({$data.pageget.type})">({/if})
+              <img src="images/icon-search.png" width="18" height="18" id="SearchBtn"/>
+              </td></tr></table>
+         </form>
+         </div>
+<!--SEARCH-->
+
+
+<div id="content_inside" style="clear:both;">
+<form action="" method="post" id="form" name="form">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+  	<tr>
+  		<th align="center" width="60">刪除 <input type="checkbox" id="allbox" name="allbox" 
+		onclick="CheckAll('allbox','choose_id')"/></th>
+
+  		<th>區塊名稱</th>
+        ({if $data.pageget.type=='main'})<th>前端引用程式</th>({/if})
+        ({if $data.pageget.type=='ban'})<th>主板嵌入標籤</th>({/if})
+        ({if $data.pageget.type=='css'})<th>嵌入式樣檔路徑</th>({/if})
+		({if $close.sort!=1})<th width="10%">排序</th>({/if})
+		<th>狀態</th>
+		<th width="15%">建立時間</th>
+		<th width="15%">維護時間</th>
+		
+
+  	</tr>
+	
+	({section name=idex loop=$data.list})
+	<tr class="tr_sort" title="可拖曳進行排序">
+      <td align="right" ><input type="checkbox" id="choose_id" value="({$data.list[idex].id})" name="choose_id" /></td>
+	  
+	  
+	  <td ><a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name})</a></td>
+	  
+      ({if $data.pageget.type=='main'})<td ><input type="text" value="$design->load('({$data.list[idex].id})');" readonly="readonly" onclick="$(this).select();">
+         ({if $data.list[idex].b_name!=''})或者是 <input type="text" value="$design->load('({$data.list[idex].b_name})');" readonly="readonly" onclick="$(this).select();">({/if})</td>({/if})
+      ({if $data.pageget.type=='ban'})<td ><input type="text" value="<%file=({$data.list[idex].id})%>" readonly="readonly" onclick="$(this).select();">
+         ({if $data.list[idex].b_name!=''})或者是 <input type="text" value="<%file=({$data.list[idex].b_name})%>" readonly="readonly" onclick="$(this).select();">({/if})</td>
+      ({/if})
+      ({if $data.pageget.type=='css'})<td ><input type="text" value="css.php?style=({$data.list[idex].id})" readonly="readonly" onclick="$(this).select();"> <a href="../css.php?style=({$data.list[idex].id})" target="_blank">[查看]</a></td>
+      ({/if})
+	  
+	({if $close.sort!=1})  
+	<td  align="center">
+		<input name="sort_({$data.list[idex].id})" type="text" size="2" value="({$data.list[idex].sort})" onblur="$('#form').submit();">
+		({$data.list[idex].up}) ({$data.list[idex].down})
+	</td>
+	({/if})
+	
+	  
+	  <td  align="center">({$data.list[idex].status_html})</td>
+	  
+	  <td >({$data.list[idex].create_name}) 於 ({$data.list[idex].create_date})</td>
+	  
+	  <td >({$data.list[idex].update_name}) 於 ({$data.list[idex].update_date})</td>
+	  
+	  
+
+    </tr>
+    ({/section})
+	
+  </table>
+  <br>
+({include file=$page_table_html})
+  <div class="page-tool-note">
+  ({if $data.pageget.type=='main'})
+  <font color="blue">第一個項目為首頁預設畫面</font><br>
+  ({/if})
+  排序規則：數字由小字大順序排序1.2.3.4.5 &nbsp;<br>
+  更新排序：拖曳該欄位進行排序，或者在排序輸入框中填入位置後存檔
+  </div>
+  <input name="act" type="hidden" value="all" />
+  </form>
+</div><!--div id="content_inside"-->
+
+
+
+<script>
+var sortnow = '({$data.list.0.sort})'*1;//--本頁排序起始值
+var sortcount = '({$smarty.section.idex.index})'*1;//--項目數量
+var sortmain = ".table-style01"; //-列表主體
+var sortrow = ".tr_sort:not(.ui-sortable-placeholder)"; //--可以移動的項目
+var sort_act = 0;
+  $(function() {
+    $( sortmain ).sortable( {items: sortrow} );
+    //$( sortmain ).disableSelection();
+  });
+  
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	  $(obj).on("mouseup",function (){
+		if (sort_act!=2){
+			window.setTimeout("cps()",50);
+		}
+		sort_act=0;
+	  });
+	  $(obj).on("mousedown",function (){
+		if (sort_act!=2) {sort_act=1;}
+	  });
+	  $(obj).on("mouseover",function (){ //--滑鼠移入加入顯示黑色方框式樣
+			_td_style = "border-bottom:1px solid #000000;border-top:1px solid #000000;";
+	 		$(obj).find('td').attr("style",_td_style);
+			$(obj).find('td:first').attr("style",_td_style+"border-left:1px solid #000000;");
+			$(obj).find('td:last').attr("style",_td_style+"border-right:1px solid #000000;");
+	  });
+	  $(obj).on("mouseout",function (){ //--滑鼠移出移除所有式樣
+			$(obj).find('td').removeAttr("style");
+	  });
+  });
+  function cps(){
+  $(sortmain+' '+sortrow).each(function(idx,obj){
+	$(obj).find('input[name][type="text"]').val(sortnow+idx);
+  });
+  }
+</script>
+
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+<script>
+page_initial('table-style01');
+</script>
+
+
+<!--頁數呈現table-->
+
+
+
+</div>
+({/if})
+
+
+
+({if $admin_info.view == 'detail'})
+<link rel="stylesheet" href="../includes/js/codemirror/codemirror.css">
+<link rel="stylesheet" href="../includes/js/codemirror/vibrant-ink.css">
+<script src="../includes/js/codemirror/codemirror.js"></script><!--code編輯器插件-->
+
+<script src="../includes/js/codemirror/xml-fold.js"></script>
+<script src="../includes/js/codemirror/matchtags.js"></script>
+<script src="../includes/js/codemirror/xml.js"></script>
+
+<script src="../includes/js/codemirror/matchbrackets.js"></script>
+<script src="../includes/js/codemirror/fullscreen.js"></script>
+<link rel="stylesheet" href="../includes/js/codemirror/fullscreen.css">
+
+<script language="javascript" src="../includes/js/jquery-ui.js"></script>
+<div class="col-02"><!-- 右邊內容區塊 -->
+       <div class="right-main">
+       
+<div class="content-box" id="content_bg">
+
+         <h2 class="funtion-title">({$admin_info.title})<!-- 頁面標題 -->         </h2>
+         <div class="page-tool">
+        <a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>
+
+        ({if $data.one.id!=null})
+          ({if $close.edit!=1})<a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+         ({else})
+          ({if $close.add!=1})<a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+        ({/if})
+         </div>
+         
+ <!--div id="title"-->
+
+
+
+
+<!--SEARCH-->
+<!--SEARCH-->
+
+
+
+<div id="content_inside">
+
+
+
+<form action="" method="post" id="form" name="form" enctype="multipart/form-data" onsubmit="checkform();">
+<div id="tabs">
+<ul>
+	<li><a href="#tabs-1">詳細內容</a></li>
+    <li><a href="#tabs-2">及時預覽畫面</a></li>
+</ul>
+
+<div id="tabs-1">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+
+	<tr>
+	<td width="120" align="right" > 名稱：</td>
+	  <td >
+	  <input type="text" name="name" id="name" value="({$data.one.name})"/>
+	  </td>
+	</tr>
+
+   	<tr>
+	<td width="120" align="right" > 命名別名：</td>
+	  <td >
+	  <input type="text" name="b_name" id="b_name" value="({$data.one.b_name})"/>
+	  </td>
+	</tr>
+   
+    <tr>
+	<td align="center" colspan="2">({if $data.pageget.type=='main'})Body版塊({else})子板塊內容({/if}) <input type="checkbox" value="1" id="isviewport" onclick="check_isview(true)">及時檢視</td>
+    </tr>
+	<tr><td colspan="2">
+      <textarea name="detail" id="detail" cols="40"></textarea>
+      <div viewport><iframe style="width:100%; height:100%;"></iframe></div>
+      
+      <script>
+		//-避免textarea 多載產生錯誤
+		$(document).ready(function (){
+			if ($('[name="id"]').val()!='')
+			$.ajax( {
+                url: "ajx.php?design="+$('[name="id"]').val(),
+                data: {},
+                type:"GET",
+                dataType:'json',
+				async: false,
+                success: function(msg){
+					$('[name="detail"]').val(msg["detail"]);
+					set_body_tocm();
+					change_url();
+                }
+            });
+			else
+				set_body_tocm();
+			$(window).on('resize',function (){
+				check_isview(true);
+			});
+		});
+		
+		$('[href="#tabs-2"]').bind('click',function(){
+			ajx_viewport(function (){$('#tabs-2').find('iframe')[0].src = '../index.php?sban=1';}); ///--及時瀏覽畫面
+		});
+		
+		var edit_obj;//--編輯器物件
+		set_body_tocm = function (){
+			editor = CodeMirror.fromTextArea(document.getElementById('detail'), {
+				lineNumbers: true,
+				styleActiveLine: true,
+				matchBrackets: true,
+				matchTags: {bothTags: true},
+				extraKeys: {"Ctrl-J": "toMatchingTag","F11": function(cm) {
+					if (cm.getOption("fullScreen")){
+						cm.setOption("fullScreen", false);
+						$('.header').show();
+					}else{
+						cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+						$('.header').hide();
+					}
+				},
+				"Esc": function(cm) {
+				  if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+				  $('.header').show();
+				}},//案件CTRL+J 跳轉到結尾標籤
+				
+			  });
+			editor.setOption("theme", 'vibrant-ink');
+			editor.markText( {line: 1, ch: 6}, {line: 1, ch: 15}, {className: "styled-background"} );
+			editor.on('keyup', function(cm, e) {change_url();});
+			editor.on('scroll', function(cm, e) {change_url();});
+			//--畫面拖曳
+			edit_obj = editor.display.wrapper;
+			$(editor.display.wrapper).resizable({
+				resize: function (){
+					$('div[viewport]').css('margin-left',$(this).width()).css('height',$(this).height());
+				},
+				create: function (){
+					$('div[viewport]').css('margin-left',$(this).width()).css('height',$(this).height());
+				},
+				start:function (event,ui){
+					$('div[viewport]').hide();
+				},
+				stop:function (event,ui){
+					$('div[viewport]').css('margin-left',$(this).width()).css('height',$(this).height());
+					check_isview();
+				}
+			}).css('float','left');
+			//--異動及時讀取
+			check_isview(true);
+			editor.on('blur',function (){check_isview();})
+		}
+		
+		check_isview = function(act){
+			if ($('#isviewport')[0].checked){
+				if (act!=null && act) $(editor.display.wrapper).width(editor_temp_width);
+				return ajx_viewport(function (){$('div[viewport]').show().find('iframe')[0].src = '../index.php?sban=1';});
+			}else{
+				$(editor.display.wrapper).width($(editor.display.wrapper).parentsUntil('div').last().parent().width());
+				if (act!=null && act) editor_temp_width = $(editor.display.wrapper).width();
+			}
+			$('div[viewport]').hide();
+		}
+		
+		ajx_viewport = function (func){
+			editor.save();
+			 $.ajax( {
+                url: "ajx.php?sban=1",
+                data: {name:$('[name="name"]').val(),head:$('[name="head"]').val(),css:$('[name="css"]').val(),page_type:$('[name="page_type[]"]').eq(0).val()+'|__|'+$('[name="page_type[]"]').eq(1).val(),
+				detail:$('[name="detail"]').val()
+				},
+                type:"POST",
+                dataType:'text',
+				async: false,
+                success: function(msg){
+                   func();
+                }
+            });
+		}
+	  </script>
+	   </td>
+	</tr>
+    ({if $data.pageget.type=='ban'})
+    <tr>
+	<td width="120" align="right" > 主板插入標籤：</td>
+	  <td >
+	  		<font color="blue"><%file=({$data.one.id})%></font>
+             ({if $data.one.b_name!=''})或者是<font color="blue"> <%file=({$data.one.b_name})%></font>({/if})
+	  </td>
+	</tr>
+    ({/if})
+    ({if $data.pageget.type=='main'})
+    <tr>
+	<td width="120" align="right" > 前端程式引用：</td>
+	  <td >
+	  		<font color="blue">$design->load(({$data.one.id}));</font>
+            ({if $data.one.b_name!=''})或者是<font color="blue">$design->load('({$data.one.b_name})');</font>({/if})
+	  </td>
+	</tr>
+    ({/if})
+</table>
+	</div><!-- tabs-1 -->
+    
+    <div id="tabs-2">
+    	<iframe style="width:100%; height:500px;"></iframe>
+    </div>
+</div>
+
+<br>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-style01">
+	 <tr >
+      <td align="right" width="150">狀態：</td>
+      <td >
+	({$data.one.status_html})
+	 </td>
+    </tr>
+
+
+	<tr >
+      <td align="right" >建立時間：</td>
+      <td >
+	 ({$data.one.create_name}) 於 ({$data.one.create_date}) 建立
+	 </td>
+    </tr>
+
+
+	<tr >
+      <td align="right" >最後維護時間：</td>
+      <td >
+	 ({$data.one.update_name}) 於 ({$data.one.update_date}) 維護
+	 </td>
+    </tr>
+	
+	
+	({if $data.pageget.class!=null})<input name="type" type="hidden" value="({$data.pageget.class})({$data.pageget.design})" />({/if})
+	<input name="act" type="hidden" value="submit" />
+	<input name="id" type="hidden" value="({$data.one.id})" />
+    <input name="member_id" type="hidden" value="({$admin_info.member.id})">
+	({$data.tages})
+    </table>
+  <br />
+</form>
+
+</div>
+
+
+</div><!--div id="content_inside"-->
+
+
+</div><!--div id="content_bg"-->
+</div>
+</div>
+
+<script>
+page_initial('table_content');//tr交互顯示顏色
+$('#tabs').tabs();
+
+function checkform(){
+	//--絕對路徑連結
+	if ($('[name="href[]"]').length>0){
+		$('[name="href[]"]').each(function (idx,obj){
+			if ($(obj).val()!=null && $(obj).val()!=''){
+				if ($(obj).val().split('//').length != 2){
+					$(obj).val('//'+$(obj).val());
+				}
+			}
+		});
+	}
+	if ($('[name="href"]').length>0 && $('[name="href"]').val()!=null && $('[name="href"]').val()!=''){
+		if ($('[name="href"]').val().split('//').length != 2){
+			$('[name="href"]').val('//'+$('[name="href"]').val());
+		}
+	}
+
+}
+
+$('#piclist div[class="ui-state-default"][id]').on("mouseup",function(event){
+	sort_event = event;
+	if (event.srcElement.className!='')
+	window.setTimeout("re_sort()",50);
+})
+
+
+//-指定排序 於多少後面
+function pic_sort(obj_id,moveto){
+	if (moveto*1==1){
+		if ($('#piclist div[id] div input[type="text"][id]:eq(0)')[0]==$('#picspan_'+obj_id).find('div input[type="text"][id]')[0])
+		return alert('目前已位於最上方');
+	}
+	if ($('#picspan_'+obj_id)[0]==$('#piclist div[id]:eq('+(moveto-1)+')')[0]) return alert('無法移動跟目前一樣的位置');
+	$('#picspan_'+obj_id).insertBefore($('#piclist div[id]:eq('+(moveto-1)+')'));
+	re_sort();
+}
+function re_sort(){
+	$('#piclist div[id]').each(function (idx,obj){
+		$(obj).find('div input[type="text"][id]').val(idx+1);
+	})
+}
+</script>
+
+
+
+({/if})
+
+
+<style>
+.table_content td a.j_ahref{color:red;}
+.j_ahref{
+	color:red;
+	animation:myfirst 3s;
+	-moz-animation:myfirst 3s; /* Firefox */
+	-webkit-animation:myfirst 3s; /* Safari and Chrome */
+	-o-animation:myfirst 3s; /* Opera */
+}
+@keyframes myfirst
+{
+from {color:red;}
+to {color:yellow;}
+}
+
+@-moz-keyframes myfirst /* Firefox */
+{
+from {color:red;}
+to {color:yellow;}
+}
+
+@-webkit-keyframes myfirst /* Safari and Chrome */
+{
+from {color:red;}
+to {color:yellow;}
+}
+
+@-o-keyframes myfirst /* Opera */
+{
+from {color:red;}
+to {color:yellow;}
+}
+</style>
+
+
+<script>
+function change_url(){
+	$('.CodeMirror-code pre:contains(<%file)').find('>span').each(function (idx,obj){
+	  	var _id;
+		/* 無特殊標籤處理
+		_changestr = $(obj).html();
+		id = _changestr.search('&lt;%file=')+10;
+		id = _changestr.substr(id,_changestr.search('%&gt;')-id);
+		_changestr = _changestr.replace('&lt;%file=','<a href="design.php?type=ban&id='+id+'" target="_blank">&lt;%file=');
+		_changestr = _changestr.replace('%&gt;','%&gt;</a>');
+		*/
+		//--含特殊標籤處理
+		
+		_changestr = $(obj).text();
+		id = _changestr.search('<%file=')+7;
+		id = _changestr.substr(id,_changestr.search('%>')-id);
+		_changestr = _changestr.replace('<%file=','<a href="design.php?type=ban&id='+id+'" class="j_ahref" target="_blank"><%file=');
+		_changestr = _changestr.replace('%>','%></a>');
+		$(obj).html('<span class="cm-tag">'+_changestr+'</span>');
+		
+	});
+}
+function Copy_data()
+{
+	if (confirm('您確定要另存此份資料為新的一筆記錄?')){
+		$('[name="id"]').val('');
+		$('#form').submit();	
+	}
+}
+
+
+function submitpose(){
+//	if ($('#p2').val()!=$('#p1').val()) return alert('兩次所輸入的密碼不相符!!');
+	$('#form').submit();
+}
+</script>

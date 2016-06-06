@@ -46,7 +46,7 @@ $(document).ready(function(){
 	//---匯出
     $( "#csv_div" ).dialog( {
 	  height:300,
-      //modal: true,
+      modal: true,
       buttons: {
         '取消': function() {$( this ).dialog( "close" );}
 		,'匯出': function() {
@@ -76,6 +76,7 @@ $(document).ready(function(){
 <form action="csv.php" method="post" id="csv2" style="" enctype="multipart/form-data">
 	<input type="hidden" name="title" value="({$data.csv_sql})">
     <input type="hidden" name="defrow" value="lang:({$admin_info.lang}),type:products">
+    <input type="hidden" name="keyrow" value="alies">
     <input type="hidden" name="act" value="insert">
     <input type="hidden" name="data_table" value="({$data_table})">
     <font color="blue">步驟一:</font>選擇檔案 <input type="file" name="file">

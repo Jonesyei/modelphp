@@ -91,10 +91,10 @@ include_once("centerpoes.php");
 
 
 //--匯出/入資料
-$data["output_title"] = array('編號','商品分類','商品名稱','品牌分類','特價品','商品售價','商品特價','可獲得紅利','可折抵購物金');
-$data["output_row"] = array('id','classname','name','probrand','cook','price1','price2','point','depoint');
-$data["input_title"] = array('編號','商品分類','商品名稱','品牌分類','特價品','商品售價','商品特價','可獲得紅利','可折抵購物金');
-$data["input_row"] = array('id','type','name','probrand','cook','price1','price2','point','depoint');
+$data["output_title"] = array('編號','商品別名','商品分類','商品名稱','商品售價','商品特價','可獲得紅利','可折抵購物金','規格','顏色','尺寸圖片','現貨','貨號','尺寸是否顯示狀態','尺寸金額','商品內容');
+$data["output_row"] = array('id','alies','class','name','price1','price2','point','depoint','size','color','stock_pic','stock','stock_no','stock_status','stock_price','detail');
+$data["input_title"] = array('編號','商品別名','商品分類','商品名稱','商品售價','商品特價','可獲得紅利','可折抵購物金','規格','顏色','尺寸圖片','現貨','貨號','尺寸是否顯示狀態','尺寸金額','商品內容');
+$data["input_row"] = array('id','alies','class','name','price1','price2','point','depoint','size','color','stock_pic','stock','stock_no','stock_status','stock_price','detail');
 $data["cpos"] = $cpos;
 //---------
 

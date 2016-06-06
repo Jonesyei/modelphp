@@ -49,6 +49,7 @@ define('LANG',$lang);
 
 
 
+
 $mail = new PHPMailer();                        // 建立新物件 
 $mail->IsHTML(true);                         // 設定郵件內容為HTML
 $mail->CharSet = "utf-8";                       // 設定郵件編碼   
@@ -88,4 +89,5 @@ if ($smtp_set){
 
 //各類別庫
 include_once(APP_PATH."class/class.php");
+$design = new design($conn,PREFIX."design",$lang);
 ?>

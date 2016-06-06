@@ -109,6 +109,8 @@ if ($page_name == "index"){
 			//QRCODE DEMO
 			QRcode::png('測試訊息','upload/demo.png', QR_ECLEVEL_L); 
 			echo '<img src="upload/demo.png" />'; 
+			
+			$tploutput = $design->load('index');
 		break;
 	}
 
@@ -152,7 +154,8 @@ $tpl->assign("lang",@$_SESSION["mode_lang"]);
 
 //--進行輸出註解去除處理
 ob_start();
-$tpl->display(ROOT_PATH.'templates/'.$templates_page);
+//$tpl->display(ROOT_PATH.'templates/'.$templates_page);
+$tpl->display("string:".$tploutput);
 $smarty_output = ob_get_contents(); //接收快取頁面
 ob_end_clean();
 

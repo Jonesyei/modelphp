@@ -252,5 +252,6 @@ switch ($act){
 	break;
 }
 
+$tploutput = $design->load("member_".$act);
 include_once("index.php");
 ?>

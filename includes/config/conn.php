@@ -32,7 +32,7 @@ if (!$connect_check) {
 $conn->Execute("SET NAMES utf8;");
 $conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
 $conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
-$conn->Execute("SET @centerpos = '057ec2a50d5f463ebe12f9d5cbe5c1d5';");
+$conn->Execute("SET @centerpos = '057ec2a50d5f463ebe12f9d5cbe5c1d5';"); ///核心授權代碼
 
 
 

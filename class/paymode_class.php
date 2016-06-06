@@ -47,6 +47,56 @@ class order extends order_center{
 			$this->form_submit($send_array,'includes/homyn/homyu_api.php');
 		}
 		
+		//--歐付寶
+		function allpay_pay_send($pay_bill){
+			$other_row = '';
+			//--串接金流
+			switch ($pay_bill["paycardmode"]){
+				case "2":
+				case "5":
+				case "1": //-信用卡
+					$this->order_mail_send($pay_bill);
+				break;
+				default: //-ATM、貨到付款、海外匯款
+					$this->order_mail_send($pay_bill,'index.php?class=complete&id='.$pay_bill["order_no"]);
+					exit;
+				break;
+			}
+			
+			//訂單商品取得做字串
+			$car_str = '';
+			$obj_list = $this->car_list($pay_bill["id"]);
+			if ($obj_list)
+			foreach ($obj_list as $k=>$v){
+				if ($car_str!='') $car_str .= '#';
+				$temp = explode(',', $v["size"]);
+				$car_str .= $v["name"].':'.$temp[0].' x '.$v["count"];			
+			}
+			
+			$paytype = array('1'=>'Credit','2'=>'BARCODE','3'=>'ATM','4'=>'貨到付款','5'=>'WebATM');
+			
+			$send_array['MerchantTradeNo'] = $pay_bill["order_no"]; //訂單編號
+			$send_array['TotalAmount']	   = ($pay_bill["total"]+$pay_bill["post_fee"]); //-金額
+			$send_array['ItemName']		 = $car_str; //商品名稱
+			$send_array['ChoosePayment'] = $paytype[$pay_bill['paycardmode']]; //付款方式
+			$send_array['TradeDesc'] 	 = '金流付款'; //付款描述
+			switch ($pay_bill['paycardmode']){
+				case "1":
+				break;
+				case "2":
+					$send_array['StoreExpireDate'] = 60;
+					$send_array['PaymentInfoURL'] = "http://".$_SERVER['HTTP_HOST']."/includes/allpay/barcode_return.php"; //接收通知接口
+				break;
+				case "3":
+					$send_array['ExpireDate'] 	 = 60; //最常繳費時間
+				break;
+			}
+			$send_array['ClientBackURL'] = "http://".$_SERVER['HTTP_HOST']."/"; 	//交易結束返回網址
+			$send_array['ReturnURL'] 	 = "http://".$_SERVER['HTTP_HOST']."/includes/allpay/feedback.php"; //接收通知接口
+			
+			$this->form_submit($send_array,"http://".$_SERVER['HTTP_HOST'].'/includes/allpay/allpay_api.php');
+		}
+		
 		//---------金流區域
 		//--EZSHIP
 		function ezship_pay_send($pay_bill,$callback=NULL){

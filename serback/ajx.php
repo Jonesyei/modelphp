@@ -190,6 +190,12 @@ if ($_GET["pro_class"]){
 	exit;
 }
 
+if ($_GET["design"]){
+	$temp = $conn->GetRow("select * from ".PREFIX."design where id='".quotes($_GET["design"])."'");
+	$temp["detail"] = dequotes($temp["detail"],-1);
+	echo json_encode($temp);
+	exit;
+}
 
 
 //--商品尺寸規格圖片及時存檔
