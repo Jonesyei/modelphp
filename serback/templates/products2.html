@@ -93,7 +93,7 @@ $(document).ready(function(){
 	//----匯入
     $( "#csv_div2" ).dialog( {
 	  height:300,
-      //modal: true,
+      modal: true,
       buttons: {
         '取消': function() {$( this ).dialog( "close" );}
 		,'匯入': function() {
@@ -581,9 +581,7 @@ function re_sort(){
 	<tr>
 	<td align="right" >商品內容：</td>
 	  <td >
-      <textarea name="memo" rows="10" cols="50">
-      ({$data.one.memo})
-      </textarea>
+      ({$data.one.memo_fck_easy})
 	   </td>
 	</tr>
 

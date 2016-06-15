@@ -189,6 +189,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 		case "contact":
 			$data["close"]["pic"] = '1';
 			$data["button"]["detail"]='1';
+			$data["button"]["fck"] = '1';
 			$data["order_html"] .= '<tr><td align="right">GOOGLE地圖:</td><td><textarea name="memo" rows="10" cols="50">'.dequotes($data["one"]["memo"],-1).'</textarea></td></tr>';
 		break;
 		

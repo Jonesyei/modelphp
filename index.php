@@ -107,7 +107,7 @@ if ($page_name == "index"){
 			
 			
 			//QRCODE DEMO
-			QRcode::png('測試訊息','upload/demo.png', QR_ECLEVEL_L); 
+			QRcode::png('','upload/demo.png', QR_ECLEVEL_L); 
 			echo '<img src="upload/demo.png" />'; 
 			
 			$tploutput = $design->load('index');

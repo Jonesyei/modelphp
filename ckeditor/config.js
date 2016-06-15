@@ -25,7 +25,7 @@ CKEDITOR.editorConfig = function( config ) {
 	//--編輯器檔案預設起始路徑
 	config.baseHref = window.location.href.split('serback')[0];
 	//--預設主體class
-	if (document.getElementById(this.name).attributes['bodyclass']!=null && document.getElementById(this.name).getAttribute('bodyclass')!=''){
+	if (document.getElementById(this.name)!=null && document.getElementById(this.name).attributes['bodyclass']!=null && document.getElementById(this.name).getAttribute('bodyclass')!=''){
 		config.bodyClass = document.getElementById(this.name).getAttribute('bodyclass');
 	}
 	//---式樣含蓋貼上
@@ -49,7 +49,7 @@ CKEDITOR.editorConfig = function( config ) {
 	}
 	
 	///---簡易版判斷
-	if (document.getElementById(this.name).attributes['editor']!=null && document.getElementById(this.name).getAttribute('editor')=='easy'){
+	if (document.getElementById(this.name)!=null && document.getElementById(this.name).attributes['editor']!=null && document.getElementById(this.name).getAttribute('editor')=='easy'){
 		config.toolbarGroups = [
 			{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
 			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
