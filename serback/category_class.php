@@ -11,7 +11,7 @@ if($id!="")
 	$max = $main_data["max_count"];
 	
 	//--分類樹資料
-	$tree_data_type=display_tree($mode,$conn,$table);	//-分類資料
+	$tree_data_type=display_tree($mode,$conn,$table,0,0," and lang='".LANG."'");	//-分類資料
 	if ($tree_data_type)
 		foreach ($tree_data_type as $k=>$v){
 			if ($id!=$v["id"]&&$v["depth"]*1<$max){

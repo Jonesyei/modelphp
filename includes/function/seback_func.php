@@ -1266,12 +1266,12 @@ function display_tree($root,$db,$table,$start=0,$count=0,$where_sql="",$total_da
   
    //抓取總數   
    $sql="SELECT count(*) as total_count FROM ".$table."  
-         WHERE lft BETWEEN ".$row['lft']." AND ".$row['rgt']." AND id <> ".$root." ".$where_sql." ORDER BY lft ASC,sort ASC ";
+         WHERE lft BETWEEN ".$row['lft']." AND ".$row['rgt']." AND root_id='".$root."' AND id <> ".$root." ".$where_sql." ORDER BY lft ASC,sort ASC ";
 	$all_total = $db->GetRow($sql);
 	   
    //開始走訪相關節點  
    $sql="SELECT * FROM ".$table."  
-         WHERE lft BETWEEN ".$row['lft']." AND ".$row['rgt']." AND id <> ".$root." ".$where_sql." ORDER BY lft ASC,sort ASC ".$limit_sql;
+         WHERE lft BETWEEN ".$row['lft']." AND ".$row['rgt']." AND root_id='".$root."' AND id <> ".$root." ".$where_sql." ORDER BY lft ASC,sort ASC ".$limit_sql;
 	
    $rs=$db->Execute($sql);
    //if(!$rs)Error($db);
