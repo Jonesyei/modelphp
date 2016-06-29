@@ -20,7 +20,6 @@ $dirtemp_name =  explode('include',dirname(__FILE__));
 $dirtemp_name = $dirtemp_name[0];
 define('APP_PATH',$dirtemp_name);
 $ini_webset = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
-
 if ($_FILES){
 	//-判斷是否超過限制空間大小
 	if ($ini_webset["web_set"]["upload_max_size"]*1<$ini_webset["web_set"]["now_file"]*1+$_FILES["Filedata"]["size"]*1){
@@ -45,7 +44,8 @@ if ($_FILES){
 				*/
 					move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$cpos["file_url"].$temp_file_name);
 				//}
-				$name_array[$k][] = $cpos["file_url"].$temp_file_name;
+				$name_array[] = $cpos["file_url"].$temp_file_name;
+				$_SESSION["upload_temp"][] = $temp_file_name;
 				}
 			}	
 		}else{
@@ -60,18 +60,20 @@ if ($_FILES){
 				*/	
 					move_uploaded_file($_FILES[$k]["tmp_name"],$cpos["file_url"].$temp_file_name);
 				//}
-				$name_array[$k] = $cpos["file_url"].$temp_file_name;
+				$name_array[] = $cpos["file_url"].$temp_file_name;
+				$_SESSION["upload_temp"][] = $temp_file_name;
 			}
 		}
 	}
 	
 	//--記憶暫存資料 edit by Jones 20150707
+	/*
 	foreach ($name_array["ff"] as $k=>$v){
 		$v = explode('/',$v);
 		$v = $v[count($v)-1];
 		$_SESSION["upload_temp"][] = $v;
 	}
-	
-	echo json_encode($name_array["ff"]);
+	*/
+	echo json_encode($name_array);
 }
 ?>

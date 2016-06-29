@@ -61,7 +61,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 {
 	$data["pic_size_title"] = "任意比例";
 	$data["uploadfilemax"] = 50;//圖檔上傳上限	
-	$data["one"]["pic"] = explode('|__|',$data["one"]["pic"]);
+	$data["one"]["pic"] = (is_array($data["one"]["pic"]) ? $data["one"]["pic"]:explode('|__|',$data["one"]["pic"]));
 	//計算圖片總數並判斷第一個是否為空值  空值等於 目前有的數量為0
 	$temp_pic_count = 0;
 	foreach ($data["one"]["pic"] as $k=>$v){

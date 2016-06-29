@@ -560,7 +560,6 @@ function Del(del_url)
 	del_url += "&del_id=";
 	
 	
-	
 	if(!ck) {alert("沒有資料可以刪除");return;}
 	
 	
@@ -580,8 +579,10 @@ function Del(del_url)
 		{
 			for (var i=0;i<ck.length;i++) 
 			{
-				if(ck[i].checked== true)//抓值
-				id_str += ck[i].value+",";
+				if(ck[i].checked== true){//抓值
+					id_str += ck[i].value+",";
+					ck[i].checked = false;
+				}
 			}
 			if(id_str=="") {alert("請勾選要刪除的資料");return;}
 			

@@ -129,7 +129,7 @@ if($_GET["id"] || $_GET["id"]=='0')
 	//----商品資訊單筆
 	//$data["one"]["detail_fck"] = Fck("detail",'90%','450','../fckeditor/',deQuotes(@$data["one"]["detail"],-1));
 
-	$data["one"]["pic"] = explode('|__|',$data["one"]["pic"]);
+	$data["one"]["pic"] = (is_array($data["one"]["pic"]) ? $data["one"]["pic"]:explode('|__|',$data["one"]["pic"]));
 	$data["one"]["small_pic"] = explode('|__|',$data["one"]["small_pic"]);
 	
 	//----加價購

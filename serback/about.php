@@ -18,7 +18,7 @@ $cpos["listorderby"] = "sort";
 $cpos["tablesearch"] = 'name';//搜尋關聯欄位
 $cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
 
-$cpos["file_check"] = array('pic','file');
+$cpos["file_check"] = array('pic','file','mno');
 
 $close["insert"] =0;
 $close["add"]	= 0;
@@ -62,12 +62,17 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	$data["pic_size_title"] = "任意比例";
 	$data["uploadfilemax"] = 50;//圖檔上傳上限
 	
-	$data["one"]["pic"] = explode('|__|',$data["one"]["pic"]);
+	$data["one"]["pic"] = (is_array($data["one"]["pic"]) ? $data["one"]["pic"]:explode('|__|',$data["one"]["pic"]));
 	
 	//-----語系為ch 使用的switch
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
+			
+			$data["button"]["pic"] = array('pic','mno');
+			$data["pic_size_title"] = array('任意比例','1x1');
+			$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
+			$data["button"]["other"]["mno"][] = array('other_name'=>'內容','other_obj'=>'memo','other_data'=>explode('|__|',$data["one"]["memo"]));
 		break;
 		case "test":
 				$data["one"]["name"] = "首頁EDM";
@@ -76,15 +81,16 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				//--檔案上傳
 				$data["one"]["file"] = explode('|__|',$data["one"]["file"]);			//-檔案名稱(實體檔案)
 				$data["one"]["file_name"] = explode('|__|',$data["one"]["file_name"]);	//-檔案名稱(顯示用途)
-				$data["button"]["file"] = '10';											//-設定檔案上限(一旦設定後則開啟檔案上傳功能)
-				
+				$data["button"]["file"] = '1';											//-設定檔案上限(一旦設定後則開啟檔案上傳功能)
+				$data["button"]["filename"] = '夾帶檔案';
 				//--關閉圖片功能
 				$data["close"]["pic"] ='1';
 				
+				
+				//--------------------------------------單圖組功能
 				//--圖片功能資料設定
 				$data["pic_size_title"] = "任意比例";										//比例說明
 				$data["uploadfilemax"] = 50;											//圖檔上傳上限
-				
 				//--圖片功能相關參數
 				$data["button"]["href"]='1';											//啟用圖片附加連結功能
 				$data["one"]["href"] = explode('|__|',$data["one"]["href"]);			//(必須把資料轉為陣列)
@@ -93,6 +99,16 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				//--圖片相關功能 自由命名多欄位
 				// array('other_name'=>'設立物件顯示名稱','other_obj'=>'設立物件命名欄位EX:name','other_data'=>array('陣列資料內容'));
 				$data["button"]["other"][] = array('other_name'=>$v,'other_obj'=>$k,'other_data'=>$data["one"][$k]);
+				
+				
+				//--------------------------------------多圖組功能
+				$data["button"]["pic"] = array('pic','mno');							//開放欄位類組
+				$data["pic_size_title"] = array('任意比例','1x1');						//比例說明
+				//額外自由欄位資料設定
+				// array('other_name'=>'設立物件顯示名稱','other_obj'=>'設立物件命名欄位EX:name','other_data'=>array('陣列資料內容'));
+				$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
+				$data["button"]["other"]["mno"][] = array('other_name'=>'內容','other_obj'=>'memo','other_data'=>explode('|__|',$data["one"]["memo"]));
+				
 				
 				//--預設內容欄位功能 (預設為不開)
 				$data["button"]["detail"]='1';											//設立後開啟detail欄位內容
@@ -107,6 +123,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 		
 		case "about":
 				$data["close"]["pic"] ='1';
+				
 				$data["button"]["detail"]='1';
 				$data["button"]["fck"]='1';
 		break;

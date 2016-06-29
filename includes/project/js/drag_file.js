@@ -18,7 +18,11 @@ create by Jones
             var fd = new FormData();
             xhr = new XMLHttpRequest();
             var up_progress ='#up_progress';
-            xhr.open('POST', '../includes/project/js/Jones_upload.php'+file_upload);//上傳到upload.php
+			if (typeof(file_upload)!="object"){
+	            xhr.open('POST', '../includes/project/js/Jones_upload.php'+file_upload);//上傳到upload.php
+			}else{
+				xhr.open('POST', '../includes/project/js/Jones_upload.php'+file_upload[$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist')]);//上傳到upload.php
+			}
             xhr.onload = function(){ window.setTimeout("upload_end()",2000);}
             xhr.upload.onprogress = function (evt) {
               //上傳進度
@@ -38,12 +42,21 @@ create by Jones
 				if (xhr.status==200 && xhr.readyState==4)
 				if (xhr.responseText!=""||xhr.responseText!=null){
 					return_data = JSON.parse(xhr.responseText);//--轉換JSON
-					for (ee in return_data)
-						upload_one(return_data[ee]);
+					for (ee in return_data){
+						if ($('#piclist').length>0)
+							upload_one(return_data[ee]);
+						else
+							upload_one(return_data[ee],$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist'));
+					}
 				}
 			}
-       
-	   		if ($('#piclist div img').length*1+tt.length*1> drag_count) return alert('上傳已達到限制數量!!');
+			
+       		if (typeof(file_upload)!="object"){
+		   		if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count) return alert('上傳已達到限制數量!!');
+			}else{
+				if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count[$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist')]) return alert('上傳已達到限制數量!!');
+			}
+				
             for (i in tt) {
 	                    fd.append('ff[]', tt[i]);
 	        }
