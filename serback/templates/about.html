@@ -238,10 +238,10 @@ function upload_one(response,objname,other_func){
 					filename = filename[filename.length-1];div_file = filename.split('.')[0];
 					$('div[piclist="'+objname+'"]').append('<div class="ui-state-default" picspan="picspan_'+div_file+'" id="picspan_'+div_file+'"></div>');//--增加一個選項
 					var max_idxtopic = $('div[piclist="'+objname+'"]').find('div.ui-state-default').length;
-					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" pic_sort="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'input[pic_sort="pic_sort_'+(max_idxtopic-1)+'"]\').val(),\''+objname+'\');"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+div_file+',\''+objname+'\');"></div>');
+					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" pic_sort="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'input[pic_sort=pic_sort_'+(max_idxtopic-1)+']\').val(),\''+objname+'\');"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+div_file+',\''+objname+'\');"></div>');
 					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
 				 	$('#picspan_'+div_file).append('<input type="hidden" name="'+objname+'[]" value="'+filename+'">');
-					other_func('#picspan_'+div_file);
+					eval("other_func_"+objname+"('#picspan_"+div_file+"');");
 					$('#picspan_'+div_file).append('<input type="button" onclick="picdel('+div_file+',\''+objname+'\')" value="刪除'+filename+'圖片"><br><br>');
 					$('[name="'+objname+'"]').remove();
 					//--定義最後一個賦予排序					
@@ -341,7 +341,7 @@ $(document).ready(
 $(function() {
     $( "div[piclist=\"({$data.button.pic[m]})\"]" ).sortable( {items: 'div[picspan]',stop: function( event, ui ) {re_sort('({$data.button.pic[m]})');unlock_view();},start:function (){lock_view();}} );
 });
-function other_func(other_obj){
+function other_func_({$data.button.pic[m]})(other_obj){
 	({if $data.button.other[$data.button.pic[m]]!=null})
 		({section name=other loop=$data.button.other[$data.button.pic[m]]})
 		$(other_obj).append('({$data.button.other[$data.button.pic[m]][other].other_name}):<input type="text" name="({$data.button.other[$data.button.pic[m]][other].other_obj})[]" placeholder="在此輸入({$data.button.other[$data.button.pic[m]][other].other_name}))" onclick="valcheck(this)"><br>');
@@ -366,7 +366,7 @@ function other_func(other_obj){
 ({$data.button.other[$data.button.pic[m]][lo].other_name}):<input type="text" name="({$data.button.other[$data.button.pic[m]][lo].other_obj})[]" value="({$data.button.other[$data.button.pic[m]][lo].other_data[picidx]})" style="width:300px;"><br>
 ({/section})
 ({/if})
-<input type="button" onclick="picdel(({$smarty.section.picidx.index}),'({$data.button.pic[m]})')" value="刪除({$data.one.pic[picidx]})圖片"><br><br>
+<input type="button" onclick="picdel(({$smarty.section.picidx.index}),'({$data.button.pic[m]})')" value="刪除({$data.one[$data.button.pic[m]][picidx]})圖片"><br><br>
 </div>
 ({/if})
 ({/section})
