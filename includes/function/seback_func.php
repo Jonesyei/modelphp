@@ -377,7 +377,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 				$sql = "select * from ".PREFIX."admin_group WHERE id=".$detail["group_id"];
 				$temp = $conn->GetRow($sql);
 				$_SESSION["admin_info"]["control"] = $temp["control"];
-				
+				$_SESSION["admin_info"]["lang_auth"] = $temp["lang_auth"];				
 				//--判斷有否語系參數
 				if ($tolang!=NULL){
 					$_SESSION["admin_info"]["lang"] = $tolang;
@@ -402,6 +402,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 			$temp = $conn->GetRow($sql);
 			$_SESSION["admin_info"]["control"] = $temp["control"];
 			$_SESSION["admin_info"]["auth"] = $temp["auth_".$_SESSION["admin_info"]["lang"]];
+			$_SESSION["admin_info"]["lang_auth"] = $temp["lang_auth"];
 		}
 	}
 	else

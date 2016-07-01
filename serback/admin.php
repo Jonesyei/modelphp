@@ -21,9 +21,8 @@ if($act=='all')
 	include("update_all.php");
 	
 
-$joinsql = ' left join (select id as gid,control from '.$group_table.') as bb On gid=group_id';
+$joinsql = ' left join (select id as gid,control from '.$group_table.($_SESSION["admin_info"]["lang_auth"] ? ' where lang_auth=\''.$_SESSION["admin_info"]["lang_auth"].'\'':'').') as bb On gid=group_id';
 $sql = " select * from ".$table.$joinsql." WHERE 1=1 and ";
-
 
 if($act=='submit')
 {
@@ -74,7 +73,7 @@ if($del_id)
 
 
 //---列表頁下拉資料來源
-$sql_2 = " select * from ".PREFIX."admin_group WHERE status='1' and control>=".$_SESSION["admin_info"]["control"];
+$sql_2 = " select * from ".PREFIX."admin_group WHERE status='1' and control>=".$_SESSION["admin_info"]["control"].($_SESSION["admin_info"]["lang_auth"] ? " and lang_auth='".$_SESSION["admin_info"]["lang_auth"]."'":"");
 $group = $conn->GetArray($sql_2);
 
 if ($_SESSION["admin_info"]["control"]>0){

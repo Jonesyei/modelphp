@@ -20,6 +20,11 @@ if($act=='all')
 
 $sql = " select * from ".$table." WHERE 1=1 and control>=".$_SESSION["admin_info"]["control"]." and ";
 
+$lang_data = $conn->GetArray("select * from ".PREFIX."language where status=1 order by sort");
+if ($lang_data)
+	foreach($lang_data as $k=>$v){
+		$lang_data_array[$v["id"]] = $v["name"];
+	}
 
 if($act=='submit')
 {
@@ -147,13 +152,15 @@ if($id || $id=='0')
 	}
 	$data["auth_html"] = $html;
 	
+	//-語系版本授權
+	$data["lang_auth_html"] = create_select("lang_auth",$lang_data_array,($data["lang_auth"] ? $data["lang_auth"]:$_SESSION["admin_info"]["lang_auth"]),"dd","不限制",($_SESSION["admin_info"]["lang_auth"] && $_SESSION["admin_info"]["control"]!='0' ? ' onfocus="defaultValue=this.value" onchange="this.value=defaultValue"':""));
 	
 	$_SESSION["admin_info"]["view"] = "detail";
 }
 else
 {
 	include("search_data.php");
-	$sql .= " 1=1 order by create_date desc";//改為擷取語系使用者
+	$sql .= " 1=1 ".($_SESSION["admin_info"]["lang_auth"] ? " and lang_auth='".$_SESSION["admin_info"]["lang_auth"]."'":"")." order by create_date desc";//改為擷取語系使用者
 	
 	$data = $conn->PageExecute(($sql),$per_page_qty,$page);
 

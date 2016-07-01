@@ -501,7 +501,7 @@ function upload_one(response){
 					filename = filename[filename.length-1];div_file = filename.split('.')[0];
 					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"></div>');//--增加一個選項
 					var max_idxtopic = $('#piclist>div.ui-state-default').length;
-					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" id="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'#pic_sort_'+(max_idxtopic-1)+'\').val());"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+(max_idxtopic-1)+');"></div>');
+					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" id="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'#pic_sort_'+(max_idxtopic-1)+'\').val());"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel(\''+div_file+'\');"></div>');
 					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
 				 	$('#picspan_'+div_file).append('<input type="hidden" name="pic[]" value="'+filename+'">');
 					({if $data.button.other!=null})

@@ -70,7 +70,7 @@ foreach ($set as $k=>$v){
 //將$_REQUEST的條件的空白全部刪除
 foreach($_REQUEST as $k => $v)
 {
-	if(count( $tmp = explode(" ",$v))>1)
+	if(!is_array($v) && count( $tmp = explode(" ",$v))>1)
 	{
 		foreach($tmp as $k_2 => $v_2)
 			$tmp_2 .= $v_2;	

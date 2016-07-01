@@ -68,11 +68,13 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
-			
+			/*
 			$data["button"]["pic"] = array('pic','mno');
 			$data["pic_size_title"] = array('任意比例','1x1');
+			$data["uploadfilemax"] = array('1','2');//圖檔上傳上限
 			$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
 			$data["button"]["other"]["mno"][] = array('other_name'=>'內容','other_obj'=>'memo','other_data'=>explode('|__|',$data["one"]["memo"]));
+			*/
 		break;
 		case "test":
 				$data["one"]["name"] = "首頁EDM";
@@ -104,6 +106,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				//--------------------------------------多圖組功能
 				$data["button"]["pic"] = array('pic','mno');							//開放欄位類組
 				$data["pic_size_title"] = array('任意比例','1x1');						//比例說明
+				$data["uploadfilemax"] = array('1','2');								//圖檔上傳上限
 				//額外自由欄位資料設定
 				// array('other_name'=>'設立物件顯示名稱','other_obj'=>'設立物件命名欄位EX:name','other_data'=>array('陣列資料內容'));
 				$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
@@ -122,7 +125,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 		
 		
 		case "about":
-				$data["close"]["pic"] ='1';
+				//$data["close"]["pic"] ='1';
 				
 				$data["button"]["detail"]='1';
 				$data["button"]["fck"]='1';
