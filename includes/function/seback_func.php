@@ -368,16 +368,27 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 			}
 			else
 			{
+				$sql = "select * from ".PREFIX."admin_group WHERE id=".$detail["group_id"];
+				$temp = $conn->GetRow($sql);
+				
+				//--判斷是否有限制登入語系
+				if ($tolang!=NULL && $temp["lang_auth"]){
+					$language_data = $conn->GetRow("select * from ".PREFIX."language where id='".$temp["lang_auth"]."'");
+					if ($language_data["detail"]!=$tolang){
+						alert('您的所屬的帳戶群沒有授權此版本,如有任何疑慮請聯繫管理者!!'.$language_data["detail"].$tolang,-1);
+						exit;
+					}
+				}
+				
 				$_SESSION["admin_info"]["id"] = $detail["id"];
 				$_SESSION["admin_info"]["account"] = $detail["account"];
 				$_SESSION["admin_info"]["name"] = $detail["name"];
 				$_SESSION["admin_info"]["group_id"] = $detail["group_id"];
 				$_SESSION["admin_info"]["login_date"] = date("Y/m/d H:i:s");
 				
-				$sql = "select * from ".PREFIX."admin_group WHERE id=".$detail["group_id"];
-				$temp = $conn->GetRow($sql);
 				$_SESSION["admin_info"]["control"] = $temp["control"];
 				$_SESSION["admin_info"]["lang_auth"] = $temp["lang_auth"];				
+				
 				//--判斷有否語系參數
 				if ($tolang!=NULL){
 					$_SESSION["admin_info"]["lang"] = $tolang;
