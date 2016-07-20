@@ -27,6 +27,7 @@ $close["edit"]	= 0;
 $close["copy"]	= 1;
 $close["sort"]  = 0;
 
+//$cpos["access_data"] = array('status','2','1','outputdata');///資料設定
 //$cpos["access_data_token"] = true;
 
 
