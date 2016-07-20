@@ -26,8 +26,6 @@ if ($_GET["type"]*1>1){
 }
 
 
-
-
 $close["add"]	= 0;
 $close["del"]	= 0;
 $close["edit"]	= 0;

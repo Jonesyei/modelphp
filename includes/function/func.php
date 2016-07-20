@@ -826,6 +826,7 @@ function now_url($value='page',$act=false){
 		if ($act){
 			foreach ($value as $n1=>$n2){
 				$temp2 = explode(':',$n2);
+				$temp3[$temp2[0]] = $temp2[1];
 				if (count($temp2)>1){
 					if ($temp[0]==$temp2[0]){
 						$temp_array[$temp2[0]]=$temp2[1];
@@ -843,6 +844,10 @@ function now_url($value='page',$act=false){
 		}
 	}
 	
+	if ($act && $value)
+		foreach ($temp3 as $k=>$v){
+			$temp_array[$k] = $v;
+		}
 	
 	$temp_output = '';
 	if ($temp_array)
