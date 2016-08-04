@@ -126,7 +126,7 @@ $(window).bind('load',function (){
 	});
 	$('[name="account"]').val(localStorage.getItem('serback_account'));
 	$('[name="password"]').val(localStorage.getItem('serback_password'));
-	$('[name="lang"]').val(localStorage.getItem('serback_lang'));
+	if (localStorage.getItem('serback_lang')!=null) $('[name="lang"]').val(localStorage.getItem('serback_lang'));
 	if (localStorage.getItem('serback_saveaccount')!=null){
 		$('#checkbox')[0].checked=true;
 	}

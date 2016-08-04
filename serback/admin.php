@@ -53,8 +53,8 @@ if($act=='submit')
 			exit;
 		}
 	
-		$record["create_date"] = date("Y-m-d H:i:s");
-		$record["create_name"] = $_SESSION["admin_info"]["account"];
+		$record["update_date"] = $record["create_date"] = date("Y-m-d H:i:s");
+		$record["update_name"] = $record["create_name"] = $_SESSION["admin_info"]["account"];
 		
 		$conn->AutoExecute($table,$record,"INSERT");
 		alert("新增完成",Page_get_url('id'));
