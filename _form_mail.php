@@ -118,7 +118,7 @@ if($_POST)
 	$tpl->assign("inquiry",$inquiry);
 	$tpl->assign("web_set",$web_set);
 	$tpl->assign("setup",$_SETUP);
-	$tpl->display(ROOT_PATH.'templates/MAIL_contact.html');
+	$tpl->display('string:'.$design->load('mail_contact'));
 	$cache_string = ob_get_contents(); //接收快取頁面
 	ob_end_clean(); //關閉快取
 	

@@ -81,6 +81,8 @@ class order_center
 		
 		var $not_member_car_time = 86400; //--非會員購物操作延遲秒數 預設一天
 		
+		var $order_template='';	//預設訂單樣板資料
+		
 		//*訂單信件設定*/
 		var $order_mail_title;	//信件主旨資料
 		var $order_mail_msg_top; //訂單信件上版訊息 array('paymode'=>'msg');
@@ -99,6 +101,7 @@ class order_center
 		function __construct($conn,$table,$table2,$table3,$table4='')
 		{
 			global $_SESSION;
+			global $design;
 			$this->conn = $conn;
 			$this->table = $table;
 			$this->cartable = $table2;
@@ -109,6 +112,8 @@ class order_center
 				$this->actable = $table4;	
 			}
 			
+			//--預設樣板資料
+			$this->order_template = 'string:'.$design->load('mail_shopping');
 			//--檢查資料表
 			$this->checktable();
 			
@@ -1233,7 +1238,7 @@ class order_center
 			
 			ob_start(); 	//打開快取
 			$tpl->assign("data",$data);
-			$tpl->display(ROOT_PATH.'templates/MAIL_shopp.html');
+			$tpl->display($this->order_template);
 			$cache_string = ob_get_contents(); //接收快取頁面
 			ob_end_clean(); //關閉快取
 			
