@@ -4,6 +4,10 @@ include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
 會員類別庫 (Memeber)
 create by Jones
 
+◎註冊檔案寫入說明
+-----------------------
+寫入時前端資料表請使用如<input type="file" name="pic[]">多維陣列方式寫入資料(適用於註冊，以及資料異動，異動時請一併回送原本的欄位資料)
+
 宣告使用
 new member($conn,table);
 
@@ -18,6 +22,9 @@ $obj->fotgot("XX@com.tw","email")  value , row_name
 
 欄位更新
 $obj->row_data_chagnge($data,row,act) value , row_nam , +/*- (EX:點數更新操作[數值型別])
+
+字串欄位轉換陣列刪除特定資料
+$obj->remove('pic','abc.png'); Ex例如PIC欄位中有多筆資料 ()
 
 登入狀態
 $obj->status();
@@ -57,6 +64,9 @@ class member
 		var $namespace = 'member'; //--會員命名空間
 		var $namespace_sql = '';	//--
 		var $iswork = false;
+		
+		var $upload_url = 'upload/member/';
+		
 		/**
 			建構類別庫
 			parameter:
@@ -220,9 +230,24 @@ class member
 				
 				$ipd["update_date"] = date("Y-m-d H:i:s");
 				$ipd["update_name"] = $this->getinfo("name");
+				$ipd = $this->data_array_implode($ipd,$this->file_upload());
 				$am = $this->conn->AutoExecute($this->table,$ipd,"UPDATE","id=".$this->session["id"]);
 				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow("select * from ".$this->table." WHERE id=".$this->session["id"]);
 				return $am;
+		}
+		//---移除文字陣列數據中的一項資料
+		// ex  $member->remove('pic','abc.jpg');
+		function remove($row,$data){
+			$row_data = explode('|__|',$this->session[$row]);
+			$data_key = array_search($data,$row_data);
+			if ($data_key!==false) {
+				unset($row_data[$data_key]);
+				$indata[$row] = $row_data;
+				$indata = $this->data_array_implode($indata);
+				return $this->update($indata);
+			}
+			$this->erromsg = '無相關資料!!';
+			return false;
 		}
 		function getinfo($value=NULL){ //---取得登入會員資料
 			if ($this->session){
@@ -280,6 +305,8 @@ class member
 			$data["lang"] = 'ch';
 			$data["point"] = $point;
 			$data["create_date"] = $data["update_date"] = date("Y-m-d H:i:s");
+			//*檔案上傳合併資料處理*/
+			$data = $this->data_array_implode($data,$mpic = $this->file_upload());
 			$this->row_have_check($data); //-欄位資料判斷是否建立
 			$am = $this->conn->AutoExecute($this->table,$data,"INSERT");
 			$data = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
@@ -440,6 +467,57 @@ class member
 				}
 			}
 			return $temp;
+		}
+		
+		/*陣列資料組合*/
+		function data_array_implode($data,$data2=NULL){
+			if ($data2)
+				foreach ($data2 as $k=>$v){
+					//--判斷源資料陣列是否有數據
+					if ($data[$k] && is_array($v)){
+							$data[$k] = $this->data_array_implode((is_array($data[$k]) ? $data[$k]:explode('|__|',$data[$k])),$v);
+					}elseif (is_numeric($k)){
+						if (array_search($v,$data)===false) $data[] = $v;
+					}else{
+						$data[$k] = $v;
+					}
+				}
+			
+			
+			if ($data)
+				foreach ($data as $k=>$v)
+					if (is_array($v)) $data[$k] = implode('|__|',$v);
+			return $data;
+		}
+		
+		/* 檔案上傳處理 */
+		function file_upload(){
+			global $_FILES;
+			
+			$data = array();
+			if ($_FILES)
+			foreach ($_FILES as $k=>$v){
+				if (is_array($_FILES[$k]["name"])){ //---判斷為陣列名稱相同物件上傳
+					foreach ($_FILES[$k]["name"] as $n1=>$n2){
+						if ($n2!=''||$n2!=NULL){
+						$temp_file_name = explode('.',$n2);
+						$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
+						$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+						move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$this->upload_url.$temp_file_name);
+						$data[$k][] = $temp_file_name;
+						}
+					}	
+				}else{
+					if ($_FILES[$k]["name"]!=''||$_FILES[$k]["name"]!=NULL){
+						$temp_file_name = explode('.',$_FILES[$k]["name"]);
+						$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
+						$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+						move_uploaded_file($_FILES[$k]["tmp_name"],$this->upload_url.$temp_file_name);
+						$data[$k] = $temp_file_name;
+					}
+				}
+			}
+			return $data;
 		}
 }
 

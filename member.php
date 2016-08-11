@@ -219,6 +219,12 @@ switch ($act){
 		}
 	break;
 	
+	case "remove":
+		if (!$member->remove($_GET["row"],$_GET["data"])){
+			alert($member->erromsg,-1);
+		}
+	break;
+	
 	default:
 		$member->logout();
 		if ($_POST){
