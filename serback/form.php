@@ -46,11 +46,13 @@ include_once("centerpoes.php");
 //明細
 if($_SESSION["admin_info"]["view"]=="detail")
 {
-	
+	if ($data["one"])
+		foreach ($data["one"] as $k=>$v){
+			if (!is_numeric($k)) $data["one"][$k] = (is_array($v) ? implode('<br>',$v):str_replace('|__|','<br>',$v));
+		}
 }
 else//列表頁
 {
-	
 	
 }
 

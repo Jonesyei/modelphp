@@ -59,6 +59,42 @@ if($_POST)
 					if (!in_array($a,$row_array) && isset($_POST[$a])) $conn->Execute("ALTER TABLE ".$table_set." ADD ".quotes($a)." TEXT NULL COMMENT '".quotes($b)."'");
 			}
 		}
+		
+		
+		
+		//判斷有上傳檔案 加到附加檔案中	
+		if (count($_FILES)>0){
+			$file_url = 'upload/'.$_REQUEST["type"].'/';
+			if (!is_dir($file_url)){
+				mkdir($file_url,0777,true);
+			}
+			foreach ($_FILES as $k=>$v){
+				if (is_array($_FILES[$k]['tmp_name'])){
+					foreach ($_FILES[$k]['tmp_name'] as $a=>$b){
+						if ($b!=NULL && $b!=''){
+							$temp_file_name = explode('.',$_FILES[$k]["name"][$a]);
+							$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
+							$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+							move_uploaded_file($_FILES[$k]["tmp_name"][$a],$file_url.$temp_file_name);
+							$_POST[$k][]='<a href="../'.$file_url.$temp_file_name.'" target="_blank">'.$_FILES[$k]['name'][$a].'</a>';
+							$mail->AddAttachment($file_url.$temp_file_name, $_FILES[$k]['name'][$a]);
+						}
+					}
+					$_POST[$k] = implode('|__|',$_POST[$k]);
+				}else{
+					if ($v["tmp_name"]!=NULL && $v["tmp_name"]!=''){
+						$temp_file_name = explode('.',$_FILES[$k]["name"]);
+						$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
+						$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+						move_uploaded_file($_FILES[$k]["tmp_name"],$file_url.$temp_file_name);
+						$_POST[$k]='<a href="../'.$file_url.$temp_file_name.'" target="_blank">'.$v['name'].'</a>';
+						$mail->AddAttachment($file_url.$temp_file_name, $v['name']);
+					}
+				}
+			}
+		}
+		
+		
 		//---資料寫入
 		if ($table_set){
 			$indata = $_POST;
@@ -133,7 +169,7 @@ if($_POST)
 	$mail->Body = $cache_string;
 	
 	//判斷有上傳檔案 加到附加檔案中
-	if (count($_FILES)>0){
+	if ($class_data && count($_FILES)>0){
 		foreach ($_FILES as $k=>$v){
 			$mail->AddAttachment($v['tmp_name'], $v['name']);
 		}
