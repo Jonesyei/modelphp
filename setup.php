@@ -1,4 +1,25 @@
 <?php
+//--ip 判斷
+$def_token_code = array(
+'localhost'=>'5a474f3854154daec579fb224d1fb780',
+'localhost:81'=>'057ec2a50d5f463ebe12f9d5cbe5c1d5',
+'localhost:82'=>'a9374d8345b4402e8f12485cd944c88c',
+'127.0.0.1'=>'3c185924affc1b0d0992c8bd3663abd0',
+'127.0.0.1:81'=>'f81f5ad1dcbf0eb44be92f632b16c2ac',
+'127.0.0.1:82'=>'86d9335887bfad9a13faa672dcb61d65',
+);
+$auth_token_ip = array('127.0.0.1'/*,'1.34.252.157','59.127.169.144'*/);
+if (!empty($_SERVER['HTTP_CLIENT_IP']))
+	$ip=$_SERVER['HTTP_CLIENT_IP'];
+else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+	$ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+else
+	$ip=$_SERVER['REMOTE_ADDR'];
+if (!in_array($ip,$auth_token_ip)) {
+		print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>網站建構中.... 如有任何問題請聯繫網動廣告科技工程人員處理!!";
+		exit;
+}
+	
 $myfile = fopen("includes/config/conn_setup.php", "r") or die("Unable to open file!");
 $settingstr = fread($myfile,filesize("includes/config/conn_setup.php"));
 fclose($myfile);
@@ -181,7 +202,7 @@ font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10
     </tr>
     <tr>
       <td>環境授權碼</td>
-      <td><input type="text" name="auth" placeholder="請設定授權代碼 (如不清楚請詢問Jones)" class="input-style01" style="width:250px;"></td>
+      <td><input type="text" name="auth" value="<?=$def_token_code[$_SERVER['HTTP_HOST']] ?>" placeholder="請設定授權代碼 (如不清楚請詢問Jones)" class="input-style01" style="width:250px;"></td>
     </tr>
     <tr>
       <td>安裝檔選擇</td>
