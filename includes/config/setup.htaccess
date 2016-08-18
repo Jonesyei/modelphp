@@ -1,6 +1,13 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
-    RewriteBase /%setup%
+    RewriteBase /%setup%/
+	ErrorDocument 400 /%setup%/erro401
+	ErrorDocument 401 /%setup%/erro402
+	ErrorDocument 403 /%setup%/erro403
+	ErrorDocument 404 /%setup%/erro404
+	ErrorDocument 500 /%setup%/erro500
+	ErrorDocument 502 /%setup%/erro502
+	RewriteRule ^erro(400|401|403|404|500|502)$ index.php?class=ErrorDocument&code=$1 [L]
 	
 	RewriteRule ^(.*).jsx(.*)$ $1.php$2 [L]
 </IfModule>

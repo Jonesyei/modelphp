@@ -95,6 +95,20 @@ if ($page_name == "index"){
 			exit;
 		break;
 		
+		//--錯誤訊息返回
+		case "ErrorDocument":
+			$erro_array = array(400=>'用戶端請求訊息不正確',401=>'請求的訊息未被授權',403=>'禁止使用此資源',404=>'找不到資源',500=>'Server 內部發生錯誤',502=>'路由不正確，或目前主機負荷量過重');
+			switch ($_GET["code"]){
+				case "400":
+				case "401":
+				case "403":
+				case "404":
+				case "500":
+					alert('主機錯誤訊息 '.$_GET["code"]."\\n ".$erro_array[$_GET["code"]],'index.php');
+				break;
+			}
+		break;
+		
 		//---index 無class參數 首頁預設
 		default:
 			//--首頁最新消息
@@ -107,9 +121,8 @@ if ($page_name == "index"){
 			
 			
 			//QRCODE DEMO
-			//QRcode::png('','upload/demo.png', QR_ECLEVEL_L); 
+			QRcode::png('14111','upload/demo.png', QR_ECLEVEL_L); 
 			//echo '<img src="upload/demo.png" />'; 
-			
 			$tploutput = $design->load('index');
 		break;
 	}

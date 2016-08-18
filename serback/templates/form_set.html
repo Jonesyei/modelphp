@@ -192,7 +192,7 @@ page_initial('table-style01');
           <div items>
           		({section name=m loop=$data.one.detail})
 				<div style="border:dashed 2px gray;">
-                	資料欄位命名:<input type="text" name="detail[]" value="({$data.one.detail[m]})"><br>
+                	資料欄位命名:<input type="text" name="detail[]" value="({$data.one.detail[m]})" onblur="check_keyword_data(this)"><br>
                     顯示名稱:<input type="text" name="memo[]" value="({$data.one.memo[m]})"><br>
                     為列表項目:<select name="b_value[]"><option value="0">否</option><option value="1" ({if $data.one.b_value[m]=='1'}) selected="selected"({/if})>是</option></select>
                 </div>
@@ -258,6 +258,32 @@ page_initial('table-style01');
 </div><!--div id="content_bg"-->
 </div>
 </div>
+
+<script>
+	check_keyword_data = function (element){
+		var check_obj = '[name="detail[]"]';
+		var break_status = '';
+		$($(check_obj).get().reverse()).each(function(idx,obj){
+			if (break_status!='') {return alert(break_status);}
+			$(obj).val($(obj).val().replace(/\W/g,''));
+			if ($(obj).val()!="")
+				$(check_obj).each(function (idx2,obj2){
+					if ($(obj).val()==$(obj2).val() && $(obj)[0]!=$(obj2)[0])
+						if (typeof(element)!="undefined" && $(obj)[0]==$(element)[0]){
+							break_status='已有重複命名欄位!! 請重新輸入置換';
+							return $(obj).select();;
+						}else{
+							var temp_str = $(obj).val().split('_');
+							if (jQuery.isNumeric(temp_str[temp_str.length-1]))
+								temp_str[temp_str.length-1] = temp_str[temp_str.length-1]*1+1;
+							else
+								temp_str[temp_str.length] = 2;
+							$(obj).val(temp_str.join('_'));
+						}
+				});
+		});
+	}
+</script>
 
 <script>
 page_initial('table_content');//tr交互顯示顏色
