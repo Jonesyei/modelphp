@@ -5,7 +5,19 @@ include_once(APP_PATH."includes/project/pclzip.lib.php");
 $include = true;//不讓 index.php display的參數
 
 
-
+//--拖曳動態上傳處理
+if ($_GET["ajax"]){
+	foreach ($_FILES as $k=>$v){
+		if (is_array($_FILES[$k]["name"])){ //---判斷為陣列名稱相同物件上傳
+			foreach ($_FILES[$k]["name"] as $n1=>$n2){
+				if ($n2!=''||$n2!=NULL)	move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$_GET["dir"].$n2);
+			}	
+		}else{
+			if ($_FILES[$k]["name"]!=''||$_FILES[$k]["name"]!=NULL)	move_uploaded_file($_FILES[$k]["tmp_name"],$_GET["dir"].$_FILES[$k]["name"]);
+		}
+	}
+	exit;
+}
 
 
 
@@ -18,7 +30,7 @@ $include = true;//不讓 index.php display的參數
  
 	$disk_array = array('0'=>'Bytes','1'=>'KBytes','2'=>'MBytes','3'=>'GBytes','4'=>'TBytes');
 	$data["check_file"] = $check_array = array('ckeditor','ckfinder','class','font','includes','serback','templates','templates_c','upload','_notes','.htaccess','ajax.php','count.txt','css.php','data_load.php','head.php',
-	'index.php','mathcode.php','member.php','resize.php','setup.php','shopping.php','verifycode.php','_form_mail.php','back.zip','phpinfo.php','fileauth.php'
+	'index.php','mathcode.php','member.php','resize.php','setup.php','shopping.php','verifycode.php','_form_mail.php','back.zip','phpinfo.php','fileauth.php','barcode.php'
 	);
 	
 	//--建立目錄
@@ -52,6 +64,7 @@ $include = true;//不讓 index.php display的參數
  
 
 	$data["dir"] = $DirectoryPath;
+
 
 
 

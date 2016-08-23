@@ -90,4 +90,5 @@ if ($smtp_set){
 //各類別庫
 include_once(APP_PATH."class/class.php");
 $design = new design($conn,PREFIX."design",$lang);
+$analytics = new analytics($conn,PREFIX."analytics",$lang);
 ?>

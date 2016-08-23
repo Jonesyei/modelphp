@@ -142,8 +142,57 @@ function dirlink(obj){
 	window.location.href = '?dir='+nurl;
 }
 </script>
+<script>
+	var xhr; //--XML請求
+	var return_data; //--返回資料
+	var tt; //--物件
+        function dragoverHandler(evt) {
+			evt.stopPropagation();
+            evt.preventDefault();
+        }
+        function dropHandler(evt) {//evt 為 DragEvent 物件
+			evt.stopPropagation();
+            evt.preventDefault();
+			tt = evt.dataTransfer.files;
+            var fd = new FormData();
+            xhr = new XMLHttpRequest();
+            var up_progress ='#up_progress';
+            xhr.open('POST', 'dir_manage.php?ajax=1&dir=({section name=m loop=$data.dir_exp})({$data.dir_exp[m]})/({/section})');//上傳到upload.php
+            xhr.onload = function(){ window.setTimeout("upload_end()",2000);}
+            xhr.upload.onprogress = function (evt) {
+              //上傳進度
+			  kkp = evt;
+              if (evt.lengthComputable) {
+                var complete = (evt.loaded / evt.total * 100 | 0);
+                if(100==complete){
+                    complete=99.9;
+                }
+				$(up_progress).find('div').css('height','20px');
+				$(up_progress).css('display','block');
+				$(up_progress).progressbar( {value: complete} );
+              }
+            }
+			xhr.onreadystatechange = function(response) {
+				ress = response;
+				if (xhr.status==200 && xhr.readyState==4)
+				if (xhr.responseText!=""||xhr.responseText!=null){
+					alert('上傳檔案完成!!');
+					window.location.reload();
+				}
+			}
+			
+			for (i in tt) {
+			   fd.append('ff[]', tt[i]);
+			}
+           xhr.send(fd);//開始上傳
+        }
+		function upload_end() {
+			$(up_progress).css('display','none');$(up_progress).removeAttr('class'); 
+		}
+</script>
 </div>
-<form action="" method="post" id="form" name="form">
+<div id="up_progress" ></div> 
+<form action="" method="post" id="form" name="form"  dragenter="dropHandler(event)" draggable="dropHandler(event)" ondragover="$(this).css('border','dashed 2px red');dragoverHandler(event);" ondrop="dropHandler(event)" onMouseOut="$(this).css('border','dashed 2px gray');" style="text-align: center;margin: auto; border: dashed 2px gray;" onclick="if ($(event.target)[0]==$(this)[0]) aes('ff({$data.button.pic[m]})','({$data.button.pic[m]})');">
   <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
   	<tr bgcolor="#EEEEEE">
   		<th align="right" width="2%"><input type="checkbox" id="allbox" name="allbox" 

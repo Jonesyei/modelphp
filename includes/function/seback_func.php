@@ -1393,4 +1393,28 @@ function date_between($date1,$date2=NULL)
 	return $tps;
 }
 
+//--連棟刪除目錄所有項目
+
+function deleteDir($dirPath) {
+
+	if (!is_dir($dirPath)) {
+		return unlink($dirPath);
+	}else{
+		if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+			$dirPath .= '/';
+		}
+	}
+	if (!is_dir($dirPath)) {
+		return unlink($dirPath);
+	}
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            deleteDir($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($dirPath);
+}
 ?>
