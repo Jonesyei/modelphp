@@ -24,6 +24,17 @@ if($act=='all')
 $joinsql = ' left join (select id as gid,control from '.$group_table.($_SESSION["admin_info"]["lang_auth"] ? ' where lang_auth=\''.$_SESSION["admin_info"]["lang_auth"].'\'':'').') as bb On gid=group_id';
 $sql = " select * from ".$table.$joinsql." WHERE 1=1 and ";
 
+
+if (isset($_POST["email"]) && $_POST["email"]!=''){
+	if ($id!=0){
+		$check_email_sql = 'select * from '.$table." where email='".$_POST["email"]."' and id !='".$id."'";
+	}else{
+		$check_email_sql = 'select * from '.$table." where email='".$_POST["email"]."'";
+	}
+	if ($conn->GetRow($check_email_sql)){alert('信箱已被重複使用!! 請使用另外一個信箱',-1);exit;}
+}
+
+
 if($act=='submit')
 {
 	if($record["password"]!=NULL)
