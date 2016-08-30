@@ -86,9 +86,9 @@ page_initial('table_content');
     <a onclick="javascript:window.history.back(-1);"><img src="images/icon14.png" width="32" height="32" alt="返回"/>返回</a>
 
     ({if $data.id})
-      ({if $close.edit!=1})<a  onClick="$('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
+      ({if $close.edit!=1})<a  onClick="if (check_form()) $('#form').submit();"><img src="images/icon05.png" width="32" height="32" alt="儲存"/>儲存</a>({/if})
      ({else})
-      ({if $close.add!=1})<a onClick="$('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
+      ({if $close.add!=1})<a onClick="if (check_form()) $('#form').submit();"><img src="images/icon06.png" width="32" height="32" alt="新增"/>新增</a>({/if})
     ({/if})
      </div>
   <!--div id="title"-->
@@ -97,7 +97,13 @@ page_initial('table_content');
 <!--SEARCH-->
 <!--SEARCH-->
 
-
+<script>
+function check_form(){
+	if ($('[name="password"]').val().length<6) {alert('密碼長度需大於六位數');return false;}
+	if ($('[name="password"]').val()!='' && ($('[name="password_2"]').val()!=$('[name="password"]').val())) {alert('兩次密碼需相同'); return false;}
+	return true;
+}
+</script>
 
 <div id="content_inside">
 <form action="" method="post" id="form" name="form">
