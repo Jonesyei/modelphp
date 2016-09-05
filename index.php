@@ -152,6 +152,9 @@ if($member->status()){//--判斷為登入的話
 			$temp = $conn->GetArray("select * from ".PREFIX."setting where type='button'".$lang);
 			$data["button"] = $temp;
 //---------------
+//---訪問分析紀錄--
+//$analytics->save(str_replace('/','',$_SERVER['PHP_SELF']));
+//---------------
 
 
 $data["pageget"] = $_GET;
@@ -179,10 +182,13 @@ $_SESSION["fileauth_time_array"]['jones_demo']=array();
 
 
 //--seo處理
+if(extension_loaded('zlib'))
+ob_start('ob_gzhandler');
 header('Last-Modified: '.gmdate('D, d M Y').' 00:00:00'.' GMT', true, 200); //--最後頁面編輯時間
 header('Date: '.gmdate('D, d M Y H:i:s').' GMT', true, 200);
 header('Expires: '.gmdate('D, d M Y H:i:s',mktime(0,0,0,1,1,1998)).' GMT', true, 200); //--快取時間
 echo html2txt($smarty_output);
+ob_end_flush();
 $conn->close();
 
 

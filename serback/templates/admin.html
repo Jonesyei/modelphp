@@ -39,7 +39,7 @@
 	
 	({section name=idex loop=$data})
    <tr >
-      <td align="right" ><input type="checkbox" id="choose_id" value="({$data[idex].id})" name="choose_id" /></td>
+      <td align="right" >({if $admin_info.id!=$data[idex].id})<input type="checkbox" id="choose_id" value="({$data[idex].id})" name="choose_id"/>({/if})</td>
       <td ><a href="({$admin_info.page})&id=({$data[idex].id})">({$data[idex].account})</a></td>
 	  <td>({$data[idex].group_html})</td>
 	  <td>({$data[idex].name})</td>
