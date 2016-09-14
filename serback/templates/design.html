@@ -191,6 +191,8 @@ page_initial('table-style01');
 
 
 ({if $admin_info.view == 'detail'})
+<link rel="stylesheet" href="../includes/js/codemirror/addon/hint/show-hint.css">
+<link rel="stylesheet" href="../includes/js/codemirror/addon/fold/foldgutter.css">
 <link rel="stylesheet" href="../includes/js/codemirror/codemirror.css">
 <link rel="stylesheet" href="../includes/js/codemirror/vibrant-ink.css">
 <script src="../includes/js/codemirror/codemirror.js"></script><!--code編輯器插件-->
@@ -202,6 +204,23 @@ page_initial('table-style01');
 <script src="../includes/js/codemirror/matchbrackets.js"></script>
 <script src="../includes/js/codemirror/fullscreen.js"></script>
 <link rel="stylesheet" href="../includes/js/codemirror/fullscreen.css">
+
+<script src="../includes/js/codemirror/mode/javascript/javascript.js"></script>
+<script src="../includes/js/codemirror/mode/css/css.js"></script>
+<script src="../includes/js/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+<script src="../includes/js/codemirror/keymap/sublime.js"></script>
+<script src="../includes/js/codemirror/addon/hint/show-hint.js"></script>
+<script src="../includes/js/codemirror/addon/hint/css-hint.js"></script>
+<script src="../includes/js/codemirror/addon/hint/javascript-hint.js"></script>
+<script src="../includes/js/codemirror/addon/hint/xml-hint.js"></script>
+<script src="../includes/js/codemirror/addon/hint/html-hint.js"></script>
+
+<script src="../includes/js/codemirror/addon/fold/foldcode.js"></script>
+<script src="../includes/js/codemirror/addon/fold/foldgutter.js"></script>
+<script src="../includes/js/codemirror/addon/fold/brace-fold.js"></script>
+<script src="../includes/js/codemirror/addon/fold/xml-fold.js"></script>
+<script src="../includes/js/codemirror/addon/fold/comment-fold.js"></script>
 
 <script language="javascript" src="../includes/js/jquery-ui.js"></script>
 <div class="col-02"><!-- 右邊內容區塊 -->
@@ -295,8 +314,17 @@ page_initial('table-style01');
 		var edit_obj;//--編輯器物件
 		set_body_tocm = function (){
 			editor = CodeMirror.fromTextArea(document.getElementById('detail'), {
+				mode: "htmlmixed",
+				tabMode: "indent",
 				lineNumbers: true,
+				lineWrapping: true,
+				autoCloseTags: true,
+				foldGutter: true,
+				dragDrop: true,
+				lint: true,
 				styleActiveLine: true,
+				foldGutter: true,
+				gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
 				matchBrackets: true,
 				matchTags: {bothTags: true},
 				extraKeys: {"Ctrl-J": "toMatchingTag","F11": function(cm) {
@@ -311,12 +339,23 @@ page_initial('table-style01');
 				"Esc": function(cm) {
 				  if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
 				  $('.header').show();
-				}},//案件CTRL+J 跳轉到結尾標籤
+				},
+				"Ctrl-S": function(cm){
+					$('form').submit();
+				},
+				"F2": function(cm){ cm.foldCode(cm.getCursor()); return false; }
+				},//案件CTRL+J 跳轉到結尾標籤
 				
 			  });
 			editor.setOption("theme", 'vibrant-ink');
 			editor.markText( {line: 1, ch: 6}, {line: 1, ch: 15}, {className: "styled-background"} );
-			editor.on('keyup', function(cm, e) {change_url();});
+			editor.on('keyup', function(cm, e) {change_url();
+				var arrows = [37, 38, 39, 40, 13, 27, 36, 16, 188, 8, 190, 113]
+				if (arrows.indexOf(e.keyCode) < 0) {
+					//alert(e.keyCode);
+					editor.execCommand("autocomplete")
+				  }
+			});
 			editor.on('scroll', function(cm, e) {change_url();});
 			//--畫面拖曳
 			edit_obj = editor.display.wrapper;
