@@ -22,10 +22,16 @@ include_once(APP_PATH."includes/project/function.php");
 include_once(APP_PATH."includes/phpqrcode/qrlib.php");
 
 //--ini設定檔案讀取
-$ini_webset = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
-if (count($ini_webset)>0) {
-	$ini_webset["web_set"]["now_file"] = CalcDirectorySize('../upload/'); //-bytes  取得客戶已上傳的所有檔案資料大小
-	if ($ini_webset["iniloadcheck"]!=NULL && trim($ini_webset["upload_max_size"])!=='') write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現值
+//--ini設定檔案讀取
+if (!$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
+	$ini_webset = $_SESSION["web_ini_data"] = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
+	$_SESSION["web_ini_time"] = strtotime(date("Y-m-d H:i:s"));
+	if (count($ini_webset)>0 && $ini_webset["upload_check_status"]=='1') {
+		$ini_webset["web_set"]["now_file"] = CalcDirectorySize('../upload/'); //-bytes  取得客戶已上傳的所有檔案資料大小
+		if ($ini_webset["iniloadcheck"]!=NULL && trim($ini_webset["upload_max_size"])!=='') write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現值
+	}
+}else{
+	$ini_webset = $_SESSION["web_ini_data"];
 }
 
 
@@ -43,8 +49,9 @@ $_SESSION["admin_info"]["tmp"] = "";
 
 
 $no_check_array = array('login','ajax','ajx');
+
 //func.php 檢查是否登入
-if(Check_Admin($conn,$_POST["account"],$_POST["password"],strtoupper($_POST["code"]),$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
+if(Check_Admin($conn,$_POST["account"],$_POST["password"],($_POST["g-recaptcha-response"] ? $_POST["g-recaptcha-response"]:strtoupper($_POST["code"])),$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
 {
 	if ($_SESSION["re_url"]==NULL) $_SESSION["re_url"] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	LinkTo("login.php");
