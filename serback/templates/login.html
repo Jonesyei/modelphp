@@ -46,7 +46,7 @@
      <ul>
      <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
      <li><img src="images/login-key.png" width="15" height="15" /> <input name="password" id="password" type="password" class="login-id" placeholder="後台管理密碼" style="width:180px" /></li>
-     ({if $data.recaptcha})
+     ({if $data.recaptcha[0]})
 	     <div class="g-recaptcha" data-sitekey="({$data.recaptcha[0]})"></div>
      ({else})
      <li><img src="images/login-code.png" width="15" height="15" /> 
