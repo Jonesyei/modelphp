@@ -64,7 +64,7 @@ imagefill($im,0,0,$bgColor);
 //參數
 
 //--edit by Jones 多字形選擇
-$jfont_array = array ('mywanderingheart.ttf','Comic Sandchez.ttf','ShellMuseum.ttf','BeTrueToYourSchool-Regular.ttf');
+$jfont_array = array ('mywanderingheart.ttf','Comic Sandchez.ttf','ShellMuseum.ttf');
 
 $multi_text_color = "#969696"; //#0a68dd,#f65c47,#8d32fd,#EE3B3B,#E066FF,#B452CD,#FF9900,
 $use_transparent_text = true;

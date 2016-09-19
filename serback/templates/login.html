@@ -4,6 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>({$set.0.detail})::後台管理系統</title>
 
+({if $data.recaptcha})<script src="https://www.google.com/recaptcha/api.js"></script>({/if})
+
 <script type="text/javascript" src="../includes/js/jquery.js"></script>
 <script type="text/javascript" src="../includes/js/jquery-ui.js"></script>
 
@@ -44,8 +46,12 @@
      <ul>
      <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
      <li><img src="images/login-key.png" width="15" height="15" /> <input name="password" id="password" type="password" class="login-id" placeholder="後台管理密碼" style="width:180px" /></li>
+     ({if $data.recaptcha})
+	     <div class="g-recaptcha" data-sitekey="({$data.recaptcha[0]})"></div>
+     ({else})
      <li><img src="images/login-code.png" width="15" height="15" /> 
      <img src="verifycode.php" onclick="$(this).attr('src',$(this).attr('src'));"> <input name="code" type="text" class="login-id" placeholder="CODE" style="width:60px;" /></li>
+     ({/if})
      <li class="fotget" style="padding-left:20px;">
          <input type="checkbox" name="checkbox" id="checkbox" />
      記住登入訊息

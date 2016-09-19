@@ -883,6 +883,8 @@ function curl($long_url,$type='GET',$data=NULL) {
 				CURLOPT_URL => $long_url,
 				CURLOPT_POST => TRUE, //使用post提交
 				CURLOPT_RETURNTRANSFER => TRUE, //接收服?端范?的html代?而不是直接??器?出
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_TIMEOUT => 4,
 				CURLOPT_POSTFIELDS => http_build_query($data), //post的?据
 			);

@@ -355,10 +355,23 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 		if($_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
 		{
 			
-			if ($_POST)
-			if (md5($checkcode)!=$_SESSION["serback__validate_code"]){
-				alert("驗證碼錯誤!!",-1);
-				exit;		
+			if ($_POST){
+				$recaptcha_setting = $conn->GetRow("select * from ".PREFIX."setting where type='recaptcha'");
+				if ($recaptcha_setting && strlen($checkcode)>10){
+					//--recaptcha 驗證
+					$recaptcha_setting['detail'] = explode(',',$recaptcha_setting['detail']);
+					$recaptcha_data = curl('https://www.google.com/recaptcha/api/siteverify','POST',array('secret'=>$recaptcha_setting['detail'][1],'response'=>$checkcode));
+					if ($recaptcha_data['code']!='200') alert('驗證套件連線錯誤!! 請聯繫網站管理員',-1);
+					$recaptcha_data['data'] = json_decode($recaptcha_data['data'],true);
+					if (!$recaptcha_data['data']['success']){
+						alert('驗證錯誤!!',-1);
+					}
+				}else{
+					if (md5($checkcode)!=$_SESSION["serback__validate_code"]){
+						alert("驗證碼錯誤!!",-1);
+						exit;		
+					}
+				}
 			}
 			
 			if($detail["password"] != md5($password))

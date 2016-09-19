@@ -111,7 +111,7 @@ $array = array('97'=>'live','98'=>'project_live','99'=>'re_new','100'=>'b_ds');
 $_SETUP["json"] .= " var SETUP = ".json_encode($_SETUP).";";//json
 
 //--後台設定頁面
-$_SETUP["setting_type"] = array('backup','website_status','website_url','delay_time','demo_show','web_css');
+$_SETUP["setting_type"] = array('backup','website_status','website_url','delay_time','demo_show','web_css','recaptcha');
 
 
 ?>
