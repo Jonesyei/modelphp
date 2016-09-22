@@ -278,7 +278,8 @@ page_initial('table-style01');
 	</tr>
    
     <tr>
-	<td align="center" colspan="2">({if $data.pageget.type=='main'})Body版塊({else})子板塊內容({/if}) <input type="checkbox" value="1" id="isviewport" onclick="check_isview(true)">及時檢視</td>
+	<td align="center" colspan="2">({if $data.pageget.type=='main'})Body版塊({else})子板塊內容({/if}) <input type="checkbox" value="1" id="isviewport" onclick="check_isview(true)">及時檢視
+    <br><input type="button" value="[全畫面檢視(F11)]" onclick="editor.setOption('fullScreen', true);$('.header').hide();" /></td>
     </tr>
 	<tr><td colspan="2">
       <textarea name="detail" id="detail" cols="40"></textarea>

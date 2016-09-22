@@ -21,7 +21,7 @@ include_once(APP_PATH."includes/project/function.php");
 //---qrcode
 include_once(APP_PATH."includes/phpqrcode/qrlib.php");
 
-//--ini設定檔案讀取
+
 //--ini設定檔案讀取
 if (!$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
 	$ini_webset = $_SESSION["web_ini_data"] = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
