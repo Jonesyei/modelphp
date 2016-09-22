@@ -1,6 +1,8 @@
-# modelphp
-網動廣告科技 程式框架模組
+ modelphp
+==========
+![N](http://www.104portal.com.tw/images/logo.png) 
 
+程式框架模組
 @2015 crate by Jones
 
 #Step 1
