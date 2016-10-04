@@ -236,4 +236,30 @@ if ($_GET["page_select"]){
 	echo '<select name="page_type[]" onchange="p_memo()">'.Make_list($temp5,'').'</select><span id="page_type_item"></span>';
 	exit;
 }
+
+//--表單回應信件
+if ($_GET["revice_mail_to_form"]){
+	$sql = " select * from ".PREFIX."setting WHERE lang = '".$_SESSION["admin_info"]["lang"]."' order by id";
+	$tmp = $conn->GetArray($sql);
+	
+	$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
+	$web_set["keyword"] = deQuotes($tmp["1"]["detail"],-1);
+	$web_set["receive_email"] = $tmp["2"]["detail"];
+	$web_set["default_email_title"] = $tmp["3"]["detail"];
+	$web_set["send_email"] = $tmp["4"]["detail"];
+	
+	$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
+	$mailto = explode_array(array(',',';'),$web_set["receive_email"]);
+	foreach ($mailto as $k=>$v){
+		$mail->AddAddress($v);	
+	}
+	$mail->AddAddress($_POST["mailto"]);
+	$mail->FromName = $web_set["title"];                 // 設定寄件者姓名              
+	$mail->Subject = $_POST["subject"];    // 設定郵件標題        
+	$mail->Body = $_POST["msg"];
+	
+	if($mail->Send()){
+		echo 'ok';
+	}
+}
 ?>

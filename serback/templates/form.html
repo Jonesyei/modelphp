@@ -173,7 +173,8 @@ page_initial('table-style01');
 <div id="tabs">
 <ul>
 	<li><a href="#tabs-1">詳細內容</a></li>
-    <!--<li><a href="#tabs-2">按鈕設定</a></li>-->
+    <li><a href="#tabs-2">項目處理狀況</a></li>
+    <li><a href="#tabs-3">回應問題</a></li>
 </ul>
 
 <div id="tabs-1">
@@ -189,7 +190,64 @@ page_initial('table-style01');
 	</tr>
     ({/foreach})
   </table>
-	</div><!-- tabs-1 -->
+</div><!-- tabs-1 -->
+
+<div id="tabs-2">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  <tr>
+	<td align="right" >事項處理備註：</td>
+		  <td width="80%">
+				<textarea name="admin_memo" rows="50" style="width:100%;">({$data.one.admin_memo})</textarea>
+		   </td>
+	</tr>
+  </table>
+	</div><!-- tabs-2 -->
+
+<div id="tabs-3">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content">
+  <tr>
+	<td align="right" >信件主旨：</td>
+      <td width="80%">
+      <input type="text" id="subject" value="">
+       </td>
+	</tr>
+  <tr>
+	<td align="right" >收件人：</td>
+      <td width="80%">
+      <input type="text" id="mailto" value="({$data.one._default_email})">
+       </td>
+	</tr>
+   <tr>
+	<td align="right" >回應內容：</td>
+      <td width="80%">
+      <textarea id="msg" rows="10" cols="50"></textarea>
+       </td>
+	</tr>
+    <tr>
+	<td align="center" colspan="2"><input type="button" value="送出回應信件" onclick="send_recive();"></td>
+	</tr>
+  </table>
+  <script>
+  	function send_recive(){
+            $.ajax( {
+                url: "ajx.php?revice_mail_to_form=1",
+                data: {subject:$('#subject').val(),mailto:$('#mailto').val(),msg:$('#msg').val()},
+                type:"POST",
+                dataType:'text',
+				async: false,
+                success: function(msg){
+                    if (msg=='ok') {
+						var aa = new Date();
+						$('[name=admin_memo]').val('發送紀錄:['+aa.toLocaleDateString()+" "+aa.toLocaleTimeString()+']\r\n'+$('#msg').val()+'\r\n\r\n'+$('[name=admin_memo]').val());
+						alert('已送出回應信件\r\n 系統已自動輸入於項目處理紀錄中\r\n 如要留下紀錄請按存檔');
+						$('a[href="#tabs-2"]').click();
+					}
+                }
+            });
+	}
+  </script>
+</div><!-- tabs-3 -->
+
 </div>
 
 <br>
