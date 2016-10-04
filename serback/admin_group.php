@@ -39,6 +39,10 @@ if($act=='submit')
 		exit;
 	}
 
+	//--修改自己的移除權力值設定
+	if ($_SESSION["admin_info"]["group_id"]==$id) unset($record["control"]);
+
+
 	//--取得所有欄位資料表 自動生成沒有的AUTH
 	foreach ($conn->GetArray("desc ".$table) as $k=>$v) {$row_colum_key[] = $v[0];$row_colum_type[] = $v[1];}//--擷取資料表所有欄位
 	if (!in_array('auth_'.$lang,$row_colum_key)){
