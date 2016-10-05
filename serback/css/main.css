@@ -86,7 +86,7 @@ a { text-decoration:none;}
 .index-warper { height:100%; width:100%; min-height: 500px; min-width:400px; position:relative;}
 .login-title { font-size:28px; font-family:"Times New Roman"; color:#edebd8; letter-spacing:20px; width:400px; height:70px; position:absolute; top:50%; left:50%; margin-top:-150px; margin-left:-200px; text-align:center;text-shadow: 1px 1px 1px #1E1905; }
 
-.login-power-by { font-size:12px; font-family:"Times New Roman"; color:#edebd8; letter-spacing:5px; width:400px; position:absolute; top:50%; left:50%; margin-top:150px; margin-left:-200px; text-align:center; text-shadow: 1px 1px 1px #1E1905; z-index:1000;}
+.login-power-by { font-size:12px; font-family:"Times New Roman"; color:#edebd8; letter-spacing:5px; width:400px; position:absolute; top:55%; left:50%; margin-top:150px; margin-left:-200px; text-align:center; text-shadow: 1px 1px 1px #1E1905; z-index:1000;}
 .login-power-by a {color:#edebd8; } .login-power-by a:hover {color:#fff; }
 
 .login-box { -webkit-border-radius: 3px; -moz-border-radius: 3px; width:400px; height:350px; position:absolute; top:50%; left:50%; margin-top:-50px; margin-left:-140px; }

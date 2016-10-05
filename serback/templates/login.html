@@ -49,10 +49,28 @@
      <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
      <li><img src="images/login-key.png" width="15" height="15" /> <input name="password" id="password" type="password" class="login-id" placeholder="後台管理密碼" style="width:180px" /></li>
      ({if $data.recaptcha[0]})
-	     <li><img src="images/login-code.png" width="15" height="15" style="float:left;" /> 
-         <div class="g-recaptcha" data-sitekey="({$data.recaptcha[0]})" style="float:left;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
-         <div style="clear:both;"></div>
-         <li>
+     <li codetags><img src="images/login-code.png" width="15" height="15" style="float:left;" /> 
+     <div class="g-recaptcha" data-sitekey="({$data.recaptcha[0]})" style="float:left;transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;">
+     </div>
+     <div style="clear:both;margin:0 0 0 18px;" onclick="return old_check();"></div>
+     <script>
+	 	function old_check(){
+			if ($('#isold:checked').length>0){
+				$('#isold')[0].checked = false;
+			}else{
+				$('#isold')[0].checked = true;
+			}
+			var a_item = $('li[codetags]:eq(0)').children().filter('img,div,input');
+			var b_item = $('li[codetags]:eq(1)').children().filter('img,div,input');
+			$('li[codetags]:eq(0)').append(b_item);
+			$('li[codetags]:eq(1)').append(a_item);
+			return false;
+		}
+	 </script>
+     <li>
+     <li style="margin:0 0 0 18px;" onclick="return old_check();">
+     <input type="checkbox" id="isold" onmousedown="return false;"><span class="fotget" style=""> 使用傳統驗證碼登入</span>
+     </li>
      ({else})
      <li><img src="images/login-code.png" width="15" height="15" /> 
      <img src="verifycode.php" onclick="$(this).attr('src',$(this).attr('src'));"> <input name="code" type="text" class="login-id" placeholder="CODE" style="width:60px;" /></li>
@@ -85,7 +103,10 @@
    </div>
 </div>
 
-
+<old_item style="display:none;">
+ <li codetags><img src="images/login-code.png" width="15" height="15" /> 
+ <img src="verifycode.php" onclick="$(this).attr('src',$(this).attr('src'));"> <input name="code" type="text" class="login-id" placeholder="CODE" style="width:60px;" /></li>
+</old_item>
 
 ({$link})
 
