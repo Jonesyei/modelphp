@@ -106,10 +106,6 @@ if($id || $id=='0')
 	$data["group_html"] = Make_sql_list($group,$data["group_id"]);
 	
 	$_SESSION["admin_info"]["view"] = "detail";
-	//-推廣路徑
-	$temp = explode('//',str_replace('/serback/','//',$_SERVER['HTTP_REFERER']));
-	$data["url"] = $temp[0].'//'.$temp[1].'/about.php?company='.urlencode(base64_encode($data["id"]));
-	//$data["url"] = 'http://'.$_SERVER['HTTP_HOST'].'/about.php?company='.urlencode(base64_encode($data["id"]));
 }
 else
 {

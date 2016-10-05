@@ -14,13 +14,19 @@
     { name : '最新消息標題' , element : 'div', attributes : { 'class' : 'title' } }*/
 ]);
  
+
+ 
+ 
 CKEDITOR.editorConfig = function( config ) {
 	
 	// %REMOVE_START%
 	// The configuration options below are needed when running CKEditor from source files.
-	config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,language,link,list,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,scayt,stylescombo,tab,table,tabletools,undo,wsc,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
+	//config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,language,link,list,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,scayt,stylescombo,tab,table,tabletools,undo,wsc,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
+	config.plugins = 'about,basicstyles,blockquote,colorbutton,colordialog,menu,contextmenu,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,link,list,liststyle,magicline,maximize,newpage,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,stylescombo,tab,table,tabletools,undo,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
 	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
 	config.skin = 'moonocolor';
+
+	
 	
 	//--編輯器檔案預設起始路徑
 	config.baseHref = window.location.href.split('serback')[0];
@@ -81,3 +87,20 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 };
+
+
+var temp_editor_uploadimage_check_status=null;
+function editor_uploadimage_check(){
+	if ($('.cke_dialog_ui_input_text input:eq(0)').length>0){
+		if (temp_editor_uploadimage_check_status!=null && temp_editor_uploadimage_check_status!=$('.cke_dialog_ui_input_text input:eq(0)').val()){
+			window.setTimeout("$('.cke_dialog_ui_input_text input:eq(2)').val('')",150);
+			window.setTimeout("$('.cke_dialog_ui_input_text input:eq(3)').val('')",150);
+		}
+		temp_editor_uploadimage_check_status = $('.cke_dialog_ui_input_text input:eq(0)').val();
+	}else
+		temp_editor_uploadimage_check_status=null;
+}
+window.setInterval('editor_uploadimage_check()',500);
+$(window).load(function(){
+	$('.cke_button.cke_button__image.cke_button_off').bind('click',function (){editor_uploadimage_check();})
+});
