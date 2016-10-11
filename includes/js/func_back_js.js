@@ -622,3 +622,54 @@ function resizeImage(img, width, height) {
 	
 	return canvas.toDataURL();
 }
+
+
+
+
+
+//---聯絡我們地圖編輯器
+/*
+	create by Jones
+*/
+J_map = function(selector,context) {
+	
+	J_map_ini = new Object();
+	var old_selector = $(selector);
+	var selector = $(selector).parent().prepend('<div class="jmap"></div>').find('div.jmap');
+	
+	//--基本設定
+	J_map_ini.defwidth = '';
+	J_map_ini.defhidth = '';
+	J_map_ini.address_keyup = function (){}
+	J_map_ini.type_array = {p:'地形圖',h:'衛星圖'}
+	//--工具箱建置
+	J_map_ini.create = function (selector){
+		$(selector).append('<div data-row="address">地址或座標:<input type="text" placeholder="輸入地址或經緯度" value=""></div>')
+				   .find('div[data-row="address"]>input').on('keyup',function(){return J_map_ini.address_keyup;});
+   	    $(selector).append('<div data-row="size">寬度:<input type="text" placeholder="寬度" class="width" value="'+J_map_ini.defwidth+'" maxlength=4 size=4> X 高度:<input type="text" placeholder="高度" class="height" value="'+J_map_ini.defhidth+'" maxlength=4 size=4></div>');
+		$(selector).append('<div data-row="zoom">比例大小:<input type="text" placeholder="1~18(16最佳)" value="16" maxlength=2 size=2></div>')
+				   .find('div[data-row="zoom"]>input').on('keyup',function(){return this.value=this.value.replace(/\D/g,'')*1;});
+		$(selector).append('<div data-row="type">地圖模式:<select></select></div>');
+		for (aa in J_map_ini.type_array)
+			$(selector).find('div[data-row="type"]>select').append('<option value='+aa+'>'+J_map_ini.type_array[aa]+'</option>');
+		
+		$(selector).append('<div data-row="button"><input type="button" value="確認"></div>')
+					.find('div[data-row="button"]>input').on('click',function(){
+						if ($(selector).find('div[data-row="address"]>input').val().trim().length<1) return alert('請填寫位置資訊!!');
+						$(old_selector).val('<iframe width="'+$('div[data-row="size"]>input.width').val()+'" height="'+$('div[data-row="size"]>input.height').val()+'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=http://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q='+encodeURI($('div[data-row="address"]>input').val())+'&z='+$('div[data-row="zoom"]>input').val()+'&output=embed&t='+$('div[data-row="type"]>select').val()+'></iframe>');
+						$(selector).find('iframe').remove();
+						$(selector).append($(old_selector).val());
+					});
+					
+		if ($(old_selector).val().trim().length>0){
+			$(selector).append($(old_selector).val());
+		}
+	}
+	J_map_ini.create(selector);
+	return J_map_ini;
+}
+
+
+
+
+

@@ -212,7 +212,8 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			$data["close"]["pic"] = '1';
 			$data["button"]["detail"]='1';
 			$data["button"]["fck"] = '1';
-			$data["order_html"] .= '<tr><td align="right">GOOGLE地圖:</td><td><textarea name="memo" rows="10" cols="50">'.dequotes($data["one"]["memo"],-1).'</textarea></td></tr>';
+			$data["order_html"] .= '<tr><td align="right">GOOGLE地圖:</td><td><textarea name="memo" rows="10" cols="50">'.dequotes($data["one"]["memo"],-1).'
+			</textarea><script>var jmap = new J_map(\'[name="memo"]\');</script></td></tr>';
 		break;
 		
 		case "smtp_mail":
