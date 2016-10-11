@@ -655,8 +655,9 @@ J_map = function(selector,context) {
 		
 		$(selector).append('<div data-row="button"><input type="button" value="確認"></div>')
 					.find('div[data-row="button"]>input').on('click',function(){
+						selector = $(event.target).parent().parent();
 						if ($(selector).find('div[data-row="address"]>input').val().trim().length<1) return alert('請填寫位置資訊!!');
-						$(old_selector).val('<iframe width="'+$('div[data-row="size"]>input.width').val()+'" height="'+$('div[data-row="size"]>input.height').val()+'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=http://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q='+encodeURI($('div[data-row="address"]>input').val())+'&z='+$('div[data-row="zoom"]>input').val()+'&output=embed&t='+$('div[data-row="type"]>select').val()+'></iframe>');
+						$(old_selector).val('<iframe width="'+$(selector).find('div[data-row="size"]>input.width').val()+'" height="'+$(selector).find('div[data-row="size"]>input.height').val()+'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=http://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q='+encodeURI($(selector).find('div[data-row="address"]>input').val())+'&z='+$(selector).find('div[data-row="zoom"]>input').val()+'&output=embed&t='+$(selector).find('div[data-row="type"]>select').val()+'></iframe>');
 						$(selector).find('iframe').remove();
 						$(selector).append($(old_selector).val());
 					});
