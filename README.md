@@ -44,6 +44,9 @@
 
 *選填 ajx-where_sql="其他的寫入資料條件(EX: name like '%關於我們%')"
 
+範例:
+
+<span contenteditable="true" ajx-table="data_list" ajx-key="id" ajx-keydata="({$data.one.id})" ajx-row="memo">({$data.one.memo})</span>
 
 
 
