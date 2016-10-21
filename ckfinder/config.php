@@ -63,7 +63,6 @@ ATTENTION: The trailing slash is required.
 session_start();
 
 if (!isset($_SESSION["admin_info"]["id"])) {echo '無權限訪問!!,請連繫網動廣告科技相關工程人員處理!!';exit;}
-
 $temp_url = explode('ckfinder',$_SERVER['PHP_SELF']);
 if (count($temp_url)>1) {
 	$temp_url = $temp_url[0];

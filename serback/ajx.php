@@ -262,4 +262,39 @@ if ($_GET["revice_mail_to_form"]){
 		echo 'ok';
 	}
 }
+
+
+
+//--前端畫面調整異動資料
+if ($_GET["ajx_view_design"]){
+	
+	//--table 檢查
+	foreach ($conn->GetArray("SHOW TABLES") as $k=>$v){
+		$table_list[] = $v[0];
+	}
+	if (!in_array($_POST["table"],$table_list)){
+		if (in_array(PREFIX.$_POST["table"],$table_list)){
+			$_POST["table"] = PREFIX.$_POST["table"];
+		}else{
+			echo '更新失敗!! 無對照 '.$_POST["table"].' 資料表';exit;
+		}
+	}
+	$where_sql = $_POST["key"]."='".$_POST["keydata"]."'".($_POST["where_sql"] ? ' AND '.$_POST["where_sql"]:'');
+	if (strpos($_POST["row"],'[')>0){
+		$temp_str_add = explode('[',$_POST["row"]);
+		$_POST["row"] = $temp_str_add[0];
+		
+		//---獲取陣列資料
+		$loadata = $conn->GetRow("select * from ".$_POST["table"]." where ".$where_sql);
+		$loadata[$_POST["row"]] = explode('|__|',$loadata[$_POST["row"]]);
+		$loadata[$_POST["row"]][$temp_str_add[1]*1] = quotes($_POST["editabledata"]);
+		$indata[$_POST["row"]] = implode('|__|',$loadata[$_POST["row"]]);
+	}else{
+		$indata[$_POST["row"]] = quotes($_POST["editabledata"]);
+	}
+	if ($_SESSION["admin_info"]["account"] && $conn->AutoExecute($_POST["table"],$indata,"UPDATE",$where_sql))
+		echo '更新成功';
+	else
+		echo '更新失敗';
+}
 ?>

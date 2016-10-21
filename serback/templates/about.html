@@ -223,7 +223,7 @@ page_initial('table-style01');
 ({/if})
 	
 ({if $data.close.pic==null})
-({if count($data.button.pic)>1})
+({if is_array($data.button.pic)})
 <link href="../includes/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../includes/Uploadify/swfobject.js"></script>
 <script type="text/javascript" src="../includes/Uploadify/jquery.uploadify.v2.1.4.min.js"></script>

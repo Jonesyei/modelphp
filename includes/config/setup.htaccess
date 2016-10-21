@@ -9,5 +9,6 @@
 	ErrorDocument 502 /%setup%/erro502
 	RewriteRule ^erro(400|401|403|404|500|502)$ index.php?class=ErrorDocument&code=$1 [L]
 	
+	RewriteRule ^(.*)ckfinder/(.*)$ $1ckfinder/$2 [QSA,L]
 	RewriteRule ^(.*).jsx(.*)$ $1.php$2 [L]
 </IfModule>

@@ -297,9 +297,9 @@ page_initial('table_content');
 <div id="tabs">
 <ul>
 	<li><a href="#tabs-1">基本資料</a></li>
-	({if $data.pageget.mode==null || $data.check_button.2=='1'})<li><a href="#tabs-2">尺寸顏色</a></li>({/if})
+	<li><a href="#tabs-2">尺寸顏色</a></li>
     <li><a href="#tabs-3">售價設定</a></li>
-    ({if $data.pageget.mode==null || $data.check_button.5=='1'})<li><a href="#tabs-4">加購設定</a></li>({/if})
+    <li><a href="#tabs-4">加購設定</a></li>
 </ul>
 
 <div id="tabs-1">
@@ -346,16 +346,9 @@ page_initial('table_content');
 	</tr>
     -->
 
-	<tr>
-	<td align="right" >是否為新品：</td>
-	  <td >
-      <input type="radio" name="isnew" value="1" ({if $data.one.isnew == 1})checked({/if})>是
-      <input type="radio" name="isnew" value="0" ({if $data.one.isnew == 0})checked({/if})>否
-	   </td>
-	</tr>
 
 
-({if $data.pageget.mode==null || $data.check_button.3=='1'})
+
 <tr>
 	<td align="right" >圖片：</td>
 	  <td >
@@ -567,7 +560,7 @@ function re_sort(){
 	</td>
 	</tr>
     
-({/if})
+
 
 	<tr>
 	<td align="right" >列表文字：</td>
@@ -598,7 +591,7 @@ function re_sort(){
 
 
 
-({if $data.pageget.mode==null || $data.check_button.1=='1'})
+
 <div id="tabs-2">
 <style>
 #size_td div.zlist{
@@ -703,7 +696,7 @@ function re_sort(){
     
 </table>
 </div>
-({/if})
+
 
 
 
@@ -717,7 +710,7 @@ function re_sort(){
 	  <input type="text" name="price1" id="price1" value="({$data.one.price1})" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
 	  </td>
     </tr>
-	({if $data.pageget.mode==null || $data.check_button.2=='1'})
+
     <tr >
       <td  align="right" >商品折扣：</td>
       <td > 
@@ -731,15 +724,14 @@ function re_sort(){
 	  <input type="text" id="price2" value="({$data.one.price2})" disabled="disabled" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
 	  </td>
     </tr>
-	({/if})
-    ({if $data.pageget.mode==null || $data.check_button.0=='1'})
+
 	<tr >
       <td  align="right" >所獲得紅利：</td>
       <td > 
 	  <input type="text" name="point" id="point" value="({$data.one.point})" size="10" onkeyup="this.value=this.value.replace(/\D/g,'');">
 	  </td>
     </tr>
-    ({/if})
+
 <!--
 	<tr >
       <td  align="right" >可折抵購物金：</td>
@@ -757,7 +749,7 @@ function re_sort(){
 
 
 
-({if $data.pageget.mode==null || $data.check_button.5=='1'})
+
 <div id="tabs-4">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_content" style="border-bottom:none;">
  	<tr>
@@ -837,7 +829,7 @@ function re_sort(){
 	</script>
 </table>
 </div>
-({/if})
+
 
  
 </div>

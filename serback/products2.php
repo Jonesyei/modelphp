@@ -11,27 +11,20 @@ $cpos["table"] = $data["pageget"]["data_table"] = PREFIX."products";
 $cpos["tablejoin"] = ' LEFT JOIN (select id as cid,name as classname from '.PREFIX.'category) AS cc ON cc.cid=class';
 $cpos["tablewhere"] = 'id='.$_GET["id"];
 $cpos["tablesearch"] = 'name,detail';//搜尋關聯欄位
-//$cpos["searchdate"] = 'cdt';//搜尋時間參照欄位 不設定預設為 created
 $cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
 $cpos["listorderby"] = 'sort';//列表頁排序方式
 $cpos["searchclass"] = 'class';//收尋分類對照欄位
-$_SESSION["admin_info"]["file_url"] = $data["file_url"] = $cpos["file_url"] = "../upload/products/";
-//$cpos["sort_class"] = "class"; //--列表不同類別排序方式 依照此欄位配排序
-$cpos["file_check"] = "pic,stock_pic";
-if (!$_GET["type"]) $_GET["type"]=1;
-if ($_GET["type"]*1>1){
-	$cpos["tablelistwhere"] = 'WHERE type="products'.$_GET["type"].'"';//列表顯示資料的條件
-}else{
-	$cpos["tablelistwhere"] = 'WHERE type="products"';//列表顯示資料的條件
-}
-
+$_SESSION["admin_info"]["file_url"] = $data["file_url"] = $cpos["file_url"] = "../upload/products/"; //--存檔路徑
+$cpos["file_check"] = "pic,stock_pic"; //-檔案檢核欄位
+$cpos["tablelistwhere"] = 'WHERE type="products"';//列表顯示資料的條件
+$cpos["cate_root"] = '1';	///--分類樹根
 
 $close["add"]	= 0;
 $close["del"]	= 0;
 $close["edit"]	= 0;
 $close["copy"]	= 1;
 $close["sort"]  = 0;
-//if(@$_POST["act"]=="excel") include_once("excel_products.php");
+
 
 
 //----使用折扣方法直接給予 特價值
@@ -40,25 +33,16 @@ if ($_POST["price1"]!=NULL){
 	
 	//實際價錢0元啟動金額保護
 	if ($_POST["price2"]==0 && $_POST["price1"]*1==0) {
-		//$_POST["price_1"] = $_POST["price_2"] = '9999999';
 		alert('警告，您所設定的商品價格設定為 0 將可能被大量訂購產品造成虧損，如設定錯誤請回商品 ['.$_POST["name"].'] 內頁中重新設定',-1);
 	}
 }
-/*
-if ($_GET["id"]!=NULL && $_POST && ($_POST["size"][0]==NULL||$_POST["size"][0]==''||$_POST["stock"][0]==NULL||$_POST["stock"][0]=='') ){
-	alert('必須先建立一個尺寸規格',-1);
-}
-*/
+
 if ($_POST){
 	//--類別分類 寫入
 	if ($_GET["mode"]){
 		$_POST["type"] = $_GET["mode"];
 	}else{
-		if ($_GET["type"]*1>1){
-			$_POST["type"] = 'products'.$_GET["type"];
-		}else{
-			$_POST["type"] = 'products';
-		}
+		$_POST["type"] = 'products';
 	}
 	//--判斷是否選擇到母項目
 	if ($_POST["class"]){
@@ -98,19 +82,8 @@ $data["cpos"] = $cpos;
 
 
 //display_tree($root,$db,$table,$start=0,$count=0,$where_sql="",$total_data="")	
-//$tree_data_type=display_tree($_GET["type"],$conn,PREFIX.'category');	//-分類資料
-$tree_data_pro=display_tree('1',$conn,PREFIX.'category');	//-品牌資料
-
-//--類組開關判斷
-if ($_GET["mode"]){
-	$check_data = $conn->GetRow("select * from ".PREFIX."data_list where type='set_pro' and b_name='".$_GET["mode"]."'");
-	$check_data["detail"] = explode('|__|',$check_data["detail"]);
-	$data["check_button"] = $check_data["detail"];
-	$tree_data_type=display_tree($check_data["detail"][6],$conn,PREFIX.'category');	//-分類資料
-}else{
-	$data["check_button"][4] = '1';//專案時 使用的圖片最大限制數
-	$tree_data_type=display_tree($_GET["type"],$conn,PREFIX.'category');	//-分類資料
-}
+//$tree_data_pro=display_tree('1',$conn,PREFIX.'category');	//-品牌資料
+$tree_data_type=display_tree($cpos["cate_root"],$conn,PREFIX.'category');	//-分類資料
 
 
 //-圖片上傳最大數
@@ -122,8 +95,6 @@ if($_GET["id"] || $_GET["id"]=='0')
 
 	$data["one"]["class_html"] = Make_List($_SETUP["pro_class"],$data["one"]["class"]);
 	
-
-
 	//----商品資訊單筆
 	//$data["one"]["detail_fck"] = Fck("detail",'90%','450','../fckeditor/',deQuotes(@$data["one"]["detail"],-1));
 
@@ -154,8 +125,16 @@ if($_GET["id"] || $_GET["id"]=='0')
 	//--商品多分類
 	$data["one"]["class"] = explode('|__|',$data["one"]["class"]);
 	foreach ($data["one"]["class"] as $k=>$v){
-		$data["one"]["cate_menu"][$k]='<div id="class_'.$k.'">'.create_select("class[]",$aa,$v,'1',"根目錄").' <input type="button" value=" 刪除 " onclick="del_class('.$k.')"></div>';
+		if ($v!='') $data["one"]["cate_menu"][$k]='<div id="class_'.$k.'">'.create_select("class[]",$aa,$v,'1',"根目錄").' <input type="button" value=" 刪除 " onclick="del_class('.$k.')"></div>';
 	}
+	if (!$data["one"]["cate_menu"]){
+		$check_rootid = $conn->GetRow("select * from ".PREFIX."category where id='".$cpos["cate_root"]."'");
+		if (!$check_rootid)
+			$data["one"]["cate_menu"][] = '<a href="catemode.php" style="color:red;">[目前尚未建立主要分類，點此前往建立一項主要分類]</a>';
+		else
+			$data["one"]["cate_menu"][] = '<a href="category.php?mode='.$cpos["cate_root"].'" style="color:#d87704;">[分類項目未有任何項目，點此前往建立分類項目]</a>';
+	}
+	
 	//-預設分類資料 (新增用)
 	$data["one"]["def_cate_menu"] = create_select("class[]",$aa,NULL,'1',"根目錄");
 	$data["one"]["prolist"]=create_select("prolist",$aa,NULL,'1',"根目錄");//--加價購選單
@@ -163,6 +142,7 @@ if($_GET["id"] || $_GET["id"]=='0')
 	
 	//----取出品牌資料
 	unset($aa);
+	if ($tree_data_pro)
 	foreach($tree_data_pro as $item)
 	{
 			$aa[$item['id']] = $item['show_text'];

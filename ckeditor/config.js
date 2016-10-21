@@ -15,7 +15,7 @@
 ]);
  
 
- 
+ var __arr = new Object();
  
 CKEDITOR.editorConfig = function( config ) {
 	
@@ -25,8 +25,6 @@ CKEDITOR.editorConfig = function( config ) {
 	config.plugins = 'about,basicstyles,blockquote,colorbutton,colordialog,menu,contextmenu,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,link,list,liststyle,magicline,maximize,newpage,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,stylescombo,tab,table,tabletools,undo,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
 	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
 	config.skin = 'moonocolor';
-
-	
 	
 	//--編輯器檔案預設起始路徑
 	config.baseHref = window.location.href.split('serback')[0];
@@ -74,6 +72,35 @@ CKEDITOR.editorConfig = function( config ) {
 		];
 		config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Scayt,Language,Link,Unlink,Anchor,Image,Flash,PageBreak,Iframe,ShowBlocks,Maximize,About'; 
 	}
+	
+	
+	config.extraPlugins = 'inlinesave,sourcedialog';
+	config.removePlugins = 'sourcearea';
+	var inline_option;
+	if (this.name && document.getElementById(this.name)) {
+	  inline_option = {
+		  table: (document.getElementById(this.name).getAttribute('ajx-table') ? document.getElementById(this.name).getAttribute('ajx-table'):'')
+		  ,key:(document.getElementById(this.name).getAttribute('ajx-key') ? document.getElementById(this.name).getAttribute('ajx-key'):'')
+		  ,keydata:(document.getElementById(this.name).getAttribute('ajx-keydata') ? document.getElementById(this.name).getAttribute('ajx-keydata'):'')
+		  ,row:(document.getElementById(this.name).getAttribute('ajx-row') ? document.getElementById(this.name).getAttribute('ajx-row'):'')
+		  ,where_sql:(document.getElementById(this.name).getAttribute('ajx-where_sql') ? document.getElementById(this.name).getAttribute('ajx-where_sql'):'')
+	  }
+	}
+	config.inlinesave = {
+	  postUrl: 'serback/ajx.php?ajx_view_design=true',
+	  postData: inline_option,
+	  onSave: function(editor) { console.log('clicked save', editor); return true; },
+	  onSuccess: function(editor, data) {
+		  console.log('save successful', editor, data);
+		  alert(data);
+	  },
+	  onFailure: function(editor, status, request) {
+		  console.log('save failed', editor, status, request);
+		  alert('操作失敗!!\n'+request);
+	  },
+	  useJSON: false,
+	  useColorIcon: false
+	};
 	
 	config.enterMode = CKEDITOR.ENTER_BR;
 	config.shiftEnterMode = CKEDITOR.ENTER_BR;
