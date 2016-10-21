@@ -46,7 +46,7 @@
 
 範例:
 
-<span contenteditable="true" ajx-table="data_list" ajx-key="id" ajx-keydata="({$data.one.id})" ajx-row="memo">({$data.one.memo})</span>
+&lt;span contenteditable="true" ajx-table="data_list" ajx-key="id" ajx-keydata="({$data.one.id})" ajx-row="memo"&gt;({$data.one.memo})&lt;/span&gt;
 
 
 
