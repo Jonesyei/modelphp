@@ -29,12 +29,19 @@
 
 ### 引導式編輯功能
 請在樣板中設定好辨識標籤 並於後台-->其他管理-->網站設定 (此路徑可能受個人設定值不同影響) 中設地 jquery selector 物件
+
 2016/10/21 增加即時編輯功能請設定好以下相關參數於資料標籤屬性上必須加入以下內容
+
 *必填 contenteditable="true"
+
 *必填 ajx-table="資料表名稱(ex: data_list 可不加上標頭 如加上PREFIX資料亦可)"
+
 *必填 ajx-key="索引鍵(EX:id)"
+
 *必填 ajx-keydata="索引值(EX:25)"
+
 *必填 ajx-row="寫入的資料欄位名稱 (EX: name 或者 使用字串陣列方式如 detail[1] 第二個項目)"
+
 *選填 ajx-where_sql="其他的寫入資料條件(EX: name like '%關於我們%')"
 
 
