@@ -49,6 +49,7 @@ if (!empty($_FILES)) {
 	$microtime = substr($microtime,2,8);
 	$file_name = explode(".",$_FILES["Filedata"]["name"]);
 	$file_name = $microtime.".".$file_name[count($file_name)-1];
+	if ($ini_webset["web_set"]["uploadfile_rename"]==='0') $file_name = $_FILES["Filedata"]["name"];
 	$targetFile =  str_replace('//','/',$targetPath) . $file_name;
 	
 

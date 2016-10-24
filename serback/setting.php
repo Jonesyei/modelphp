@@ -19,7 +19,7 @@ $data["web_set"]["upload_check_status"] = Make_radio($_SETUP["status"],$ini_webs
 $data["web_set"]["post_fee_button_html"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["post_fee_button"],'post_fee_button');//--運費
 $data["web_set"]["design_button"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["design_button"],'design_button');//--設計師
 $data["web_set"]["system_button"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["system_button"],'system_button');//--系統
-
+$data["web_set"]["uploadfile_rename"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["uploadfile_rename"],'uploadfile_rename');//--檔案重新命名
 if($act=='submit')
 {
 	$record["update_date"] = date("Y-m-d H:i:s");
@@ -44,6 +44,7 @@ if($act=='submit')
 		}
 	}
 	//--webini寫入
+	if ($_SESSION["web_ini_time"]) $_SESSION["web_ini_time"] -= 600;
 	write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現
 	alert("修改完成",Page_get_url(''));
 	exit;

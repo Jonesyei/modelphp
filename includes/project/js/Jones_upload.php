@@ -37,6 +37,7 @@ if ($_FILES){
 				$temp_file_name = explode('.',$n2);
 				$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
 				$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+				if ($ini_webset["web_set"]["uploadfile_rename"]==='0') $temp_file_name = $n2;
 				/*
 				if (in_array($after_name,$image_array)){//上傳的檔案圖片就縮圖處理
 					ImageResize($_FILES[$k]["tmp_name"][$n1], $cpos["file_url"].$temp_file_name);
@@ -53,6 +54,7 @@ if ($_FILES){
 				$temp_file_name = explode('.',$_FILES[$k]["name"]);
 				$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
 				$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+				if ($ini_webset["web_set"]["uploadfile_rename"]==='0') $temp_file_name = $_FILES[$k]["name"];
 				/*
 				if (in_array($after_name,$image_array)) {//上傳的檔案圖片就縮圖處理
 					ImageResize($_FILES[$k]["tmp_name"], $cpos["file_url"].$temp_file_name);

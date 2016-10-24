@@ -42,6 +42,10 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
      */
     public function sendResponse()
     {
+		$dirtemp_name =  explode('ckfinder',dirname(__FILE__));
+		$dirtemp_name = $dirtemp_name[0];
+		$ini_webset = parse_ini_file($dirtemp_name."includes/config/web_set.ini",true);
+		
         $iErrorNumber = CKFINDER_CONNECTOR_ERROR_NONE;
 
         $_config =& CKFinder_Connector_Core_Factory::getInstance("Core_Config");
@@ -56,8 +60,12 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
 
         $sUnsafeFileName = CKFinder_Connector_Utils_FileSystem::convertToFilesystemEncoding(CKFinder_Connector_Utils_Misc::mbBasename($uploadedFile['name']));
 		//-隨機檔案命名
-		$sExtension = CKFinder_Connector_Utils_FileSystem::getExtension($sUnsafeFileName);
-		$sUnsafeFileName=date('YmdHis').'.'.$sExtension;
+		//--判斷參數是否重新命名
+		if ($ini_webset["web_set"]["uploadfile_rename"]==='0'){
+		}else{
+			$sExtension = CKFinder_Connector_Utils_FileSystem::getExtension($sUnsafeFileName);
+			$sUnsafeFileName=date('YmdHis').'.'.$sExtension;
+		}
         $sFileName = CKFinder_Connector_Utils_FileSystem::secureFileName($sUnsafeFileName);
 
         if ($sFileName != $sUnsafeFileName) {
@@ -192,9 +200,6 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
 
 		
 		//* 用以判斷 檔案上傳是否超過限制大小 add by Jones*/
-		$dirtemp_name =  explode('ckfinder',dirname(__FILE__));
-		$dirtemp_name = $dirtemp_name[0];
-		$ini_webset = parse_ini_file($dirtemp_name."includes/config/web_set.ini",true);
 		if (
 		isset($ini_webset["web_set"]["upload_max_size"]) && isset($ini_webset["web_set"]["now_file"]) &&
 		$ini_webset["web_set"]["upload_max_size"]*1<$ini_webset["web_set"]["now_file"]*1+filesize($sFilePath)*1
