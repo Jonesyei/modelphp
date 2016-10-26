@@ -43,7 +43,7 @@ if ($_FILES){
 					ImageResize($_FILES[$k]["tmp_name"][$n1], $cpos["file_url"].$temp_file_name);
 				}else{
 				*/
-					move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$cpos["file_url"].$temp_file_name);
+					move_uploaded_file($_FILES[$k]["tmp_name"][$n1],(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name));
 				//}
 				$name_array[] = $cpos["file_url"].$temp_file_name;
 				$_SESSION["upload_temp"][] = $temp_file_name;
@@ -60,7 +60,7 @@ if ($_FILES){
 					ImageResize($_FILES[$k]["tmp_name"], $cpos["file_url"].$temp_file_name);
 				}else{
 				*/	
-					move_uploaded_file($_FILES[$k]["tmp_name"],$cpos["file_url"].$temp_file_name);
+					move_uploaded_file($_FILES[$k]["tmp_name"],(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name));
 				//}
 				$name_array[] = $cpos["file_url"].$temp_file_name;
 				$_SESSION["upload_temp"][] = $temp_file_name;

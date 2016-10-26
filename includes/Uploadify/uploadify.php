@@ -64,7 +64,7 @@ if (!empty($_FILES)) {
 		// mkdir(str_replace('//','/',$targetPath), 0755, true);
 		//$_SESSION["serbackpicupload"] = 
 
-		move_uploaded_file($tempFile,$targetFile);
+		move_uploaded_file($tempFile,(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$targetFile):$targetFile));
 		
 		
 		/*

@@ -264,7 +264,11 @@ Examples:
 	$config['FilesystemEncoding'] = 'CP1250';
 	$config['FilesystemEncoding'] = 'ISO-8859-2';
 */
-$config['FilesystemEncoding'] = 'UTF-8';
+if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN'){
+	$config['FilesystemEncoding'] = 'big5';
+}else{
+	$config['FilesystemEncoding'] = 'UTF-8';
+}
 
 /*
 Perform additional checks for image files
