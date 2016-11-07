@@ -329,4 +329,13 @@ if ($data["addpro"])
 
 
 $console->module->foor();
+$console->module->foor
+->set('data',$data)
+->set('member_info',@$_SESSION["member_info"])
+->set('cookie',@$_COOKIE["cookie"])
+->set("setup", $_SETUP)//config設定檔
+->set("content",@$content)
+->set("web_set",@$web_set)
+->set("lang",@$_SESSION["mode_lang"]);
+$console->module->foor->work();
 ?>

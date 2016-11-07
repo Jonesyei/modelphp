@@ -8,13 +8,14 @@ $def_token_code = array(
 '127.0.0.1:81'=>'f81f5ad1dcbf0eb44be92f632b16c2ac',
 '127.0.0.1:82'=>'86d9335887bfad9a13faa672dcb61d65',
 );
-$auth_token_ip = array('127.0.0.1'/*,'1.34.252.157','59.127.169.144'*/);
+$auth_token_ip = array('127.0.0.1','localhost:81','localhost:82','localhost'/*,'1.34.252.157','59.127.169.144'*/);
 if (!empty($_SERVER['HTTP_CLIENT_IP']))
 	$ip=$_SERVER['HTTP_CLIENT_IP'];
 else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
 	$ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
 else
-	$ip=$_SERVER['REMOTE_ADDR'];
+	$ip=($_SERVER['REMOTE_ADDR'] && strlen($_SERVER['REMOTE_ADDR'])>=7 ? $_SERVER['REMOTE_ADDR']:$_SERVER['HTTP_HOST']);
+
 if (!in_array($ip,$auth_token_ip)) {
 		print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>網站建構中.... 如有任何問題請聯繫網動廣告科技工程人員處理!!";
 		exit;
@@ -51,6 +52,8 @@ if ($_POST) {
 	$settingstr = str_replace('%root%',$_POST["dbid"],$settingstr);
 	$settingstr = str_replace('%passwrod%',$_POST["dbpw"],$settingstr);
 	$settingstr = str_replace('%auth%',$_POST["auth"],$settingstr);
+	$settingstr = str_replace('%host%',$_SERVER['HTTP_HOST'],$settingstr);
+	$settingstr = str_replace('%mvc%',$_POST["mvc"],$settingstr);
 	$file = fopen("includes/config/conn.php","w");
 	fwrite($file,$settingstr);
 	fclose($file);
@@ -61,6 +64,13 @@ if ($_POST) {
 	fclose($myfile);
 	/*htaccess 設定檔寫入*/
 	$settingstr = str_replace('%setup%',$_POST["dbname"],$settingstr);
+	if ($_POST["mvc"]=='true'){
+	$settingstr = str_replace('%mvc%',"
+	RewriteCond $1 !^(setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
+    RewriteRule ^(.*)$ index.php/$1 [L,QSA]",$settingstr);
+	}else{
+		$settingstr = str_replace('%mvc%','',$settingstr);
+	}
 	$file = fopen(".htaccess","w");
 	fwrite($file,$settingstr);
 	fclose($file);
@@ -78,14 +88,21 @@ if ($_POST) {
 
 
 if ($_POST["dbname"]){
-	$link = mysql_connect($dbHost,$dbUser,$dbPass) or die('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script>alert("資料庫連線失敗，請確認是否已設定正確的主機資訊!!");window.history.back(-1);</script>');
-	$check_mq = mysql_select_db($_POST["dbname"], $link);
-	if ($check_mq){
-		//alert('資料庫已存在!!,將您引導到後台進行登入','serback/');
-		mysql_query("drop database `".$_POST["dbname"]."`"); //刪除資料庫
-		//exit;
-	}
-	mysql_query("create database ".$_POST["dbname"]);
+	$conn = ADONewConnection('pdo');
+	$conn->debug=false;
+	$connect_check = $conn->PConnect('mysql:' . 'host='.$dbHost.';charset=utf8',$dbUser,$dbPass);
+	if (!$connect_check){echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script>alert("資料庫連線失敗，請確認是否已設定正確的主機資訊!!");window.history.back(-1);</script>';exit;};
+	$db_list = $conn->GetArray("show databases");
+	if ($db_list)
+		foreach ($db_list as $k=>$v)
+			$db_array[] = $v[0];
+	
+	$check_mq = in_array($_POST["dbname"],$db_array);
+	if ($check_mq)
+		$conn->Execute("drop database `".$_POST["dbname"]."`");
+	$conn->Execute("create database ".$_POST["dbname"]);
+	$conn->close();
+	$conn->PConnect('mysql:' . 'host='.$dbHost.';dbname='.$dbData.';charset=utf8',$dbUser,$dbPass);
 }
 
 
@@ -94,7 +111,7 @@ if ($_POST["dbname"]){
 if ($_POST["dbname"]){
 
 
-
+	
 
 	//連線到資料庫	
 	if ($_POST["dbselect"]!=NULL && $_POST["dbselect"]!=''){
@@ -102,9 +119,6 @@ if ($_POST["dbname"]){
 	}else{
 		$dfile = 'includes/config/setup_sql.sql';
 	}
-	$conn = ADONewConnection('mysql');
-	$conn->debug=false;
-	$conn->PConnect($dbHost,$dbUser,$dbPass,$dbData);
 	if ($conn && file_exists($dfile) )
 	{
 	 
@@ -129,7 +143,8 @@ if ($_POST["dbname"]){
 					$conn->Execute("SET NAMES utf8;");
 					$conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
 					$conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
-					if (!$conn->Execute($templine)) echo '失敗語法:<div>'.$templine.'</div>';
+					$checkdata = $conn->Execute($templine);
+					if (!$checkdata) echo '失敗語法:<div>'.$templine.'</div>'.$conn->errorMsg();
 					
 					$templine = '';$ins_on=NULL;
 					
@@ -201,6 +216,11 @@ font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10
       <td><input type="text" name="dbpw" placeholder="用以連線DBserver密碼" class="input-style01"></td>
     </tr>
     <tr>
+      <td>前端程式框架</td>
+      <td><input type="radio" name="mvc" value="true" checked>MVC框架<font color=red>(new)</font>
+         <input type="radio" name="mvc" value="false" onclick="alert('選擇傳統框架 日後可能不支援相關模組功能哦!!')"><font color="#666666">傳統框架(將不再使用)</font></a></td>
+    </tr>
+    <tr>
       <td>環境授權碼</td>
       <td><input type="text" name="auth" value="<?=$def_token_code[$_SERVER['HTTP_HOST']] ?>" placeholder="請設定授權代碼 (如不清楚請詢問Jones)" class="input-style01" style="width:250px;"></td>
     </tr>
@@ -218,7 +238,7 @@ font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10
     </tr>
     <tr>
       <td>&nbsp;</td>
-      <td><input type="submit" value="安裝" class="btn-input"></td>
+      <td><input type="submit" value="安裝" class="btn-input" onclick="if (!confirm('環境需要PHP 5.4以上版本，建議使用PHP 5.6')) return false;"></td>
     </tr>
   </tbody>
 </table>

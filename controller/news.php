@@ -28,5 +28,16 @@ if ($_GET["id"]==NULL) {//--沒資料預設
 	$data["one"]["detail"] = dequotes($data["one"]["detail"],-1);
 }
 
+
 $console->module->foor();
+$console->module->foor->set(array(
+	'data'=>$data,
+	'member_info'=>@$_SESSION["member_info"],
+	'cookie'=>@$_COOKIE["cookie"],
+	'setup'=>$_SETUP,
+	'content'=>@$content,
+	'web_set'=>@$web_set,
+	'lang'=>@$_SESSION["mode_lang"]
+));
+$console->module->foor->work();
 ?>

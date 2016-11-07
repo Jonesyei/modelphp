@@ -4,20 +4,35 @@
 */
 class foor
 {
+		var $tplurl = NULL;
+		var $_para_list;
 		function __construct($tplurl=NULL)
 		{
+			$this->tplurl = $tplurl;
+		}
+		function set($para,$objdata=NULL){
+			if (is_array($para)){
+				if ($para)
+					foreach ($para as $k=>$v){
+						$this->$k = $v;
+						$this->_para_list[] = $k;
+					}
+			}else{
+				$this->$para = $objdata;
+				$this->_para_list[] = $para;
+			}
+			return $this;
+		}
+		function work(){
 			global $_GET;
 			global $console;
-			$data["pageget"] = $_GET;
-			$console->tpl->assign("data",$data); //別的頁面傳送來的data
-			$console->tpl->assign("member_info",@$_SESSION["member_info"]);
-			$console->tpl->assign("cookie",@$_COOKIE["cookie"]);
-			$console->tpl->assign("setup", $_SETUP);//config設定檔
-			$console->tpl->assign("content",@$content);
-			$console->tpl->assign("web_set",@$web_set);
-			$console->tpl->assign("lang",@$_SESSION["mode_lang"]);
-			$console->design->load(($tplurl==NULL ? $console->path[0]:$tplurl[0]));
+			$this->data['pageget'] = $_GET;
+			foreach ($this->_para_list as $k=>$v)
+				$console->tpl->assign($v,$this->$v); //別的頁面傳送來的data
+			
+			$console->design->load(($this->tplurl==NULL||$this->tplurl[0]==NULL ? $console->path[0]:$this->tplurl[0]));
 		}
+
 }
 
 ?>
