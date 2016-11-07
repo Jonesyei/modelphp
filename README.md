@@ -44,6 +44,8 @@
 
 *選填 ajx-where_sql="其他的寫入資料條件(EX: name like '%關於我們%')"
 
+(在物件中設定id即為編輯器功能 多設定editor="easy" 則為簡易版編輯器，預設則為全功能編輯器)
+
 範例:
 
 &lt;span contenteditable="true" ajx-table="data_list" ajx-key="id" ajx-keydata="({$data.one.id})" ajx-row="memo"&gt;({$data.one.memo})&lt;/span&gt;
