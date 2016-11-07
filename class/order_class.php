@@ -114,6 +114,7 @@ class order_center
 			
 			//--預設樣板資料
 			$this->order_template = 'string:'.$design->load('mail_shopping');
+			$design->views = '';
 			//--檢查資料表
 			$this->checktable();
 			

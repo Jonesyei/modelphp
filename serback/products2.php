@@ -128,10 +128,10 @@ if($_GET["id"] || $_GET["id"]=='0')
 		if ($v!='') $data["one"]["cate_menu"][$k]='<div id="class_'.$k.'">'.create_select("class[]",$aa,$v,'1',"根目錄").' <input type="button" value=" 刪除 " onclick="del_class('.$k.')"></div>';
 	}
 	if (!$data["one"]["cate_menu"]){
-		$check_rootid = $conn->GetRow("select * from ".PREFIX."category where id='".$cpos["cate_root"]."'");
+		$check_rootid = $conn->GetArray("select * from ".PREFIX."category where root_id='".$cpos["cate_root"]."'");
 		if (!$check_rootid)
 			$data["one"]["cate_menu"][] = '<a href="catemode.php" style="color:red;">[目前尚未建立主要分類，點此前往建立一項主要分類]</a>';
-		else
+		elseif (count($check_rootid)<=1)
 			$data["one"]["cate_menu"][] = '<a href="category.php?mode='.$cpos["cate_root"].'" style="color:#d87704;">[分類項目未有任何項目，點此前往建立分類項目]</a>';
 	}
 	

@@ -29,6 +29,7 @@ else
 	
 }
 
+$_SETUP['MVC'] = false;
 
 //連線到資料庫	
 $conn = ADONewConnection('mysql');

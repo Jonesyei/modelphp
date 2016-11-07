@@ -5,13 +5,12 @@ $dbHost = "%localhost%";
 $dbUser = "%root%";
 $dbPass = "%passwrod%";
 $dbData = "%database%";
-
+$_SETUP['MVC'] = %mvc%;
 
 //連線到資料庫	
-$conn = ADONewConnection('mysql');
+$conn = ADONewConnection('pdo');
 $conn->debug=false;
-$conn->PConnect($dbHost,$dbUser,$dbPass,$dbData);
-$connect_check = $conn->PConnect($dbHost,$dbUser,$dbPass,$dbData);
+$connect_check = $conn->PConnect('mysql:' . 'host='.$dbHost.';dbname='.$dbData.';charset=utf8',$dbUser,$dbPass);
 if (!$connect_check) {
 	$check_file = explode('/',$_SERVER["PHP_SELF"]);
 	
@@ -32,6 +31,7 @@ if (!$connect_check) {
 $conn->Execute("SET NAMES utf8;");
 $conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
 $conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
+$conn->Execute("SET @centerpos_host = '%host%';"); //授權域名
 $conn->Execute("SET @centerpos = '%auth%';"); ///核心授權代碼
 
 

@@ -1,14 +1,18 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
     RewriteBase /modelphp/
-	ErrorDocument 400 /modelphp/erro401
-	ErrorDocument 401 /modelphp/erro402
-	ErrorDocument 403 /modelphp/erro403
-	ErrorDocument 404 /modelphp/erro404
-	ErrorDocument 500 /modelphp/erro500
-	ErrorDocument 502 /modelphp/erro502
-	RewriteRule ^erro(400|401|403|404|500|502)$ index.php?class=ErrorDocument&code=$1 [L]
+	
+	ErrorDocument 400 /modelphp/ErrorDocument/401
+	ErrorDocument 401 /modelphp/ErrorDocument/402
+	ErrorDocument 403 /modelphp/ErrorDocument/403
+	ErrorDocument 404 /modelphp/ErrorDocument/404
+	ErrorDocument 500 /modelphp/ErrorDocument/500
+	ErrorDocument 502 /modelphp/ErrorDocument/502
 	
 	RewriteRule ^(.*)ckfinder/(.*)$ $1ckfinder/$2 [QSA,L]
 	RewriteRule ^(.*).jsx(.*)$ $1.php$2 [L]
+	
+	
+	RewriteCond $1 !^(test\.php|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
+    RewriteRule ^(.*)$ index.php/$1 [L,QSA]
 </IfModule>

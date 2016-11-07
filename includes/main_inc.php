@@ -7,10 +7,6 @@ define('ROOT_PATH', str_replace('includes/main_inc.php', '', str_replace('\\', '
 include_once(APP_PATH.'includes/adodb5/adodb.inc.php');
 include_once(APP_PATH."includes/smarty/Smarty.class.php");
 
-
-require_once(APP_PATH."includes/function/JSON.php");	//php 4不支援 json轉換，利用別人寫的class
-
-
 include_once(APP_PATH."includes/function/func.php");
 include_once(APP_PATH."includes/config/conn.php");
 include_once(APP_PATH."includes/config/config.php");
@@ -79,7 +75,7 @@ if ($smtp_set){
     $mail->IsSMTP();                                // 設定使用SMTP方式寄信        
     $mail->SMTPAuth = true;                         // 設定SMTP需要驗證
 	
-    $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+    if ($smtp_set["detail"][0]) $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
     $mail->Host = $smtp_set["detail"][1];	        // Gmail的SMTP主機        
     $mail->Port = $smtp_set["detail"][2]*1;                              // Gmail的SMTP主機的port為465      
           
@@ -90,5 +86,14 @@ if ($smtp_set){
 //各類別庫
 include_once(APP_PATH."class/class.php");
 $design = new design($conn,PREFIX."design",$lang);
-$analytics = new analytics($conn,PREFIX."analytics",$lang);
+
+//MVC架框設定
+if ($_SETUP['MVC']){
+	$console = new console\word_console();
+	$console->conn = $conn;
+	$console->mail = $mail;
+	$console->design = $design;
+	$console->web_set = $web_set;
+	$console->tpl = $tpl;
+}
 ?>

@@ -139,9 +139,12 @@ class member
 			parameter:
 			$where		=>	mysql 條件語法
 		*/
-		function getmember($where=NULL) //--獲取
+		function getmember($where=NULL,$act='load') //--獲取
 		{
 			$temp = $this->conn->GetRow("select * from ".$this->table." ".$where);
+			if ($act=='login'){
+				$_SESSION["login_info"][$this->namespace] = $this->session = $temp;
+			}
 			return $temp;
 		}
 		
@@ -378,7 +381,7 @@ class member
 			$mail->SMTPDebug = false;
 			$mail->do_debug = 0;
 			
-			$mail->SMTPSecure = $type;     // Gmail的SMTP主機需要使用SSL連線   
+			if ($type) $mail->SMTPSecure = $type;     // Gmail的SMTP主機需要使用SSL連線   
 			$mail->Host = $host;	        // Gmail的SMTP主機        
 			$mail->Port = $port;                              // Gmail的SMTP主機的port為465      
 			$mail->CharSet = "utf-8";                       // 設定郵件編碼   
@@ -518,6 +521,46 @@ class member
 				}
 			}
 			return $data;
+		}
+		
+		/*
+			點數操作
+		*/
+		//--點數處理 (訂單編號,方式,其他資料)
+		function point_work($mount,$memo,$other_data=array()){
+			$this->point_table_check();
+			$indata['before_point'] = $this->getinfo('point');
+			if ($mount>0){
+				$indata['after_point'] = $indata['before_point']*1+$mount;
+			}elseif ($memo<0){
+				$indata['after_point'] = $indata['before_point']*1-$mount;
+			}
+			$indata["member_id"] = $this->session['id'];
+			$indata['point'] = $mount;
+			$indata['detail'] = $memo;
+			$indata['post_date'] = date('Y-m-d H:i:s');
+			$indata = array_merge($indata,$other_data);
+			$updata['point'] = $indata['after_point'];
+			$this->update($updata);
+			return $this->conn->AutoExecute($this->table."_point_logs",$indata,"INSERT");
+		}
+		function point_table_check(){
+			//--判斷點數資料紀錄表是否存在
+			$check_row = $this->conn->GetRow("desc ".$this->table."_point_logs");
+			if (!$check_row)
+				$this->conn->Execute("
+				CREATE TABLE `".$this->table."_point_logs` (
+				  `id` int(20) NOT NULL auto_increment,
+				  `shopping_car_id` int(11) default NULL,
+				  `member_id` int(11) default NULL,
+				  `post_date` datetime default NULL,
+				  `before_point` int(11) NOT NULL default '0',
+				  `after_point` int(11) NOT NULL default '0',
+				  `point` int(11) NOT NULL default '0',
+				  `detail` text,
+				  PRIMARY KEY  (`id`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+				");
 		}
 }
 

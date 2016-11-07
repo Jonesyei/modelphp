@@ -14,6 +14,7 @@ class design
 		var $conn;
 		var $table;
 		var $lang;
+		var $views='';	//--暫存樣板
 		
 		function __construct($conn,$table,$lang)
 		{
@@ -30,7 +31,12 @@ class design
 			else
 				$temp = $this->conn->GetRow("select * from ".$this->table." where type='main' and b_name='".$data."'");
 			
-			return dequotes($this->ban_load($temp),-1);
+			$this->views .= dequotes($this->ban_load($temp),-1);
+			
+			if (trim($this->views)==''){
+				echo '樣板獲取失敗，請確認後台是否有設定相關版面!!';
+			}else
+				return $this->views;
 		}
 		
 		//--板塊多載

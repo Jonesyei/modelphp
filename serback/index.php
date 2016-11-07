@@ -127,7 +127,7 @@ if($include != true)
 	if ($aa["code"]=='200'){
 		safefilerewrite(ROOT_PATH.$admin_path."templates/info.html",$aa["data"]);
 	}
-	$info["version"] = '後台系統 PHP 5.3 版 (sv1.6)';
+	$info["version"] = '後台系統 PHP 5.6 版 (sv2.1)';
 	$tpl->assign("info",$info);
 	$tpl->assign("content",ROOT_PATH.$admin_path."templates/info.html");
 	$tpl->display(ROOT_PATH.$admin_path."templates/index.html");

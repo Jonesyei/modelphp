@@ -7,9 +7,6 @@ define('ROOT_PATH', str_replace('includes/main_back_inc.php', '', str_replace('\
 include_once(APP_PATH.'includes/adodb5/adodb.inc.php');
 include_once(APP_PATH."includes/smarty/Smarty.class.php");
 
-
-require_once(APP_PATH."includes/function/JSON.php");	//php 4不支援 json轉換，利用別人寫的class
-
 include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
 include_once(APP_PATH."includes/function/seback_func.php");
 include_once(APP_PATH."includes/function/func.php");
@@ -21,14 +18,13 @@ include_once(APP_PATH."includes/project/function.php");
 //---qrcode
 include_once(APP_PATH."includes/phpqrcode/qrlib.php");
 
-
 //--ini設定檔案讀取
 if (!$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
 	$ini_webset = $_SESSION["web_ini_data"] = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
 	$_SESSION["web_ini_time"] = strtotime(date("Y-m-d H:i:s"));
-	if (count($ini_webset)>0 && $ini_webset["upload_check_status"]=='1') {
+	if (count($ini_webset)>0 && $ini_webset["web_set"]["upload_check_status"]=='1') {
 		$ini_webset["web_set"]["now_file"] = CalcDirectorySize('../upload/'); //-bytes  取得客戶已上傳的所有檔案資料大小
-		if ($ini_webset["iniloadcheck"]!=NULL && trim($ini_webset["upload_max_size"])!=='') write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現值
+		if ($ini_webset["web_set"]["iniloadcheck"]!=NULL && trim($ini_webset["web_set"]["upload_max_size"])!=='') write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現值
 	}
 }else{
 	$ini_webset = $_SESSION["web_ini_data"];
@@ -51,7 +47,7 @@ $_SESSION["admin_info"]["tmp"] = "";
 $no_check_array = array('login','ajax','ajx');
 
 //func.php 檢查是否登入
-if(Check_Admin($conn,$_POST["account"],$_POST["password"],($_POST["g-recaptcha-response"] ? $_POST["g-recaptcha-response"]:strtoupper($_POST["code"])),$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
+if(!$_GET['_center_token'] && Check_Admin($conn,$_POST["account"],$_POST["password"],($_POST["g-recaptcha-response"] ? $_POST["g-recaptcha-response"]:strtoupper($_POST["code"])),$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
 {
 	if ($_SESSION["re_url"]==NULL) $_SESSION["re_url"] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	LinkTo("login.php");
@@ -115,7 +111,7 @@ if ($smtp_set){
     $mail->IsSMTP();                                // 設定使用SMTP方式寄信        
     $mail->SMTPAuth = true;                         // 設定SMTP需要驗證
 	
-    $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+    if ($smtp_set["detail"][0]) $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
     $mail->Host = $smtp_set["detail"][1];	        // Gmail的SMTP主機        
     $mail->Port = $smtp_set["detail"][2]*1;                              // Gmail的SMTP主機的port為465      
           
