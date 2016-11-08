@@ -28,7 +28,7 @@ if($_POST)
 			foreach ($class_data["detail"] as $k=>$v){
 				$form[$v] = $class_data["memo"][$k];
 			}
-			
+		$_POST["type"] = $form['type'] = quotes($_REQUEST["type"]);
 		///--自動記憶新增資料表功能
 		$table_set = PREFIX.'form';
 		if ($table_set!=''){
@@ -38,7 +38,7 @@ if($_POST)
 				$conn->Execute("
 				CREATE TABLE  `".$table_set."` (
 				 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				 `type` TEXT NOT NULL ,
+				 `type` TEXT NULL ,
 				 `status` int(11) NOT NULL default '1',
 				 `create_date` DATETIME NULL ,
 				 `update_date` DATETIME NULL ,
@@ -53,7 +53,6 @@ if($_POST)
 				foreach ($row_check as $k=>$v){
 					$row_array[] = $v["Field"];
 				}
-				
 			if ($row_array)
 			foreach ($form as $a=>$b) {
 					if (!in_array($a,$row_array) && isset($_POST[$a])) $conn->Execute("ALTER TABLE ".$table_set." ADD ".quotes($a)." TEXT NULL COMMENT '".quotes($b)."'");
@@ -185,6 +184,6 @@ if($_POST)
 }
 
 
-LinkTo("./");
+//LinkTo("./");
 
 ?>

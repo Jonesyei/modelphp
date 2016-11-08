@@ -11,8 +11,8 @@ $_j_web_set['main_path']			=	'/modelphp';			//--主目錄路徑
 $_j_web_set['host_path']			=	'//'.$_j_web_set['host'].$_j_web_set['main_path'].'/';	//--完整域
 $_j_web_set['module_path']			=	'module/';				//--模組路徑
 $_j_web_set['controller_path']		=	'controller/';			//--控制器路徑
-$_j_web_set['controller_ninclude']	=	array('serback','includes','css','js','font','ckeditor','ckfinder','images','upload',
-											'fileauth.php','mathcode.php','resize.php','verifycode.php','_form_mail.php');//---原始路徑保留參數
+$_j_web_set['controller_ninclude']	=	array('favicon.ico','serback','includes','css','js','font','ckeditor','ckfinder','images','upload',
+											'fileauth.php','mathcode.php','resize.php','verifycode.php');//---原始路徑保留參數
 $_j_web_set['module_autoload']		=	array();				//--自動載入模塊
 $_j_web_set['default_controller']	=	'index';				//--預設控制器
 

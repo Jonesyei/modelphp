@@ -24,16 +24,13 @@ if (!$connect_check) {
 			}
 		echo '<script>if (confirm("db connect of error . Do you setting , now?")) window.location.href="'.implode('/',$check_file).'/setup.php";</script>';
 	}
+}else{
+	//設定utf8編碼
+	$conn->Execute("SET NAMES utf8;");
+	$conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
+	$conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
+	$conn->Execute("SET @centerpos_host = '%host%';"); //授權域名
+	$conn->Execute("SET @centerpos = '%auth%';"); ///核心授權代碼
 }
-
-
-//設定utf8編碼
-$conn->Execute("SET NAMES utf8;");
-$conn->Execute("SET CHARACTER_SET_CLIENT=utf8;");
-$conn->Execute("SET CHARACTER_SET_RESULTS=utf8;");
-$conn->Execute("SET @centerpos_host = '%host%';"); //授權域名
-$conn->Execute("SET @centerpos = '%auth%';"); ///核心授權代碼
-
-
 
 ?>

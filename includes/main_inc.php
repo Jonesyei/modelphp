@@ -56,6 +56,7 @@ $mail->WordWrap = 50;                           // 每50個字元自動斷行
 
 //網站設定 $web_set
 $sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
+if ($connect_check)
 $tmp = $conn->GetArray($sql);
 $web_set["all"] = $tmp;
 $web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
@@ -67,7 +68,7 @@ $web_set["selfurl"] = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; /
 
 
 
-
+if ($connect_check)
 $smtp_set = $conn->GetRow("select * from ".PREFIX."data_list where type='smtp_mail' and status=1");
 //--啟用 SMTP模式
 if ($smtp_set){
