@@ -26,7 +26,18 @@ class foor
 		function work(){
 			global $_GET;
 			global $console;
+			global $web_set;
 			$this->data['pageget'] = $_GET;
+			$this->data['main_path'] = $console->_j_web_set['main_path'];
+			$this->data['path'] = $console->path;
+			
+			$this->web_set = $web_set;
+			$this->_para_list[] = 'web_set';
+			
+			//--下版內容
+			$this->data["foor"] = $console->conn->GetRow("select * from ".PREFIX."data_list where type='foor' and status=1 and lang='".$_SESSION["mode_lang"]."'");
+			$this->data["foor"]['detail'] = dequotes($this->data["foor"]['detail'],-1);
+			
 			foreach ($this->_para_list as $k=>$v)
 				$console->tpl->assign($v,$this->$v); //別的頁面傳送來的data
 			
