@@ -19,7 +19,8 @@ namespace load_plugin{
 	class module_autoinstall{
 		//--自動引入
 		function __call($function_name,$args=NULL){
-			$this->$function_name = new $function_name($args);
+			$_temp = new $function_name($args);
+			$this->$function_name = $_temp;
 		}
 	}
 }
@@ -54,7 +55,7 @@ namespace console{
 			$this->_j_web_set = $_j_web_set;
 			
 			//--路由轉換
-			if ($_SERVER['PHP_SELF']){
+			if (!$_SERVER['PATH_INFO']){
 				$this->path = explode('index.php',$_SERVER['PHP_SELF']);
 				$this->path = explode('/',$this->path[1]);
 			}else{
@@ -68,8 +69,6 @@ namespace console{
 			//--裝載模組宣告
 			$this->module = new installplugin;
 		}
-		
-		
 		
 	
 		//--控制器
@@ -85,6 +84,7 @@ namespace console{
 	
 		//--確認路由中是否包含已設定的目錄
 		function check_path_url(){
+			global $_SERVER;
 			$path = $this->path;
 			if ($path)
 				foreach ($path as $k=>$v){
@@ -97,7 +97,7 @@ namespace console{
 				$path = array_values($path);
 				$path = implode('/',$path);
 				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo '控制器設定名稱不可予保留參數 confing/_j_web_set[controller_ninclude] 重複!!';exit;}
-				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].'/'.$path);
+				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}
 		
