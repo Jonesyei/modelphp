@@ -66,7 +66,8 @@ if ($_POST) {
 	$settingstr = str_replace('%setup%',$_POST["dbname"],$settingstr);
 	if ($_POST["mvc"]=='true'){
 	$settingstr = str_replace('%mvc%',"
-	RewriteCond $1 !^(setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
+	RewriteRule ^(.*)serback/ajx.php$ serback/ajx.php [QSA,L]
+	RewriteCond $1 !^(favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
     RewriteRule ^(.*)$ index.php/$1 [L,QSA]",$settingstr);
 	}else{
 		$settingstr = str_replace('%mvc%','',$settingstr);
