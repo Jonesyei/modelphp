@@ -68,6 +68,11 @@ namespace console{
 			$this->load->_j_web_set = $this->_j_web_set;
 			//--裝載模組宣告
 			$this->module = new installplugin;
+			
+			//--自動裝載模塊
+			if ($this->_j_web_set["module_autoload"])
+				foreach ($this->_j_web_set["module_autoload"] as $k=>$v)
+					$this->load->module($v);
 		}
 		
 	
