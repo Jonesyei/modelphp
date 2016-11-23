@@ -8,7 +8,7 @@ $record["type"] = Now_file();
 
 $cpos["pagecount"] = 30; //每頁顯示筆數
 $cpos["table"] = $data["pageget"]["data_table"] = PREFIX."products";
-$cpos["tablejoin"] = ' LEFT JOIN (select id as cid,name as classname from '.PREFIX.'category) AS cc ON cc.cid=class';
+//$cpos["tablejoin"] = ' LEFT JOIN (select id as cid,name as classname from '.PREFIX.'category) AS cc ON cc.cid=class';
 $cpos["tablewhere"] = 'id='.$_GET["id"];
 $cpos["tablesearch"] = 'name,detail';//搜尋關聯欄位
 $cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
@@ -18,6 +18,9 @@ $_SESSION["admin_info"]["file_url"] = $data["file_url"] = $cpos["file_url"] = ".
 $cpos["file_check"] = "pic,stock_pic"; //-檔案檢核欄位
 $cpos["tablelistwhere"] = 'WHERE type="products"';//列表顯示資料的條件
 $cpos["cate_root"] = '1';	///--分類樹根
+
+$cpos["sort_set"] = array('class'=>$_GET["s_class"]);
+
 
 $close["add"]	= 0;
 $close["del"]	= 0;
