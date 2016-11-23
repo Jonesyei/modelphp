@@ -898,7 +898,14 @@ function curl($long_url,$type='GET',$data=NULL) {
 }
 
 
-
+function cpos_sort_value($value=array()){
+	$temp_str = '';
+	if ($value)
+		foreach ($value as $k=>$v){
+			$temp_str .=$k.$v;
+		}
+	return $temp_str;
+}
 
 /*
 	Hex 轉 rgb
