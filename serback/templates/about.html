@@ -224,9 +224,6 @@ page_initial('table-style01');
 	
 ({if $data.close.pic==null})
 ({if is_array($data.button.pic)})
-<link href="../includes/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../includes/Uploadify/swfobject.js"></script>
-<script type="text/javascript" src="../includes/Uploadify/jquery.uploadify.v2.1.4.min.js"></script>
 <script type="text/javascript">
 var Pic;
 function valcheck(obj){
@@ -287,57 +284,6 @@ function re_sort(objname){
 	<td align="right" >({if $data.button.name[m]!=null})({$data.button.name[m]})({else})圖片({/if})：</td>
 	  <td >
 <script>
-$(document).ready(
-	function()
-	{
-	     var max_count = '({$data.uploadfilemax[m]})';
-		 $("#uploadify({$data.button.pic[m]})").uploadify
-		 (
-			 {
-				'uploader'		: '../includes/Uploadify/uploadify.swf', 
-				'script'		: '../includes/Uploadify/uploadify.php({if $data.button.watermark})?watermark=({urlencode($data.button.watermark.pic)})&act=({$data.button.watermark.act})({/if})', 
-				'cancelImg'		: '../includes/Uploadify/cancel.png', 
-				'folder'		: '({$data.file_url})', 
-				'queueID'		: 'fileQueue_list({$data.button.pic[m]})',
-				'queueSizeLimit': max_count*1,
-				'auto'			: false,
-				'multi'			: true,
-				'onSelectOnce'	:function(event,data)
-				{
-					//--全部選擇完之後
-					if (data.fileCount+$("div[piclist=\"({$data.button.pic[m]})\"]" ).find('div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出 "+max_count+" 數量");
-						setTimeout("$('#uploadify({$data.button.pic[m]})').uploadifyClearQueue()",1);
-						this.uploadifyCancel(ID);
-					}else if (max_count=='1'){
-						setTimeout("$('#uploadify({$data.button.pic[m]})').uploadifyUpload()",1);
-					}
-				},
-				'onAllComplete'	:function(event,data) 
-				{
-					//$('form').submit();
-				},
-				'onComplete'  : function(event, ID, fileObj, response, data)
-				{	
-					upload_one(response,'({$data.button.pic[m]})');
-				},
-				'onSelect'    : function(event,ID,fileObj)
-				{
-					var type = fileObj.type.toLowerCase();
-					if(type!=".jpg" && type!=".jpeg" && type!=".gif" && type!=".png")
-					{					
-						alert("圖片格式不符\n只允許jpg,jpeg,gif,png");
-						setTimeout("$('#uploadify({$data.button.pic[m]})').uploadifyCancel('"+ID+"')",1);
-						this.uploadifyCancel(ID);
-
-					}
-				}
-			}
-			
-		)// $("#uploadify").uploadify
-		
-	}//function()
-);
 $(function() {
     $( "div[piclist=\"({$data.button.pic[m]})\"]" ).sortable( {items: 'div[picspan]',stop: function( event, ui ) {re_sort('({$data.button.pic[m]})');unlock_view();},start:function (){lock_view();}} );
 });
@@ -380,12 +326,10 @@ function other_func_({$data.button.pic[m]})(other_obj){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-    <div id="fileQueue_list({$data.button.pic[m]})" fileQueue_list="({$data.button.pic[m]})"></div>
-    ({$data.edmpic}) <BR>
-	<input type="file" name="uploadify" id="uploadify({$data.button.pic[m]})"/>
+	<input type="file" id="ff({$data.button.pic[m]})" name="ff({$data.button.pic[m]})[]" multiple />
 	<BR />
-	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify({$data.button.pic[m]})').uploadifyUpload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
-	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify({$data.button.pic[m]})').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title[m]})<BR />
+	({if $data.uploadfilemax>1})<a href="javascript:ajxupload('ff({$data.button.pic[m]})','({$data.button.pic[m]})');" onclick="" style="color:#30F;"><b>批量上傳圖片</b></a>&nbsp;|&nbsp;({/if})
+	({if $data.uploadfilemax>1})<a href="javascript:$('#ff({$data.button.pic[m]})').val(null)">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title[m]})<BR />
     </div>
     
     </div>
@@ -402,7 +346,10 @@ function other_func_({$data.button.pic[m]})(other_obj){
     <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
     <script>
 	function ajxupload(dname,objname){
-		if ($('#'+dname)[0].files.length>0)
+		if ($('#'+dname)[0].files.length>0){
+			if ($('div[piclist="'+objname+'"] div img').length*1+$('#'+dname)[0].files.length*1>drag_count[objname]*1){
+				return alert('已超過圖片上限所設定的 '+drag_count[objname]+' 張');
+			}
 		 $.ajaxFileUpload
             (
                 {
@@ -418,15 +365,15 @@ function other_func_({$data.button.pic[m]})(other_obj){
                     }
                 }
             );
+		}
 	}
-	function aes (dname,objname){
+	function aes(dname,objname){
 		$('#'+dname).on('change',function (){
 			ajxupload(dname,objname);
 		});
 		$('#'+dname).click();
 	}
 	</script>
-    <input type="file" id="ff({$data.button.pic[m]})" name="ff({$data.button.pic[m]})" style="display:none;" multiple />
 	</td>
 	</tr>
 ({/section})
@@ -435,62 +382,7 @@ function other_func_({$data.button.pic[m]})(other_obj){
 <tr>
 	<td align="right" >圖片：</td>
 	  <td >
-<link href="../includes/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../includes/Uploadify/swfobject.js"></script>
-<script type="text/javascript" src="../includes/Uploadify/jquery.uploadify.v2.1.4.min.js"></script>
 <script type="text/javascript">
-var Pic;
-var max_count = '({$data.uploadfilemax})';
-$(document).ready(
-	function()
-	{
-		 $("#uploadify").uploadify
-		 (
-			 {
-				'uploader'		: '../includes/Uploadify/uploadify.swf', 
-				'script'		: '../includes/Uploadify/uploadify.php({if $data.button.watermark})?watermark=({urlencode($data.button.watermark.pic)})&act=({$data.button.watermark.act})({/if})', 
-				'cancelImg'		: '../includes/Uploadify/cancel.png', 
-				'folder'		: '({$data.file_url})', 
-				'queueID'		: 'fileQueue_list',
-				'queueSizeLimit': ({if $data.uploadfilemax != null})({$data.uploadfilemax})({else})0({/if}),
-				'auto'			: false,
-				'multi'			: true,
-				'onSelectOnce'	:function(event,data)
-				{
-					//--全部選擇完之後
-					if (data.fileCount+$('#piclist div img').length>max_count*1 && max_count*1!=0){
-						alert("圖片選擇超出 "+max_count+" 數量");
-						setTimeout("$('#uploadify').uploadifyClearQueue()",1);
-						this.uploadifyCancel(ID);
-					}else if (max_count=='1'){
-						setTimeout("$('#uploadify').uploadifyUpload()",1);
-					}
-				},
-				'onAllComplete'	:function(event,data) 
-				{
-					//$('form').submit();
-				},
-				'onComplete'  : function(event, ID, fileObj, response, data)
-				{	
-					upload_one(response);
-				},
-				'onSelect'    : function(event,ID,fileObj)
-				{
-					var type = fileObj.type.toLowerCase();
-					if(type!=".jpg" && type!=".jpeg" && type!=".gif" && type!=".png")
-					{					
-						alert("圖片格式不符\n只允許jpg,jpeg,gif,png");
-						setTimeout("$('#uploadify').uploadifyCancel('"+ID+"')",1);
-						this.uploadifyCancel(ID);
-
-					}
-				}
-			}
-			
-		)// $("#uploadify").uploadify
-		
-	}//function()
-);
 function valcheck(obj){
 	if ($(obj).val().indexOf('在此輸入')>-1) $(obj).val('');
 }
@@ -599,12 +491,10 @@ function re_sort(){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-    <div id="fileQueue_list"></div>
-    ({$data.edmpic}) <BR>
-<input type="file" name="uploadify" id="uploadify"/>
+	<input type="file" id="ff" name="ff[]" multiple />
 	<BR />
-	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();$('#uploadify').uploadifyUpload();" onclick="">批次上傳圖片</a>&nbsp;|&nbsp;({/if})
-	({if $data.uploadfilemax>1})<a href="javascript:$('#uploadify').uploadifyClearQueue()">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
+	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();" onclick="" style="color:#30F;"><b>批次上傳圖片</b></a>&nbsp;|&nbsp;({/if})
+	({if $data.uploadfilemax>1})<a href="javascript:$('#ff').val(null);">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
     </div>
     
     </div>
@@ -613,7 +503,10 @@ function re_sort(){
     <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
     <script>
 	function ajxupload(){
-		if ($('#ff')[0].files.length>0)
+		if ($('#ff')[0].files.length>0){
+			if ($('div#piclist div img').length*1+$('#ff')[0].files.length*1>drag_count*1){
+				return alert('已超過圖片上限所設定的 '+drag_count+' 張');
+			}
 		 $.ajaxFileUpload
             (
                 {
@@ -629,6 +522,7 @@ function re_sort(){
                     }
                 }
             );
+		}
 	}
 	function aes (dname){
 		$('[name="'+dname+'[]"]').click();
@@ -637,7 +531,6 @@ function re_sort(){
 		});
 	}
 	</script>
-    <input type="file" id="ff" name="ff[]" style="display:none;" multiple />
 	</td>
 	</tr>
 ({/if})
