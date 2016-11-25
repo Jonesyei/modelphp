@@ -1,21 +1,11 @@
 <?php
 include_once("../../main_inc.php");
 include_once("../function.php");
-/*
-if ($_FILES){
-	$uploads_dir = 'upload';//存放上傳檔案資料夾
-	foreach ($_FILES["ff"]["error"] as $key => $error) {
-		if ($error == UPLOAD_ERR_OK) {
-			$tmp_name = $_FILES["ff"]["tmp_name"][$key];
-			$name = explode('.',$_FILES["ff"]["name"][$key]);
-			$name = date('YmdHis').'.'.$name[count($name)-1];
-			move_uploaded_file($tmp_name, "$uploads_dir/$name");
-			$name_array[] = $name;
-		}
-	}
-	echo json_encode($name);
-}
-*/
+
+
+
+
+
 $dirtemp_name =  explode('include',dirname(__FILE__));
 $dirtemp_name = $dirtemp_name[0];
 define('APP_PATH',$dirtemp_name);
@@ -43,7 +33,11 @@ if ($_FILES){
 					ImageResize($_FILES[$k]["tmp_name"][$n1], $cpos["file_url"].$temp_file_name);
 				}else{
 				*/
-					move_uploaded_file($_FILES[$k]["tmp_name"][$n1],(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name));
+					$temp_file_url = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name);
+					move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$temp_file_url);
+					if (strtolower($after_name)=='jpeg'||strtolower($after_name)=='jpg') {jpeg_jwork($temp_file_url);}
+					if (strtolower($after_name)=='png') {png_jwork($temp_file_url);}
+					//if (strtolower($after_name)=='gif') {gif_jwork($temp_file_url);}
 				//}
 				$name_array[] = $cpos["file_url"].$temp_file_name;
 				$_SESSION["upload_temp"][] = $temp_file_name;
@@ -60,7 +54,11 @@ if ($_FILES){
 					ImageResize($_FILES[$k]["tmp_name"], $cpos["file_url"].$temp_file_name);
 				}else{
 				*/	
-					move_uploaded_file($_FILES[$k]["tmp_name"],(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name));
+					$temp_file_url = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name);
+					move_uploaded_file($_FILES[$k]["tmp_name"],$temp_file_url);
+					if (strtolower($after_name)=='jpeg'||strtolower($after_name)=='jpg') {jpeg_jwork($temp_file_url);}
+					if (strtolower($after_name)=='png') {png_jwork($temp_file_url);}
+					//if (strtolower($after_name)=='gif') {gif_jwork($temp_file_url);}
 				//}
 				$name_array[] = $cpos["file_url"].$temp_file_name;
 				$_SESSION["upload_temp"][] = $temp_file_name;
@@ -77,5 +75,55 @@ if ($_FILES){
 	}
 	*/
 	echo json_encode($name_array);
+}
+
+
+
+
+//-----漸進式存取圖片 jepg
+function jpeg_jwork($file_name){
+	$im = imagecreatefromjpeg($file_name);
+	imageinterlace($im, 1);
+	imagejpeg($im, $file_name, 100);
+	imagedestroy($im); 
+}
+//-----交錯式存取圖片 png
+function png_jwork($file_name){
+	$im = @imagecreatefrompng($file_name);
+	$srcWidth = imagesx($im);
+	$srcHeight = imagesy($im);
+
+	$newWidth = $srcWidth;
+	$newHeight = $srcHeight;
+	$newImg = imagecreatetruecolor($newWidth, $newHeight);
+	
+	$alpha = imagecolorallocatealpha($newImg, 0, 0, 0, 127);
+	imagefill($newImg, 0, 0, $alpha);
+	
+	imagecopyresampled($newImg, $im, 0, 0, 0, 0, $newWidth, $newHeight, $srcWidth, $srcHeight);
+	imagesavealpha($newImg, true);
+	
+	imageinterlace($newImg, 1);
+	imagepng($newImg, $file_name);
+	imagedestroy($newImg); 
+}
+function gif_jwork($file_name){
+	$im = @imagecreatefromgif($file_name);
+	$srcWidth = imagesx($im);
+	$srcHeight = imagesy($im);
+
+	$newWidth = $srcWidth;
+	$newHeight = $srcHeight;
+	$newImg = imagecreatetruecolor($newWidth, $newHeight);
+	
+	$alpha = imagecolorallocatealpha($newImg, 0, 0, 0, 127);
+	imagefill($newImg, 0, 0, $alpha);
+	
+	imagecopyresampled($newImg, $im, 0, 0, 0, 0, $newWidth, $newHeight, $srcWidth, $srcHeight);
+	imagesavealpha($newImg, true);
+	
+	imageinterlace($newImg, 1);
+	imagegif($newImg, $file_name);
+	imagedestroy($newImg);  
 }
 ?>
