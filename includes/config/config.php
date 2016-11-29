@@ -11,9 +11,9 @@ $_j_web_set['main_path']			=	'/modelphp';			//--主目錄路徑
 $_j_web_set['host_path']			=	'//'.$_j_web_set['host'].$_j_web_set['main_path'].'/';	//--完整域
 $_j_web_set['module_path']			=	'module/';				//--模組路徑
 $_j_web_set['controller_path']		=	'controller/';			//--控制器路徑
-$_j_web_set['controller_ninclude']	=	array('favicon.ico','serback','includes','css','js','font','ckeditor','ckfinder','images','upload',
+$_j_web_set['controller_ninclude']	=	array('favicon.ico','serback','includes','css','js','font','ckeditor','ckfinder','images','upload','ajax.php',
 											'fileauth.php','mathcode.php','resize.php','verifycode.php');//---原始路徑保留參數
-$_j_web_set['module_autoload']		=	array();				//--自動載入模塊
+$_j_web_set['module_autoload']		=	array('foor');				//--自動載入模塊
 $_j_web_set['default_controller']	=	'index';				//--預設控制器
 
 ///--------一般環境參數設定
@@ -26,30 +26,12 @@ $_SETUP["member_mode"] = array('normal'=>'一般會員','fb'=>'FB串接帳戶');
 $_SETUP["member_type"] = array('member'=>'一般會員','wkmember'=>'白金會員','gkmember'=>'黃金會員');
 $_SETUP["date"] = date("Y-m-d H:i:s");
 
-//--------------------SMARTY section 值 呈現 設定
-for($i=0;$i<100;$i++) $_SETUP["smarty_count"][$i] = $i;
-
-//--------------------上傳圖片,檔案設定
-$_SETUP["pic_type"] = array('jpg','gif','jpeg','png');
-$_SETUP["file_type"] = array('doc','docx','pdf','xls');
-
 //-------------購物車
 $_SETUP["shopping_car_status"] = array('1'=>'購物中','2'=>'購物完成','3'=>'付款完成','4'=>'失效定單');
 $_SETUP["shipped"] = array('0'=>'未出貨','1'=>'已出貨');
 $_SETUP["payment_status"] = array('0'=>'未付款','1'=>'已付款','2'=>'回傳資料有誤','9'=>'失效');
-
-
 //--------------金流設定
 $_SETUP["paytype"] = array('1'=>'線上刷卡','2'=>'超商付款','3'=>'ATM轉帳','4'=>'貨到付款','5'=>'WEBATM');
-
-
-define('ACCOUNT_ERROR',"帳號格式錯誤。");
-define('ACCOUNT_EXIST',"帳號已有人申請，請確認");
-
-define('PWD_ERROR',"密碼格式錯誤。");
-
-
-
 
 
 $_SETUP["json"] .= " var SETUP = ".json_encode($_SETUP).";";//json
