@@ -47,13 +47,13 @@ else//列表頁
 	
 
 //--重新排序
-function cate_mode_reload($parent_id,$step=0,$conn,$table){
+function cate_mode_reload($parent_id,$step=0,$conn,$table,$depth=1){
 	$temp = $conn->GetArray("select * from ".$table." where parent_id='".$parent_id."' order by sort");
 	if ($temp){
 		foreach ($temp as $k=>$v){
 			$step += 1;
-			$avalue = $conn->Execute("UPDATE ".$table." SET lft=".$step." where id='".$v["id"]."'");
-			$step = cate_mode_reload($v["id"],$step,$conn,$table);
+			$avalue = $conn->Execute("UPDATE ".$table." SET lft=".$step.",depth='".$depth."' where id='".$v["id"]."'");
+			$step = cate_mode_reload($v["id"],$step,$conn,$table,$depth+1);
 			$step += 1;
 			$avalue = $conn->Execute("UPDATE ".$table." SET rgt=".$step." where id='".$v["id"]."'");
 		}
