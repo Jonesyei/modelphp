@@ -12,7 +12,7 @@ $_j_web_set['host_path']			=	'//'.$_j_web_set['host'].$_j_web_set['main_path'].'
 $_j_web_set['module_path']			=	'module/';				//--模組路徑
 $_j_web_set['controller_path']		=	'controller/';			//--控制器路徑
 $_j_web_set['controller_ninclude']	=	array('favicon.ico','serback','includes','css','js','font','ckeditor','ckfinder','images','upload','ajax.php',
-											'fileauth.php','mathcode.php','resize.php','verifycode.php');//---原始路徑保留參數
+											'fileauth.php','mathcode.php','resize.php','verifycode.php','_form_mail.php');//---原始路徑保留參數
 $_j_web_set['module_autoload']		=	array('foor');				//--自動載入模塊
 $_j_web_set['default_controller']	=	'index';				//--預設控制器
 

@@ -1017,8 +1017,8 @@ function page_show($cousql,$mount,$page_button_count=10,$page_row_count=false){
 			}
 		}
 	}
-	
-	$hrefhead =  $_SERVER['PHP_SELF'].'?'.$headurl;
+
+	$hrefhead =  ($_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL']:($_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF']:$_SERVER['PATH_INFO'])).'?'.$headurl;
 	
 	
 	//---一站通特殊處理
