@@ -461,7 +461,7 @@ function re_sort(){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-	<input type="file" id="ff" name="ff[]" multiple />
+	<input type="file" id="ff" name="ff[]" multiple ({if $data.uploadfilemax[m]<='1'})onchange="ajxupload();"({/if}) />
 	<BR />
 	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();" onclick="" style="color:#30F;"><b>批次上傳圖片</b></a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#ff').val(null);">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />

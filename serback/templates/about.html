@@ -326,7 +326,7 @@ function other_func_({$data.button.pic[m]})(other_obj){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-	<input type="file" id="ff({$data.button.pic[m]})" name="ff({$data.button.pic[m]})[]" multiple />
+	<input type="file" id="ff({$data.button.pic[m]})" name="ff({$data.button.pic[m]})[]" multiple ({if $data.uploadfilemax[m]<='1'})onchange="ajxupload('ff({$data.button.pic[m]})','({$data.button.pic[m]})');"({/if}) />
 	<BR />
 	({if $data.uploadfilemax>1})<a href="javascript:ajxupload('ff({$data.button.pic[m]})','({$data.button.pic[m]})');" onclick="" style="color:#30F;"><b>批量上傳圖片</b></a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#ff({$data.button.pic[m]})').val(null)">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title[m]})<BR />
@@ -491,7 +491,7 @@ function re_sort(){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-	<input type="file" id="ff" name="ff[]" multiple />
+	<input type="file" id="ff" name="ff[]" multiple ({if $data.uploadfilemax[m]<='1'})onchange="ajxupload();"({/if}) />
 	<BR />
 	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();" onclick="" style="color:#30F;"><b>批次上傳圖片</b></a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#ff').val(null);">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
