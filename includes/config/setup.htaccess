@@ -9,7 +9,7 @@
 	ErrorDocument 500 /%setup%/ErrorDocument/500
 	ErrorDocument 502 /%setup%/ErrorDocument/502
 	
-	RewriteRule ^(.*)ckfinder/(.*)$ $1ckfinder/$2 [QSA,L]
+	#RewriteRule ^(.*)ckfinder/(.*)$ $1ckfinder/$2 [QSA,L]
 	RewriteRule ^(.*).jsx(.*)$ $1.php$2 [L]
 	
 	%mvc%

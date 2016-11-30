@@ -68,7 +68,7 @@ if ($_POST) {
 	$settingstr = str_replace('%mvc%',"
 	RewriteRule ^(.*)serback/ajx.php$ serback/ajx.php [QSA,L]
 	RewriteCond $1 !^(ajax\.php|favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
-    RewriteRule ^(.*)$ index.php/$1 [L,QSA]",$settingstr);
+    RewriteRule ^(.*)$ index.php [L,QSA]",$settingstr);
 	}else{
 		$settingstr = str_replace('%mvc%','',$settingstr);
 	}

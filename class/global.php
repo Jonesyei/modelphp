@@ -1,5 +1,10 @@
 <?php
 /*
+	Create by Jones MVC核心框架
+*/
+
+
+/*
 	讀取模塊
 */
 namespace load_plugin{
@@ -54,10 +59,17 @@ namespace console{
 			$this->get = $_GET;
 			$this->_j_web_set = $_j_web_set;
 			
+			//--環境預設值設立
+			$this->work();
+			
 			//--路由轉換
 			if (!$_SERVER['PATH_INFO']){
-				$this->path = explode('index.php',$_SERVER['PHP_SELF']);
-				$this->path = explode('/',$this->path[1]);
+				if ($_SERVER['REDIRECT_URL']){
+					$this->path = explode('/',str_replace($this->_j_web_set['main_path'],'',$_SERVER['REDIRECT_URL']));
+				}else{
+					$this->path = explode('index.php',$_SERVER['PHP_SELF']);
+					$this->path = explode('/',$this->path[1]);
+				}
 			}else{
 				$this->path = explode('/',$_SERVER['PATH_INFO']);
 			}
@@ -75,6 +87,16 @@ namespace console{
 					$this->load->module($v);
 		}
 		
+		function work(){
+			global $_SESSION;
+			global $_POST;
+			global $_SERVER;
+			//--原頁面含有post 資料處理
+			if (isset($_SESSION['_J_MVC_POST_SESSION_'])){
+				$_POST = $_SESSION['_J_MVC_POST_SESSION_'];
+				unset($_SESSION['_J_MVC_POST_SESSION_']);
+			}
+		}
 	
 		//--控制器
 		function controller($value){
@@ -108,6 +130,14 @@ namespace console{
 		
 		//直接引導轉跳
 		function movePage($num,$url){
+		   global $_SESSION;
+		   global $_POST;
+		   global $_SERVER;
+		   if ($_SERVER['REQUEST_METHOD']=='POST'){
+			   $rand_token = md5(rand(11111111,99999999));
+			   $_SESSION['_J_MVC_POST_SESSION_'] = $_POST;
+			   header('token:'.$rand_token);
+		   }
 		   static $http = array (
 			   100 => "HTTP/1.1 100 Continue",
 			   101 => "HTTP/1.1 101 Switching Protocols",
