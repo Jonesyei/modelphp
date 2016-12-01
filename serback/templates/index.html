@@ -33,6 +33,7 @@
 
 <body>
 <script>
+//--後台式樣管理
 serback_style();
 function serback_style(){
 	if (window.localStorage.getItem("serback_style")!=null && window.localStorage.getItem("serback_style")!="default"){
@@ -46,6 +47,29 @@ $(document).ready(function (){
 	});
 });
 </script>
+<div msgdiago style="position:fixed; width:100%; height:100%; z-index:800; text-align:center; display:none;" onclick="hide_design_msg()">
+	<div style="position:absolute;background-color:#FFF; width:60%; height:60%; z-index:801; display:table; margin: 10% calc(50% - 30%);">
+    	<div style=" display:table-cell; vertical-align:middle;"><b style="font-size:24px;">右上方引導式編輯，可供您直接做前端預覽編輯畫面</b><br>
+        <input type="checkbox" onclick="window.localStorage.setItem('no_to_desing_msg','1');">不再提示此訊息</div>
+    </div>
+    <div style="position:absolute;background-color:black; width:100%; height:100%; opacity:0.65;">
+    </div>
+</div>
+<script>
+	if (window.localStorage.getItem('no_to_desing_msg')==null) $('div[msgdiago]').show();
+	function hide_design_msg(){
+		$('div[msgdiago]>div:first').animate({
+			left:'80%',
+			top:'-20%',
+			width:'5%',
+			height:'5%',
+			opacity:'0'
+		},'slow',function (){
+			$('div[msgdiago]').remove();
+			$('a[design_btn]').fadeOut('slow').fadeIn('slow').fadeOut('slow').fadeIn('slow');
+		})
+	};
+</script>
 <div id="warper">
 
 <div class="header"><!-- head -->
@@ -55,7 +79,7 @@ $(document).ready(function (){
         <div class="logo-slogan">網站後台管理系統</div>
         <div class="login-person clearfix">
              <a href="login.php" class="logout">登　　出</a>
-             <a href="../" onclick="return open_ser_editor();" target="_blank" class="outlay" sereditor>引導式編輯</a>
+             <a href="../" design_btn onclick="return open_ser_editor();" target="_blank" class="outlay" sereditor>引導式編輯</a>
              <script>
 			 	function open_ser_editor(noset){
 					 if (window.localStorage.getItem('serback_editor')==null){
