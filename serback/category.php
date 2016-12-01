@@ -92,8 +92,14 @@ else//列表頁
 	if ($data["list"])
 		foreach ($data["list"] as $k=>$v){
 			$spce = '';
-			for($i=1;$i<$v["depth"];$i++) $spce .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			$data["list"][$k]["name"] = $spce.$v["name"];
+			for($i=1;$i<=$v["depth"];$i++) {
+				if ($i==1 && $v["rgt"]-$v["lft"]>1)
+					$spce .= '';
+				else
+					$spce .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			}
+			$data["list"][$k]["__span__"] = $spce;
+			$data["list"][$k]["name"] = $v["name"];
 		}
 }
 

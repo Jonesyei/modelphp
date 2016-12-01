@@ -179,7 +179,7 @@ namespace console{
 			   503 => "HTTP/1.1 503 Service Unavailable",
 			   504 => "HTTP/1.1 504 Gateway Time-out"
 		   );
-		   header($http[$num]);
+		   //header($http[$num]);
 		   header("Location: $url");
 		   exit;
 		}

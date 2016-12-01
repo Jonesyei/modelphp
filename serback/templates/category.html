@@ -82,10 +82,9 @@ $(document).ready(function(){
 	  
 	  
 	  <td >
+      ({$data.list[idex].__span__})
       ({if $data.list[idex].lft*1+1 < $data.list[idex].rgt*1})
       <img src="images/closedir.png" width="20" onclick="toggdir(({$data.list[idex].id}));" dir>
-      ({else})
-      <img src="images/wdir.png" width="20">
       ({/if})
       <a href="({$admin_info.page})&id=({$data.list[idex].id})">({$data.list[idex].name})</a></td>
 	  
