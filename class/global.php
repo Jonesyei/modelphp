@@ -51,7 +51,9 @@ namespace console{
 		var $_j_web_set;
 		var $load;
 		var $tpl;
-		function __construct()
+		var $lang;
+		var $tag;
+		function __construct($lang)
 		{
 			global $_GET;
 			global $_SERVER;
@@ -59,13 +61,17 @@ namespace console{
 			$this->get = $_GET;
 			$this->_j_web_set = $_j_web_set;
 			
+			//--設定語系
+			$this->setlang($lang);
+			
 			//--環境預設值設立
 			$this->work();
 			
 			//--路由轉換
 			if (!$_SERVER['PATH_INFO']){
 				if ($_SERVER['REDIRECT_URL']){
-					$this->path = explode('/',str_replace($this->_j_web_set['main_path'],'',$_SERVER['REDIRECT_URL']));
+					$this->path = explode('//',str_replace($_SERVER['HTTP_HOST'],'',str_replace($this->_j_web_set['main_path'],'',$_SERVER['REDIRECT_URL'])));
+					$this->path = explode('/',($this->path[1] ? $this->path[1]:$this->path[0]));
 				}else{
 					$this->path = explode('index.php',$_SERVER['PHP_SELF']);
 					$this->path = explode('/',$this->path[1]);
@@ -97,7 +103,29 @@ namespace console{
 				unset($_SESSION['_J_MVC_POST_SESSION_']);
 			}
 		}
-	
+		
+		function setlang($lang){
+			$this->lang = $lang;
+			//--語言標籤裝載
+			$lang_ini_file = APP_PATH."includes/config/tags/".$this->lang.".ini";
+			if (is_file($lang_ini_file)){
+				$temp = parse_ini_file($lang_ini_file,true);
+				$this->tag = $temp[$this->lang];
+			}
+		}
+		
+		//--標籤資料返回
+		function tags($value,$setting=array()){
+			$value = $this->tag[$value];
+			if (is_array($setting) && count($setting)>0){
+				sort($setting);
+				foreach ($setting as $k=>$v)
+					$value = str_replace('$'.($k+1),$v,$value);
+			}
+			return $value;
+		}
+		
+		
 		//--控制器
 		function controller($value){
 			global $$value;
@@ -105,10 +133,10 @@ namespace console{
 			if (is_file(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php')){
 				include_once(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php');			
 			}else{
-				echo '控制器讀取錯誤!! 無此檔案請檢查'.$this->_j_web_set['controller_path'].$this->path[0].'.php 是否存在';exit;
+				echo $this->tags('THE_CONTROLLER_LOADING_ERROR',array($this->_j_web_set['controller_path'].$this->path[0]));exit;
 			}
 		}
-	
+		
 		//--確認路由中是否包含已設定的目錄
 		function check_path_url(){
 			global $_SERVER;
@@ -123,7 +151,7 @@ namespace console{
 			if ($path){
 				$path = array_values($path);
 				$path = implode('/',$path);
-				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo '控制器設定名稱不可予保留參數 confing/_j_web_set[controller_ninclude] 重複!!';exit;}
+				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo $this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
 				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}

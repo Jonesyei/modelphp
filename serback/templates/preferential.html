@@ -266,14 +266,34 @@ page_initial('table_content');
 	  <font color="#008000">$ ({$data.one.total+$data.one.post_fee-$data.one.deshpoint|number_format:0:".":","})</font>
 	 </td>
     </tr>
-<!--
+
 	<tr >
       <td align="right" >可獲得紅利：</td>
       <td >
-	 ({$data.one.addpoint})
+	 ({$data.one.addpoint}) 
+     ({if $data.one.addpoint_status=='1'})
+     <font color="blue">已發放</font><a href="javascript:;" onclick="point_change();">[回收]</a>
+     ({else})
+     <font color="red">未發放</font><a href="javascript:;" onclick="point_change();">[發放]</a>
+     ({/if})
+     <script>
+	 function point_change(){
+            $.ajax( {
+                url: "ajx.php",
+                data: {back_point:"({$data.one.id})"},
+                type:"GET",
+                dataType:'text',
+				async: false,
+                success: function(msg){
+                    alert(msg);
+					window.location.reload();
+                }
+            });
+	 }
+	 </script>
 	 </td>
     </tr>
--->
+
 
 	 <tr >
       <td align="right" >訂單狀態：</td>

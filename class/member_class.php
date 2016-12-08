@@ -141,6 +141,7 @@ class member
 		*/
 		function getmember($where=NULL,$act='load') //--獲取
 		{
+			global $_SESSION;
 			$temp = $this->conn->GetRow("select * from ".$this->table." ".$where);
 			if ($act=='login'){
 				$_SESSION["login_info"][$this->namespace] = $this->session = $temp;
@@ -533,7 +534,7 @@ class member
 			if ($mount>0){
 				$indata['after_point'] = $indata['before_point']*1+$mount;
 			}elseif ($memo<0){
-				$indata['after_point'] = $indata['before_point']*1-$mount;
+				$indata['after_point'] = $indata['before_point']*1+$mount;
 			}
 			$indata["member_id"] = $this->session['id'];
 			$indata['point'] = $mount;

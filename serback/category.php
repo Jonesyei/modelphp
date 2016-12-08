@@ -20,6 +20,7 @@ $cpos["sort_class"] = "parent_id"; //--列表頁有多個不同類別 依照此�
 $cpos["tablesearch"] = 'name';//搜尋關聯欄位
 $cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
 
+
 $close["insert"] =0;
 $close["add"]	= 0;
 $close["del"]	= 0;

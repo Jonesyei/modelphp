@@ -297,4 +297,23 @@ if ($_GET["ajx_view_design"]){
 	else
 		echo '更新失敗';
 }
+
+
+
+//--訂單紅利操作
+if ($_GET["back_point"]){
+	$member = new member($conn,PREFIX."member");
+	$check_data = $conn->GetRow("select * from ".PREFIX."shopping_car where id='".$_GET["back_point"]."'");
+	$member->getmember(" where id='".$check_data["member_id"]."'",'login');
+	$member->work();
+	if ($check_data["addpoint_status"]=='1'){
+		$member->point_work(($check_data['addpoint']*-1),'後台訂單調整回收紅利');
+		$conn->Execute("UPDATE ".PREFIX."shopping_car SET addpoint_status=0 where id='".$_GET["back_point"]."'");
+		echo '已回收紅利點數';exit;
+	}else{
+		$member->point_work($check_data['addpoint'],'後台訂單調整發放紅利');
+		$conn->Execute("UPDATE ".PREFIX."shopping_car SET addpoint_status=1 where id='".$_GET["back_point"]."'");
+		echo '已發放紅利點數';exit;
+	}
+}
 ?>

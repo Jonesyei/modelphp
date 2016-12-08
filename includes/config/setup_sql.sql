@@ -226,6 +226,7 @@ CREATE TABLE `datasetup_shopping_car` (
   `total` int(20) default '0' COMMENT '總價(不含折價 不含運費)',
   `deshpoint` int(11) default NULL COMMENT '扣除紅利點',
   `addpoint` int(11) default NULL COMMENT '新增紅利點',
+  `addpoint_status` int(11) default '0' COMMENT '點數支付狀態',
   `post_fee` int(10) default '0' COMMENT '運費',
   `back_total` int(20) default NULL COMMENT '退款總額',
   `back_money` int(20) default NULL COMMENT '已退金額',

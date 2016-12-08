@@ -118,4 +118,7 @@ if ($smtp_set){
     $mail->Username = $smtp_set["detail"][3];     // 設定驗證帳號        
     $mail->Password = $smtp_set["detail"][4];              // 設定驗證密碼          
 }
+
+//各類別庫
+include_once(APP_PATH."class/class.php");
 ?>

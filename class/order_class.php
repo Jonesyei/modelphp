@@ -51,6 +51,13 @@ $shopping_car->order_list(訂單唯一編號(or條件式),起始筆數,顯示筆
 確認付款
 $shopping_car->paycheck(訂單編號);
 
+訂單點數發放 (訂單確認付款後 會自動發放)
+$shopping_car->point(訂單唯一編號(or訂單資料陣))
+
+訂單點數回收
+$shopping_car->back_point(訂單唯一編號(or訂單資料陣列))
+
+
 自訂訂單編號
 $shopping_car->order_auto_set(標頭,總字段數(含標頭),起始值)
 */
@@ -1134,10 +1141,42 @@ class order_center
 		function paycheck($order_no){
 			$carlist["pay_status"] = 1; //--付款狀態
 			$carlist["paymode_status"] = 1;//--金流付款狀態
+			$check_data = $this->conn->GetRow("select * from ".$this->table." where order_no='".$order_no."'");
+			//--點數發放
+			$this->pay_point($check_data);
+			
 			$this->ispay_mail($order_no);
 			return $this->conn->AutoExecute($this->table,$carlist,"UPDATE","order_no='".$order_no."'");
 		}
 		
+		//--訂單點數發放
+		// patten $data 訂單資料
+		function pay_point($data,$memo=''){
+			if (!is_array($data))
+				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
+				
+			if ($data && $data["member_id"]!='' && $data["addpoint_status"]!='1'){
+				$member = new member($this->conn,PREFIX."member");
+				$member->getmember(" where id='".$data["member_id"]."'",'login');
+				$ind['shopping_car_id'] = $data["id"];
+				$member->point_work($data["addpoint"],($memo!='' ? $memo:'訂單'.$order_no.'交易成功返回紅利'),$ind);
+				$this->conn->Execute("UPDATE ".$this->table." SET addpoint_status=1 where id='".$data["id"]."'");
+			}
+		}
+		
+		//--訂單點數回收
+		function back_point($data,$memo=''){
+			if (!is_array($data))
+				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
+				
+			if ($data && $data["member_id"]!='' && $data["addpoint_status"]=='1'){
+				$member = new member($this->conn,PREFIX."member");
+				$member->getmember(" where id='".$data["member_id"]."'",'login');
+				$ind['shopping_car_id'] = $data["id"];
+				$member->point_work(($data["addpoint"]*-1),($memo!='' ? $memo:'訂單'.$order_no.'移除紅利'),$ind);
+				$this->conn->Execute("UPDATE ".$this->table." SET addpoint_status=0 where id='".$data["id"]."'");
+			}
+		}
 		
 		//--訂單成功信件
 		function ispay_mail($order_no){
