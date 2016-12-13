@@ -189,11 +189,11 @@ class order_center
 		/* 訂單編號自定義  標頭,長度,開始值 */
 		function order_auto_set($title,$count=10,$mask='1'){
 			global $_SESSION;
-			$temp = $this->conn->GetRow("select * from ".$this->table." order by id desc limit 1,1");
+			$temp = $this->conn->GetRow("SELECT *,REPLACE(order_no,'".$title."','') as _order_no FROM `".$this->table."` WHERE order_no like '".$title."%' order by _order_no desc limit 1");
 			if (substr($this->order['order_no'],0,strlen($title))==$title) return;
 			
 			if (substr($temp['order_no'],0,strlen($title))==$title){
-				$num = substr($temp['order_no'],strlen($title))*1+1;
+				$num = $temp['_order_no']*1+1;
 			}else{
 				$num = $mask*1;
 			}
@@ -212,8 +212,8 @@ class order_center
 			
 			$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and order_no='".$ORDER_NO."'");
 			$this->order = $temp;
-			
 		}
+		
 		//--資料表檢查並建立
 		function checktable(){
 			$temp = $this->conn->GetArray("show tables");
@@ -1144,8 +1144,9 @@ class order_center
 			$check_data = $this->conn->GetRow("select * from ".$this->table." where order_no='".$order_no."'");
 			//--點數發放
 			$this->pay_point($check_data);
-			
-			$this->ispay_mail($order_no);
+			//--第一次收到付款完成 則寄通知信 否者 都當作已付款已發送通知
+			if ($check_data["pay_status"]!='1')
+				$this->ispay_mail($order_no);
 			return $this->conn->AutoExecute($this->table,$carlist,"UPDATE","order_no='".$order_no."'");
 		}
 		

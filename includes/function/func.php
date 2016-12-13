@@ -384,33 +384,21 @@ function array_sql_search($row,$data){
 function alert($messages,$url=NULL)
 {
 	print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>";
-	
 	if( trim($url)=="-1" )
 	{
-		echo "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");javascript:history.back(-1);</script>";
+		echo "<script language=\"JavaScript\" type=\"text/JavaScript\">window.addEventListener('load',function(){alert(\"$messages\");javascript:history.back(-1);});</script>";
 		exit;
 	}
 	elseif( trim($url)==NULL || trim($url)=="")
 	{
-		echo "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");location.reload();</script>";
+		echo "<script language=\"JavaScript\" type=\"text/JavaScript\">window.addEventListener('load',function(){alert(\"$messages\");location.reload();});</script>";
 	}
 	else
 	{
-		echo "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");location.href='$url';</script>";
+		echo "<script language=\"JavaScript\" type=\"text/JavaScript\">window.addEventListener('load',function(){alert(\"$messages\");location.href='$url';});</script>";
 		exit;
 	}
-		
-	/*
-	if (trim($url) == "-1")
-		$msg= "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");javascript:history.back(-1);</script>";
-	else if (trim($url) == "submit")
-		$msg= "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");document.vipform.submit();</script>";
-	else if (trim($url) == "")
-		$msg= "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");</script>";
-	else
-		$msg= "<script language=\"JavaScript\" type=\"text/JavaScript\">window.alert(\"$messages\");location.href='$url';</script>";
-	echo $msg;
-	*/
+	
 }
 
 

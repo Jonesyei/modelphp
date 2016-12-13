@@ -117,6 +117,7 @@ namespace console{
 		//--標籤資料返回
 		function tags($value,$setting=array()){
 			$value = $this->tag[$value];
+			//--參數轉換
 			if (is_array($setting) && count($setting)>0){
 				sort($setting);
 				foreach ($setting as $k=>$v)
