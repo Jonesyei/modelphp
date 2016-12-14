@@ -58,7 +58,7 @@ if (!$member->status() && 0){
 			echo 'ok';
 			exit;
 		}else{
-			alert('您未登入已將您購買的商品暫存，登入後才會正式加入購物車',-1);
+			alert($console->tags('NOTLOGIN_ADDCAR_MESG'),-1);//您未登入已將您購買的商品暫存，登入後才會正式加入購物車
 			exit;
 		}
 	}
@@ -128,7 +128,7 @@ if ($_POST && $_REQUEST['submit']){
 	
 	$pay_bill = $shopping_car->paybill($_POST);
 	if (!$pay_bill){
-		alert('付款結帳失敗!!'.$shopping_car->erromsg,'?list=1');
+		alert($console->tags('PAY_BILL_FILED').$shopping_car->erromsg,'?list=1'); //付款結帳失敗!!
 		exit;
 	}else{
 		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路徑');
@@ -205,7 +205,7 @@ if ($_REQUEST["addoth"]){
 			$shopping_car->addother($o_name[$k],$o_detail[$k],$o_value[$k],$o_count[$k],false,$sort);
 	}
 	if ($_REQUEST["ajax"]){
-		echo $_REQUEST["name"].'已加入購物車!!';
+		echo $_REQUEST["name"].$console->tags('ADDCAR_SURE_MESG');//已加入購物車!!
 		exit;
 	}
 	linkto('?list=1&oadd=1');
@@ -217,16 +217,16 @@ if ($_GET["editpro"]){
 	$temp = $shopping_car->car_change($_GET["editpro"],$_GET["count"]);
 	if ($temp){
 		if ($_GET["ajax"]) {
-			echo '數量更新成功!!';
+			echo $console->tags('CARITEM_UPDATE_SURE_MESG'); //數量更新成功!!
 			exit;
 		}
-		alert('數量更新成功!!','?list=1');
+		alert($console->tags('CARITEM_UPDATE_SURE_MESG'),'?list=1'); // 數量更新成功!!
 	}else{
 		if ($_GET["ajax"]) {
 			echo $shopping_car->erromsg;
 			exit;
 		}
-		alert('數量更新失敗!!','?list=1');
+		alert($console->tags('CARITEM_UPDATE_FILED_MESG'),'?list=1'); //數量更新失敗!!
 	}
 }
 
@@ -283,7 +283,7 @@ if ($_GET["payorder"]){
 	if ($pay_bill["pay_status"]!='1'){
 		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路由');
 	}else{
-		alert('此筆交易已經成功付款了，無需再次付款!!',-1);
+		alert($console->tags('ISPAY_AFTER'),-1); //此筆交易已經成功付款了，無需再次付款!!
 		exit;
 	}
 }
@@ -291,7 +291,7 @@ if ($_GET["payorder"]){
 //--商品退貨
 if ($_GET["back_item"]){
 	if ($shopping_car->back_item($_GET["back_item"])){
-		$temp_str = '商品退貨申請成功!!';
+		$temp_str = $console->tags('ORDER_TOBACK_SURE_MESG');//商品退貨申請成功!!
 	}else{
 		$temp_str = $shopping_car->erromsg;
 	}

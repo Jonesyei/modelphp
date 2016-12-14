@@ -54,7 +54,7 @@ switch ($act){
 		if ($_POST){
 			unset($_POST["account"]);
 			if ($member->update($_POST)){
-				alert('修改成功!!',$console->_j_web_set['main_path']."/member/detail");
+				alert($console->tags('UPDATE_SURE'),$console->_j_web_set['main_path']."/member/detail"); // 修改成功!!
 				exit;
 			}
 		}
@@ -67,18 +67,18 @@ switch ($act){
 			$update["password"] = $_POST["new_password"];
 			$update["create_date"] = date("Y-m-d H:i:s");
 			if ($member->update($update)){
-				alert('修改成功!!',$console->_j_web_set['main_path']."/member/detail");
+				alert($console->tags('UPDATE_SURE'),$console->_j_web_set['main_path']."/member/detail");//修改成功!!
 				exit;
 			}
 		}else{
-			alert('填入的資訊有誤!!',-1);
+			alert($console->tags('INFO_INSERT_ERRO'),-1);//填入的資訊有誤!!
 			exit;
 		}
 	break;
 	
 	case "logout":
 			$member->logout();
-			alert('已成功登出!!','-1');
+			alert($console->tags('LOGOUT_SURE'),'-1');//已成功登出!!
 			exit;
 	break;
 	
@@ -88,25 +88,25 @@ switch ($act){
 			if ($member->recive_check_mail($_GET)){
 				print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>";
 				echo '<form id="form1" action="member?cpw&nock=1" method="post"><input type="hidden" name="password" value="'.base64_decode(urldecode($_GET["auth"])).'"><br>';
-				echo '請輸入欲修改的密碼:<input type="password" name="new_password" id="password" value=""><br>';
-				echo '再次輸入欲修改的密碼:<input type="password" id="new_password" value=""><br>';
-				echo '<input type="button" value=" 送出 " onclick="checkdata()"></form>
+				echo $console->tags('PLEASE_ENTER_PASSWORD').':<input type="password" name="new_password" id="password" value=""><br>';
+				echo $console->tags('PLEASE_ENTER_PASSWORD_AGAIN').':<input type="password" id="new_password" value=""><br>';
+				echo '<input type="button" value=" '.$console->tags('SEND').' " onclick="checkdata()"></form>
 				<script>
 				function checkdata(){
 					if(document.getElementById("password").value=="" || document.getElementById("password").value==null){
-						return alert("必需要輸入新密碼");
+						return alert("'.$console->tags('PASSWORD_OLD_REQUIRE').'");
 					}
 					if (document.getElementById("password").value==document.getElementById("new_password").value){
 						document.getElementById("form1").submit();
 					}else{
-						alert("二次密碼不相同!!");
+						alert("'.$console->tags('PASSWORD_SECOND_REQUIRE').'");
 					}
 				}
 				</script>
 				';
 				
 			}else{
-				alert('資訊來源錯誤!!請重新發送密碼驗證信件!!','/');
+				alert($console->tags('PASSWORD_CHANGE_VILED_AGAIN'),'/');//資訊來源錯誤!!請重新發送密碼驗證信件!!
 			}
 			exit;
 		}
@@ -116,7 +116,7 @@ switch ($act){
 		}else if ($_POST["email"]){
 			$new_pd = $member->fotgot("email",$_POST["email"]);
 		}
-		if ($new_pd) alert('已寄出密碼修改信件!!',$console->_j_web_set['main_path']."/member/detail");
+		if ($new_pd) alert($console->tags('PASWORD_CHANGE_MAIL_FINSH'),$console->_j_web_set['main_path']."/member/detail");//已寄出密碼修改信件!!
 	break;
 	
 	
@@ -144,7 +144,7 @@ switch ($act){
 			}
 			//針對接收到的資料做處理 判斷有否相關社群網站資料 沒有者 新建立資料
 			if (!$member->net_login($row,$_POST)){
-					alert('系統發生錯誤!!',-1);
+					alert($console->tags('SYSTEM_ERRO'),-1);//系統發生錯誤!!
 			}
 			
 			linkto($console->_j_web_set['main_path']."/member/detail");
@@ -159,12 +159,12 @@ switch ($act){
 		}
 		if ($_POST){
 			if ($_SESSION["__validate_code"]!=md5($_POST["code"])){
-				alert('驗證碼錯誤!!',-1);exit;
+				alert($console->tags('VAILD_CODE_ERRO'),-1);exit;
 			}
 			if (!$_POST["account"]) $_POST["account"] = $_POST["email"];
 			$backdata = $member->newjoin($_POST);
 			if (is_array($backdata)){
-				alert('帳號申請成功',$console->_j_web_set['main_path']."/member/detail");exit;
+				alert($console->tags('CREATE_ACCOUNT_SURE'),$console->_j_web_set['main_path']."/member/detail");exit;//帳號申請成功
 			}else{
 				alert($backdata,"-1");exit;
 			}
@@ -194,7 +194,7 @@ switch ($act){
 						}
 					break;
 					default:
-						$data["orderlist"][$k]["status_html"] = '<a href="shopping?payorder='.$v["id"].'">待付款';
+						$data["orderlist"][$k]["status_html"] = '<a href="shopping?payorder='.$v["id"].'">待付款</a>';
 					break;
 				}
 
@@ -208,7 +208,7 @@ switch ($act){
 	
 	case "open":
 		if ($member->recive_check_mail($_GET)){
-			alert("會員帳戶認證完成!!",$console->_j_web_set['main_path']."/");
+			alert($console->tags('RECIVE_CHECK_ACCOUNT'),$console->_j_web_set['main_path']."/");//會員帳戶認證完成!!
 		}else{
 			alert($member->erromsg,$console->_j_web_set['main_path']."/");
 			exit;
@@ -246,7 +246,7 @@ switch ($act){
 					linkto($console->_j_web_set['main_path']."/member/detail");
 				}
 			}else{
-				alert('請確認資料是否正確',-1);
+				alert($console->tags('INFO_INSERT_ERRO'),-1);//請確認資料是否正確
 				exit;
 			}
 		}

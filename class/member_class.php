@@ -93,13 +93,19 @@ class member
 			$this->smtp_set = $mail;
 		}
 		
+		//--對應參數標籤
+		function tags($value,$para=array()){
+			global $console;
+			return $console->tags($value,$para);
+		}
+		
 		/**
 			運行
 			設置完參數後 運行此
 		*/
 		function work(){
 			if ($this->iswork) {
-				echo '錯誤:已經建立過此物件!! 勿重複宣告work()';
+				echo $this->tags('MEMBER_IS_WORK');//錯誤:已經建立過此物件!! 勿重複宣告work()
 				exit;
 			}
 			//-判斷是否!=預設值
@@ -116,7 +122,7 @@ class member
 		*/
 		function clone_of($obj,$name=''){
 			if (!$obj->iswork){
-				echo '拷貝對象 必須是已經work的物件 參數(物件變數,命名空間)';
+				echo $this->tags('MEMBER_COPY_IS_TO_WORK_ERRO');//拷貝對象 必須是已經work的物件 參數(物件變數,命名空間)
 				exit;
 			}
 			foreach ($obj as $k=>$v){
@@ -128,7 +134,7 @@ class member
 				$this->namespace_sql = ''; //-不判斷命名空間登入方式
 				$_SESSION["login_info"][$this->namespace] = $this->session;
 			}else{
-				 echo '必須宣告 不同於 ['.$obj->namespace.'] 的命名空間';
+				 echo $this->tags('MEMBER_HAVETO_NOT_SAME_NAMESPACE',array($obj->namespace));//'必須宣告 不同於 ['.$obj->namespace.'] 的命名空間'
 				 exit;
 			}
 		}
@@ -215,6 +221,7 @@ class member
 				$mtime =$mtime[1];
 				$href = $pagefile.'cid='.$temp["id"].'&auth='.urlencode(base64_encode($temp["new_password"])).'&dkt='.$mtime.'&checkcode='.urlencode(base64_encode(base64_encode($temp["new_password"]).'|_br_|'.$mtime.'|_br_|'.$temp["id"]));
 				
+				
 				$message = '您好此為 '.$this->web_name.'密碼修改信件<br><br>
 							帳號: '.$this->str_hide($temp["account"],0,2).'
 							<br><br><font color="red">如果您未申請密碼更換</font>，請立即上線修改密碼以避免遭到盜用<br>
@@ -250,7 +257,7 @@ class member
 				$indata = $this->data_array_implode($indata);
 				return $this->update($indata);
 			}
-			$this->erromsg = '無相關資料!!';
+			$this->erromsg = $this->tags('MEMBER_NO_INFO_DATA');//無相關資料!!
 			return false;
 		}
 		function getinfo($value=NULL){ //---取得登入會員資料
@@ -298,7 +305,7 @@ class member
 			}else{
 				$check = $this->conn->GetRow("select * from ".$this->table." WHERE (account='".$data["account"]."' or email='".$data["email"]."') ".$this->namespace_sql);
 				if ($check){
-					return '帳號 或者 email 資料已重複!!';
+					return $this->tags('MEMBER_ACCOUNT_EMAIL_SAME_ERRO');//帳號 或者 email 資料已重複!!
 				}
 			}
 			
@@ -319,9 +326,9 @@ class member
 			if ($this->check_mail!=0){
 				if ($this->send_check_mail($data)){
 					$am = $this->conn->AutoExecute($this->table,$data,"INSERT");
-					return '已寄出帳號確認信件!!';
+					return $this->tags('MEMBER_REVICE_MAIL_SEND_SURE');//已寄出帳號確認信件!!
 				}else{
-					return '發送驗證信時發生錯誤!!,請確認郵件資訊是否正確';
+					return $this->tags('MEMBER_REVICE_MAIL_SEND_FILED');//'發送驗證信時發生錯誤!!,請確認郵件資訊是否正確'
 				}
 			}else{
 				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
@@ -430,10 +437,10 @@ class member
 			$temp = explode('|_br_|',$temp);
 			//--參數解密後判斷
 			if (count($temp)!=3) {
-				$this->erromsg = '參數錯誤!!';
+				$this->erromsg = $this->tags('MEMBER_PARA_ERRO');//參數錯誤!!
 				return false;
 			}else if ($data["auth"]!=$temp[0] || $data["dkt"]!=$temp[1]){
-				$this->erromsg = '檢查碼不符!!';
+				$this->erromsg = $this->tags('MEMBER_VAILD_CODE_ERRO');//檢查碼不符!!
 				return false ;
 			}
 			
@@ -447,11 +454,11 @@ class member
 				if ($this->session){
 					return $this->session;
 				}else{
-					$this->erromsg = '異常無法登入!!';
+					$this->erromsg = $this->tags('MEMBER_LOGIN_IS_VAILD_ERRO');//異常無法登入!!
 					return false;
 				}
 			}else{
-				$this->erromsg = '無資料對應!!';
+				$this->erromsg = $this->tags('MEMBER_NOT_HAVE_DATA');//無資料對應!!
 				return false;
 			}
 		}

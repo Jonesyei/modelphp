@@ -186,6 +186,12 @@ class order_center
 			$this->conn->Execute("UPDATE ".$this->table." set create_date='".date("Y-m-d H:i:s")."' where id = '".$this->order["id"]."'");
 		}
 		
+		//--對應參數標籤
+		function tags($value,$para=array()){
+			global $console;
+			return $console->tags($value,$para);
+		}
+		
 		/* 訂單編號自定義  標頭,長度,開始值 */
 		function order_auto_set($title,$count=10,$mask='1'){
 			global $_SESSION;
@@ -260,7 +266,7 @@ class order_center
 			}
 			$product = $this->conn->GetRow("select * from ".$this->protable." where id='".$value."' and status=1");
 			if (!$product) {
-				$this->erromsg = '無此商品訊息!!';
+				$this->erromsg = $this->tags('NO_HAVE_ITEM_INFO');//無此商品訊息!!
 				return false;
 			}
 			
@@ -277,7 +283,7 @@ class order_center
 						if (array_search($size,$price_data["stock_no"])!==false){
 							$product["price2"] = $price_data["stock_price"][array_search($size,$price_data["stock_no"])];
 						}else{
-							$this->erromsg = '未提供尺寸金額設定!!';
+							$this->erromsg = $this->tags('NOT_HAVE_PRICE_SETTING');//未提供尺寸金額設定!!
 							return false;
 						}	
 					break;
@@ -336,7 +342,7 @@ class order_center
 				$carlist["update_date"] = date("Y-m-d H:i:s");
 				$status = $this->conn->AutoExecute($this->cartable,$carlist,"UPDATE","shopping_car_list_id=".$carlist["shopping_car_list_id"]);
 				if (!$status) {
-					$this->erromsg = '購物商品更新失敗!!';
+					$this->erromsg = $this->tags('PRO_CARITEM_UPDATE_FILED');//購物商品更新失敗!!
 					return false;
 				}
 				$this->reload();
@@ -375,7 +381,7 @@ class order_center
 				$carlist["update_date"] = date("Y-m-d H:i:s");
 				$status = $this->conn->AutoExecute($this->cartable,$carlist,"INSERT");
 				if (!$status) {
-					$this->erromsg = '購物商品新增失敗!!';
+					$this->erromsg = $this->tags('PRO_CARITEM_INSERT_FILED');//購物商品新增失敗!!
 					return false;
 				}
 				$this->reload();
@@ -397,13 +403,13 @@ class order_center
 								
 			//--判斷是否為0值以下
 			if ($count*1<=0){
-				$this->erromsg = '更新的數量不可小於0';
+				$this->erromsg = $this->tags('CARITEM_UPDATE_COUNT_BTZERO',array(0=>'0'));//'更新的數量不可小於0'
 				return false;
 			}	
 			
 			//--判斷是否選擇規格
 			if(!$size){
-				$this->erromsg = '請選擇規格';
+				$this->erromsg = $this->tags('PLZ_SELECT_SIZE');//請選擇規格
 				return false;	
 			}		
 			
@@ -434,18 +440,18 @@ class order_center
 				$carlist["update_date"] = date("Y-m-d H:i:s");
 				$status = $this->conn->AutoExecute($this->cartable,$carlist,"UPDATE","shopping_car_list_id=".$car_list_id);
 				if (!$status) {
-					$this->erromsg = '購物商品更新失敗!!';
+					$this->erromsg = $this->tags('PRO_CARITEM_UPDATE_FILED');//購物商品更新失敗
 					return false;
 				}
 				
 				if($temp){
-					$this->erromsg = '購物商品更新成功!!';
+					$this->erromsg = $this->tags('PRO_CARITEM_UPDATE_SURE');//購物商品更新成功!!
 					$this->car_remove($id);
 				}else{
 					return $this->reload();
 				}
 			}else{
-				$this->erromsg = '購物車內無此商品';
+				$this->erromsg = $this->tags('PRO_CARITEM_NO_HAVE'); // 購物車內無此商品
 				return false;
 			}
 			
@@ -462,7 +468,7 @@ class order_center
 			
 			//--判斷是否為0值以下
 			if ($count*1<=0){
-				$this->erromsg = '更新的數量不可小於0';
+				$this->erromsg = $this->tags('CARITEM_UPDATE_COUNT_BTZERO',array(0=>'0')); //更新的數量不可小於0
 				return false;
 			}
 			
@@ -471,7 +477,7 @@ class order_center
 				$carlist["update_date"] = date("Y-m-d H:i:s");
 				$status = $this->conn->AutoExecute($this->cartable,$carlist,"UPDATE","shopping_car_list_id=".$car_pro["shopping_car_list_id"]);
 				if (!$status) {
-					$this->erromsg = '購物商品更新失敗!!';
+					$this->erromsg = $this->tags('PRO_CARITEM_UPDATE_FILED');//購物商品更新失敗!!
 					return false;
 				}
 				$output = $this->reload();
@@ -485,7 +491,7 @@ class order_center
 				
 				return $output;
 			}else{
-				$this->erromsg = '購物車內無此商品';
+				$this->erromsg = $this->tags('PRO_CARITEM_NO_HAVE');//購物車內無此商品
 				return false;
 			}
 		}
@@ -654,13 +660,13 @@ class order_center
 				$backcount = $check_count['sum']*1;
 				if ($check_count['count']*1>0)
 				if ($backcount>$this->active_group_count*1 && $this->active_any_other=='1'){
-					$this->erromsg = '已超過訂單活動數量限制'.$this->active_group_count.'，請刪除後再操作';
+					$this->erromsg = $this->tags('CAR_ACTIVE_FULL_COUNT',array($this->active_group_count));//'已超過訂單活動數量限制'.$this->active_group_count.'，請刪除後再操作'
 					return true;
 				}else{
 					//--判斷是否有多餘的餘數商品於訂單中
 					$check_count = $this->conn->GetRow("select sum(count-decount) as sum from ".$this->cartable." where shopping_car_id='".$this->order['id']."' group by shopping_car_id");
 					if ($backcount==$this->active_group_count && $check_count['sum']*1>0 && $this->active_any_other=='1'){
-						$this->erromsg = '已超過訂單活動數量限制'.$this->active_group_count.',請刪除後再操作';
+						$this->erromsg = $this->tags('CAR_ACTIVE_FULL_COUNT',array($this->active_group_count));//'已超過訂單活動數量限制'.$this->active_group_count.'，請刪除後再操作'
 						return true;
 					}else{
 						return false;
@@ -815,7 +821,7 @@ class order_center
 			$carlist["update_date"] = date("Y-m-d H:i:s");
 			$status = $this->conn->AutoExecute($this->cartable,$carlist,"INSERT");
 			if (!$status) {
-				$this->erromsg = '購物商品新增失敗!!';
+				$this->erromsg = $this->tags('PRO_CARITEM_INSERT_FILED');//購物商品新增失敗!!
 				return false;
 			}
 			return $this->reload();
@@ -936,7 +942,7 @@ class order_center
 				}
 			}
 			if (!$this->car_list()){
-				$this->erromsg = '購物車無商品無法結帳!!';
+				$this->erromsg = $this->tags('CAR_ITEM_IS_NULL_TO_PAY');//購物車無商品無法結帳!!
 				return false;
 			}
 			$unset_array = array('id','step','order_no','total','addpoint','deshpoint','post_fee'); //--禁止寫入的資料
@@ -991,7 +997,7 @@ class order_center
 				$product["stock"] = explode('|__|',$product["stock"]);
 				//--購物車商品規格 不在 現有規格之中
 				if (!in_array($v["size"],$product["stock_no"])){
-					$this->erromsg = '商品 '.$v["name"].'  '.$v["size"].' 規格已不存在!!';
+					$this->erromsg = $this->tags('STOCK_IS_NOT_FOUND',array($v["name"],$v["size"]));//'商品 '.$v["name"].'  '.$v["size"].' 規格已不存在!!'
 					return false;
 				}
 				foreach ($product["stock_no"] as $n1=>$n2){
@@ -999,7 +1005,7 @@ class order_center
 						if ($product["stock"][$n1]*1>=$v["count"]){//判斷庫存是否足夠
 							$product["stock"][$n1] = $product["stock"][$n1]-$v["count"];
 						}else{
-							$this->erromsg = '商品 '.$v["name"].' 庫存不足 '.$v["count"].',目前 '.$v["size"].' 剩下庫存 '.$product["stock"][$n1];
+							$this->erromsg = $this->tags('STOCK_COUNT_IS_LOW',array($v["name"],$v["count"],$v["size"],$product["stock"][$n1]));//'商品 '.$v["name"].' 庫存不足 '.$v["count"].',目前 '.$v["size"].' 剩下庫存 '.$product["stock"][$n1]
 							return false;
 						}
 					}
@@ -1073,13 +1079,14 @@ class order_center
 				$size = $temp[0];
 				//--購物車商品規格 不在 現有規格之中
 				if (!in_array($size,$temp_pro["size"])){
-					$this->erromsg = '商品 '.$product["name"].'  '.$size.' 規格已不存在!!';
+					$this->erromsg = $this->tags('STOCK_IS_NOT_FOUND',array($product["name"],$size));//'商品 '.$product["name"].'  '.$size.' 規格已不存在!!'
 					return false;
 				}
 				foreach ($temp_pro["size"] as $n1=>$n2){
 					if ($size==$n2){	//--判斷規格相同
 						if ($temp_pro["stock"][$n1]*1<$count*1){//判斷庫存是否足夠
-							$this->erromsg = '商品 '.$product["name"].' \n規格:'.implode('/',$temp).'\n庫存不足 '.$count.',目前 '.$size.' 剩下庫存 '.$temp_pro["stock"][$n1];
+							//'商品 '.$product["name"].' \n規格:'.implode('/',$temp).'\n庫存不足 '.$count.',目前 '.$size.' 剩下庫存 '.$temp_pro["stock"][$n1]
+							$this->erromsg = $this->tags('STOCK_COUNT_IS_LOW2',array($product["name"],implode('/',$temp),$count,$size,$temp_pro["stock"][$n1]));
 							return false;
 						}
 					}
@@ -1093,18 +1100,18 @@ class order_center
 			//--檢測商品詳細
 			$temp_item = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_list_id='".$id."'");
 			if (!$temp_item){
-				$this->erromsg ='商品錯誤!!';
+				$this->erromsg = $this->tags('PRO_ERRO'); //商品錯誤!!
 				return false;
 			}
 			$temp_order = $this->conn->GetRow("select * from ".$this->table." where id ='".$temp_item["shopping_car_id"]."'");
 			if (!$temp_order) {
-				$this->erromsg = '此商品訂單錯誤無法進行退貨';
+				$this->erromsg = $this->tags('ORDER_ERRO_TO_BACKITEM');//此商品訂單錯誤無法進行退貨
 				return false;
 			}else if ($temp_order["step"]=='1'){
-				$this->erromsg = '購物車環境中無法申請退貨';
+				$this->erromsg = $this->tags('ORDER_NOW_IS_SHOPCAR');//購物車環境中無法申請退貨
 				return false;
 			}else if ($temp_order["pay_status"]!='1'){ //-- 判斷是否已付款
-				$this->erromsg = '訂單狀態不符!!';
+				$this->erromsg = $this->tags('ORDER_STATUS_NOT_SAME');//訂單狀態不符!!
 				return false;
 			}
 			
@@ -1119,7 +1126,7 @@ class order_center
 			$this->conn->AutoExecute($this->cartable,$temp_item,"UPDATE","shopping_car_list_id='".$temp_item["shopping_car_list_id"]."'");
 			
 			if (!$this->back_reload($temp_order["id"])){
-				$this->erromsg = '退貨訂單寫入失敗!!';
+				$this->erromsg = $this->tags('ORDER_BACK_INTOFILE_ERRO');//'退貨訂單寫入失敗!!'
 				return false;
 			}else{
 				return true;
@@ -1305,7 +1312,8 @@ class order_center
 				$mail->AddAddress($v);
 			}
 			if($mail->Send()){
-				if ($callback) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'."<script>alert('已寄送訂單內容至郵件中!!');window.location.href='".$callback."';</script>";
+				//已寄送訂單內容至郵件中
+				if ($callback) echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'."<script>alert('".$this->tags('ORDER_PAYBILL_MAIL_MESG')."!!');window.location.href='".$callback."';</script>";
 			}else{
 				print_r($smtp_set["detail"]);
 				exit;

@@ -38,6 +38,9 @@ class foor
 			$this->data["foor"] = $console->conn->GetRow("select * from ".PREFIX."data_list where type='foor' and status=1 and lang='".$_SESSION["mode_lang"]."'");
 			$this->data["foor"]['detail'] = dequotes($this->data["foor"]['detail'],-1);
 			
+			//--console
+			$console->tpl->assign("console",$console); //別的頁面傳送來的data
+			
 			foreach ($this->_para_list as $k=>$v)
 				$console->tpl->assign($v,$this->$v); //別的頁面傳送來的data
 			
