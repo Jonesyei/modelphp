@@ -55,7 +55,7 @@ if ($_GET["checkpwd"]){
 
 
 //--連線測試
-if (!(@ $link=mysql_connect($dbHost, $dbUser, $dbPass))){
+if (!(@ $link=mysqli_connect($dbHost, $dbUser, $dbPass))){
 	$link = '<div class="fOoT" style="background-color: #ffAAAA;">[資料庫連線失敗] POWER BY WEB POWER ADVERTISING TECHNOLOGY CO.,LTD.</div>';
 }else{
 	$link = '<div class="fOoT" style="background-color: #AAffAA;">POWER BY WEB POWER ADVERTISING TECHNOLOGY CO.,LTD.</div>';

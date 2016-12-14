@@ -89,10 +89,10 @@ if ($_POST) {
 
 
 if ($_POST["dbname"]){
-	$conn = ADONewConnection('pdo');
+	$conn = ADONewConnection('mysqli');
 	$conn->debug=false;
-	$connect_check = $conn->PConnect('mysql:' . 'host='.$dbHost.';charset=utf8',$dbUser,$dbPass);
-	if (!$connect_check){echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script>alert("資料庫連線失敗，請確認是否已設定正確的主機資訊!!");window.history.back(-1);</script>';exit;};
+	$connect_check = $conn->PConnect($dbHost,$dbUser,$dbPass);
+	if (!$connect_check){echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><script>alert("資料庫連線失敗，請確認是否已設定正確的主機資訊!!");//window.history.back(-1);</script>';exit;};
 	$db_list = $conn->GetArray("show databases");
 	if ($db_list)
 		foreach ($db_list as $k=>$v)
@@ -103,7 +103,7 @@ if ($_POST["dbname"]){
 		$conn->Execute("drop database `".$_POST["dbname"]."`");
 	$conn->Execute("create database ".$_POST["dbname"]);
 	$conn->close();
-	$conn->PConnect('mysql:' . 'host='.$dbHost.';dbname='.$dbData.';charset=utf8',$dbUser,$dbPass);
+	$connect_check = $conn->PConnect($dbHost,$dbUser,$dbPass,$dbData);
 }
 
 
@@ -239,7 +239,7 @@ font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10
     </tr>
     <tr>
       <td>&nbsp;</td>
-      <td><input type="submit" value="安裝" class="btn-input" onclick="if (!confirm('環境需要PHP 5.4以上版本，建議使用PHP 5.6')) return false;"></td>
+      <td><input type="submit" value="安裝" class="btn-input" onclick="if (!confirm('環境需要PHP 5.4以上版本(包含PHP7)，建議使用PHP 5.6')) return false;"></td>
     </tr>
   </tbody>
 </table>

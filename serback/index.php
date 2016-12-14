@@ -59,6 +59,7 @@ foreach ($set as $k=>$v){
 	if($v["type"]=='delay_time')
 	if($_SESSION["admin_info"]["delay_time"]!=NULL&&$_SESSION["admin_info"]["delay_time"]!=''&&$_SESSION["admin_info"]["delay_time"]*1+$v["detail"]*1 <=strtotime(date("Y-m-d H:i:s")))
 	{
+		session_unset();
 		alert('登入閒置過久，因安全因素請您重新登入!!','login.php');
 		exit;
 	}else{
@@ -127,7 +128,7 @@ if($include != true)
 	if ($aa["code"]=='200'){
 		safefilerewrite(ROOT_PATH.$admin_path."templates/info.html",$aa["data"]);
 	}
-	$info["version"] = '後台系統 PHP 5.6 版 (sv2.1)';
+	$info["version"] = '後台系統 PHP 7.0.11 版 (sv2.2) [建置環境如採用5.6亦可運行]';
 	$tpl->assign("info",$info);
 	$tpl->assign("content",ROOT_PATH.$admin_path."templates/info.html");
 	$tpl->display(ROOT_PATH.$admin_path."templates/index.html");

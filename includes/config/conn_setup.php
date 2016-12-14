@@ -8,9 +8,9 @@ $dbData = "%database%";
 $_SETUP['MVC'] = %mvc%;
 
 //連線到資料庫	
-$conn = ADONewConnection('pdo');
+$conn = ADONewConnection('mysqli');
 $conn->debug=false;
-$connect_check = $conn->PConnect('mysql:' . 'host='.$dbHost.';dbname='.$dbData.';charset=utf8',$dbUser,$dbPass);
+$connect_check = $conn->PConnect($dbHost,$dbUser,$dbPass,$dbData);
 if (!$connect_check) {
 	$check_file = explode('/',$_SERVER["PHP_SELF"]);
 	
