@@ -6,9 +6,6 @@
 //--mailer 信件套件
 include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
 
-//-環境引用模組
-include_once(APP_PATH."class/global.php");
-
 //-設計版面模組
 include_once(APP_PATH."class/design_class.php");
 

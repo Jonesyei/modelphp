@@ -11,6 +11,10 @@ include_once(APP_PATH."includes/function/func.php");
 include_once(APP_PATH."includes/config/conn.php");
 include_once(APP_PATH."includes/config/config.php");
 
+//-環境引用模組
+include_once(APP_PATH."class/global.php");
+if ($_SETUP['MVC']) $console = new console\word_console($lang);
+
 //---Jones 函數
 include_once(APP_PATH."includes/project/function.php");
 //---qrcode
@@ -27,13 +31,13 @@ $tpl->config_dir = APP_PATH . "configs/";
 $tpl->cache_dir = APP_PATH . "cache/";
 
 
-
-$_SESSION["member_info"]["tmp"] = "";
-
-
-$_SESSION["member_info"]["lang"] = "ch";//無分語系
-
-$record["lang"] = $post["lang"] = $lang = $_SESSION["member_info"]["lang"];
+//------語系
+if ($_GET["lang"]!=NULL && $_GET["lang"]!=''){
+	$_SESSION["mode_lang"] = $_GET["lang"];
+}else{
+	$_SESSION["mode_lang"] = 'ch';
+}
+$record["lang"] = $post["lang"] = $lang = $_SESSION["member_info"]["lang"] = $_SESSION["mode_lang"];
  
 
 	
@@ -89,8 +93,7 @@ include_once(APP_PATH."class/class.php");
 $design = new design($conn,PREFIX."design",$lang);
 
 //MVC架框設定
-if ($_SETUP['MVC']){
-	$console = new console\word_console();
+if ($console){
 	$console->conn = $conn;
 	$console->mail = $mail;
 	$console->design = $design;

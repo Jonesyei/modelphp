@@ -153,7 +153,7 @@ namespace console{
 				$path = array_values($path);
 				$path = implode('/',$path);
 				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo $this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
-				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
+				$this->movePage(301,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}
 		
@@ -208,7 +208,7 @@ namespace console{
 			   503 => "HTTP/1.1 503 Service Unavailable",
 			   504 => "HTTP/1.1 504 Gateway Time-out"
 		   );
-		   //header($http[$num]);
+		   header($http[$num]);
 		   header("Location: $url");
 		   exit;
 		}

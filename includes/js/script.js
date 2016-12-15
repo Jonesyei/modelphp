@@ -29,42 +29,21 @@ var no_image_ava = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAA
 
 
 if (window.localStorage.getItem('serback_editor')!=null){
-	/*
-		WDJQ.ajax({
-		  url: 'ckeditor/ckeditor.js',
-		  dataType: "text",
-		  async: false,
-		  success: function (msg){
-			  //eval(msg.replace(/core\/loader.js/g,"ckeditor/core/loader.js"));
-			  eval(msg);
-			  CKEDITOR.getUrl2 = CKEDITOR.getUrl;
-			  CKEDITOR.getUrl = function(val){
-				  if (val.search('ckeditor/')>=0)
-				  	return CKEDITOR.getUrl2(val);
-				  else
-					return CKEDITOR.getUrl2('ckeditor/'+val);
-			  }
-				if ( CKEDITOR.loader )
-					CKEDITOR.loader.load( 'ckeditor' );
-				else {
-					// Set the script name to be loaded by the loader.
-					CKEDITOR._autoLoad = 'ckeditor';
-					// Include the loader script.
-					if ( document.body && ( !document.readyState || document.readyState == 'complete' ) ) {
-						var script = document.createElement( 'script' );
-						script.type = 'text/javascript';
-						script.src = CKEDITOR.getUrl( 'core/loader.js' );
-						document.body.appendChild( script );
-					} else {
-						document.write( '<script type="text/javascript" src="' + CKEDITOR.getUrl( 'core/loader.js' ) + '"></script>' );
-					}
-				
-				}
-		  }
+		$.ajax( {
+			url: "/ckeditor/ckeditor.js",
+			data: {},
+			type:"GET",
+			dataType:'text',
+			async: false,
+			success: function(msg){
+				document.write( '<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>' );
+				document.write( '<script type="text/javascript" src="/ckfinder/ckfinder.js"></script>' );
+			},
+			 error:function(xhr, ajaxOptions, thrownError){ 
+				document.write( '<script type="text/javascript" src="ckeditor/ckeditor.js"></script>' );
+				document.write( '<script type="text/javascript" src="ckfinder/ckfinder.js"></script>' ); 
+			 }
 		});
-		*/
-		document.write( '<script type="text/javascript" src="ckeditor/ckeditor.js"></script>' );
-		document.write( '<script type="text/javascript" src="ckfinder/ckfinder.js"></script>' );
 		WDJQ(document).ready(function(){
 			WDJQ('[contenteditable]:not([id])').each(function(idx,obj){
 				WDJQ(obj).removeAttr('contenteditable').attr('nck_contenteditable','true');
@@ -107,7 +86,8 @@ serback_editor = function (){
                 }
             });
 	//--上版描述
-	WDJQ('body').prepend('<div style="position: fixed;z-index: 9999;top: 0;text-align: center;width: 100%;font-size: 18px;color: white;background: red; left:0;">後台編輯模式<BR><input type="button" value="點此正常瀏覽網站" onclick="window.localStorage.removeItem(\'serback_editor\');"></div>');
+	WDJQ('body').prepend('<div shead style="position: fixed;z-index: 9999;top: 0;right: 0;text-align: center;width: 100%;font-size: 18px;color: white;background: red;opacity:0.9;">後台編輯模式<BR><input type="button" value="點此正常瀏覽網站" style="background-color:blue;" onclick="window.localStorage.removeItem(\'serback_editor\');"></div>');
+	WDJQ('div[shead]').animate({width:'10%'},'slow',function(){$(this).css('width','auto')});
 	
 	if (_menu_data!=null && _menu_data.length>0){
 		for (aa in _menu_data){
@@ -147,6 +127,8 @@ function serback_editor_timer(){
 
 //--前台欄位編輯功能
 view_contenteditable = function (){
+	//--編輯區域加上辨識外框
+	WDJQ('[contenteditable],[nck_contenteditable]').css('border-style','dotted').css('border-color','red');
 	//--找尋所有包含物件
 	WDJQ('[nck_contenteditable]').each(function (idx,obj){
 		WDJQ(obj).attr('contenteditable','true');
