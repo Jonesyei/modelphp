@@ -13,7 +13,6 @@ include_once(APP_PATH."includes/config/config.php");
 
 //-環境引用模組
 include_once(APP_PATH."class/global.php");
-if ($_SETUP['MVC']) $console = new console\word_console($lang);
 
 //---Jones 函數
 include_once(APP_PATH."includes/project/function.php");
@@ -38,7 +37,7 @@ if ($_GET["lang"]!=NULL && $_GET["lang"]!=''){
 	$_SESSION["mode_lang"] = 'ch';
 }
 $record["lang"] = $post["lang"] = $lang = $_SESSION["member_info"]["lang"] = $_SESSION["mode_lang"];
- 
+if ($_SETUP['MVC']) $console = new console\word_console($lang);
 
 	
 $page_name = Now_file();

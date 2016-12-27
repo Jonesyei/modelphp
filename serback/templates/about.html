@@ -343,28 +343,24 @@ function other_func_({$data.button.pic[m]})(other_obj){
 	drag_count['({$data.button.pic[m]})']= ({$data.uploadfilemax[m]});
     </script>
     <script src="../includes/project/js/drag_file.js"></script>
-    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
     <script>
 	function ajxupload(dname,objname){
+		var obj = new Object();
 		if ($('#'+dname)[0].files.length>0){
+			
 			if ($('div[piclist="'+objname+'"] div img').length*1+$('#'+dname)[0].files.length*1>drag_count[objname]*1){
 				return alert('已超過圖片上限所設定的 '+drag_count[objname]+' 張');
 			}
-		 $.ajaxFileUpload
-            (
-                {
-                    url: '../includes/project/js/Jones_upload.php'+(typeof(file_upload)!="object" ? file_upload:file_upload[objname]),
-                    secureuri: false, //加密
-                    fileElementId: dname, //objid
-                    dataType: 'json', 
-                    success: function (data, status)  
-                    {
-						$('#'+dname).val(null);
-                        for (ee in data)
-							upload_one(data[ee],objname);
-                    }
-                }
-            );
+			
+			obj.target = document.getElementById('dropDIV');
+			tt_now =0;
+			tt_old_now = -1;
+			j_file_split_start = 0;
+			j_file_split_end=0;
+			tt_total_send_size = 0;
+			tt = document.getElementById(dname).files;
+	
+			ajxupload_work(obj);
 		}
 	}
 	function aes(dname,objname){
@@ -491,7 +487,7 @@ function re_sort(){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-	<input type="file" id="ff" name="ff[]" multiple ({if $data.uploadfilemax[m]<='1'})onchange="ajxupload();"({/if}) />
+	<input type="file" id="ff" name="ff[]" multiple ({if $data.uploadfilemax<='1'})onchange="ajxupload();"({/if}) />
 	<BR />
 	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();" onclick="" style="color:#30F;"><b>批次上傳圖片</b></a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#ff').val(null);">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
@@ -500,28 +496,22 @@ function re_sort(){
     </div>
     <script>var file_upload = '?upload=({$data.file_url})';var drag_count = ({$data.uploadfilemax});</script>
     <script src="../includes/project/js/drag_file.js"></script>
-    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
     <script>
 	function ajxupload(){
+		var obj = new Object();
 		if ($('#ff')[0].files.length>0){
 			if ($('div#piclist div img').length*1+$('#ff')[0].files.length*1>drag_count*1){
 				return alert('已超過圖片上限所設定的 '+drag_count+' 張');
 			}
-		 $.ajaxFileUpload
-            (
-                {
-                    url: '../includes/project/js/Jones_upload.php'+file_upload,
-                    secureuri: false, //加密
-                    fileElementId: 'ff', //objid
-                    dataType: 'json', 
-                    success: function (data, status)  
-                    {
-						$('#ff').val(null);
-                        for (ee in data)
-							upload_one(data[ee]);
-                    }
-                }
-            );
+			obj.target = document.getElementById('dropDIV');
+			tt_now =0;
+			tt_old_now = -1;
+			j_file_split_start = 0;
+			j_file_split_end=0;
+			tt_total_send_size = 0;
+			tt = document.getElementById('ff').files;
+	
+			ajxupload_work(obj);
 		}
 	}
 	function aes (dname){
@@ -563,7 +553,7 @@ function re_sort(){
               </span>
               ({/if})
               
-              <input type="file" name="file[]" onchange="file_change(({$smarty.section.c1.index}))" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)
+              <input type="file" name="file[]" onchange="file_change(({$smarty.section.c1.index}))" /><input type="button" value="背景上傳" onclick="upload_file_loop($(this).prev(),2097152);">(上傳建議大小 為 <font color="#FF0000">({ini_get('upload_max_filesize')})</font> 以下)
           </div>
           ({/if})
           ({/section})
@@ -589,13 +579,17 @@ function re_sort(){
 		if($('#file_list >div').length >= '({$data.button.file})'*1){
 			alert('附加檔案超過({$data.button.file})個!!');
 		}else{
-			$('#file_list').append('<div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;">檔案名稱：<input type="text" name="file_name[]" /><br><input type="file" name="file[]" />(上傳建議大小 為 <font color="#FF0000">8</font> MB 以下)</div><br>')
+			$('#file_list').append('<div style="border:border-width:3px;border-style:dashed;border-color:#FFAC55;padding:5px;">檔案名稱：<input type="text" name="file_name[]" /><br><input type="file" name="file[]" />(上傳建議大小 為 <font color="#FF0000">({ini_get('upload_max_filesize')})</font> 以下)</div><br>')
 		}
 	}
 	$(function() {
 		$( "#file_list" ).sortable( {stop: function( event, ui ) {unlock_view();},start:function (){lock_view();} });
 		$( "#file_list" ).disableSelection();
 	});
+	function upload_file_loop(obj,split_max_size){
+		if ($(obj)[0])
+		split_max_size
+	}
     </script>
 ({/if})
 

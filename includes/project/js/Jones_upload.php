@@ -3,7 +3,9 @@ include_once("../../main_inc.php");
 include_once("../function.php");
 
 
-
+if ($_GET["phpinfo"]){
+	echo ini_get($_GET["phpinfo"])*1;exit;
+}
 
 
 $dirtemp_name =  explode('include',dirname(__FILE__));
@@ -11,62 +13,91 @@ $dirtemp_name = $dirtemp_name[0];
 define('APP_PATH',$dirtemp_name);
 $ini_webset = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
 if ($_FILES){
-	//-§PÂ_¬O§_¶W¹L­­¨îªÅ¶¡¤j¤p
-	if ($ini_webset["web_set"]["upload_max_size"]*1<$ini_webset["web_set"]["now_file"]*1+$_FILES["Filedata"]["size"]*1){
+	//-åˆ¤æ–·æ˜¯å¦è¶…éé™åˆ¶ç©ºé–“å¤§å°
+	if ($ini_webset["web_set"]['upload_check_status']=='1' && $ini_webset["web_set"]["upload_max_size"]*1<$ini_webset["web_set"]["now_file"]*1+$_FILES["Filedata"]["size"]*1){
 		echo json_encode(array($ini_webset["web_set"]["upload_full_msg"]));
 		exit;
 	}
+	//--çºŒå‚³åˆ¤æ–·
+	if ($_POST["j_loop_upload"]){
+		$_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])]=='';
+	}elseif (isset($_SESSION["j_loop_file_upload"])){ //--æ²’å†é€è³‡æ–™æ™‚åˆ¤æ–·ç‚ºå·²çµæŸ
+		$_SESSION["j_loop_file_upload"] = NULL;
+		unset($_SESSION["j_loop_file_upload"]);
+	}
 	
-	$cpos["file_url"] = '../../../upload/';//¦s©ñ¤W¶ÇÀÉ®×¸ê®Æ§¨
+	$cpos["file_url"] = '../../../upload/';//å­˜æ”¾ä¸Šå‚³æª”æ¡ˆè³‡æ–™å¤¾
 	if ($_GET["upload"]!=NULL) $cpos["file_url"] = '../../'.$_GET["upload"];
 	$image_array = array('bmp','jpg','jpeg','png','gif');
 	foreach ($_FILES as $k=>$v){
-		if (is_array($_FILES[$k]["name"])){ //---§PÂ_¬°°}¦C¦WºÙ¬Û¦Pª«¥ó¤W¶Ç
+		if (is_array($_FILES[$k]["name"])){ //---åˆ¤æ–·ç‚ºé™£åˆ—åç¨±ç›¸åŒç‰©ä»¶ä¸Šå‚³
 			foreach ($_FILES[$k]["name"] as $n1=>$n2){
 				if ($n2!=''||$n2!=NULL){
-				$temp_file_name = explode('.',$n2);
-				$after_name = $temp_file_name[count($temp_file_name)-1];//°ÆÀÉ¦W
+				$temp_file_name = explode('.',($_POST["j_loop_upload"] ? $_POST["j_loop_upload"]:$n2));
+				$after_name = $temp_file_name[count($temp_file_name)-1];//å‰¯æª”å
 				$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
 				if ($ini_webset["web_set"]["uploadfile_rename"]==='0') $temp_file_name = $n2;
 				/*
-				if (in_array($after_name,$image_array)){//¤W¶ÇªºÀÉ®×¹Ï¤ù´NÁY¹Ï³B²z
+				if (in_array($after_name,$image_array)){//ä¸Šå‚³çš„æª”æ¡ˆåœ–ç‰‡å°±ç¸®åœ–è™•ç†
 					ImageResize($_FILES[$k]["tmp_name"][$n1], $cpos["file_url"].$temp_file_name);
 				}else{
 				*/
-					$temp_file_url = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name);
-					move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$temp_file_url);
-					if (strtolower($after_name)=='jpeg'||strtolower($after_name)=='jpg') {jpeg_jwork($temp_file_url);}
-					if (strtolower($after_name)=='png') {png_jwork($temp_file_url);}
+					if (!isset($_SESSION["j_loop_file_upload"]) || $_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])]==''){
+						$temp_file_url = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name);
+						if ($_POST["j_loop_upload"]) $_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])] = $temp_file_url;
+						move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$temp_file_url);
+						$name_array[] = $cpos["file_url"].$temp_file_name;
+					}else{
+						$content=file_get_contents($_FILES[$k]["tmp_name"][$n1]);
+						file_put_contents($_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])], $content,FILE_APPEND);
+					}
+					if (!isset($_SESSION["j_loop_file_upload"]) || $_POST["j_loop_upload_action"]=='end'){
+						$_SESSION["j_loop_file_upload"] = NULL;
+						unset($_SESSION["j_loop_file_upload"]);
+						if (strtolower($after_name)=='jpeg'||strtolower($after_name)=='jpg') {jpeg_jwork($temp_file_url);}
+						if (strtolower($after_name)=='png') {png_jwork($temp_file_url);}
+					}
 					//if (strtolower($after_name)=='gif') {gif_jwork($temp_file_url);}
 				//}
-				$name_array[] = $cpos["file_url"].$temp_file_name;
 				$_SESSION["upload_temp"][] = $temp_file_name;
 				}
 			}	
 		}else{
 			if ($_FILES[$k]["name"]!=''||$_FILES[$k]["name"]!=NULL){
-				$temp_file_name = explode('.',$_FILES[$k]["name"]);
-				$after_name = $temp_file_name[count($temp_file_name)-1];//°ÆÀÉ¦W
+				$temp_file_name = explode('.',($_POST["j_loop_upload"] ? $_POST["j_loop_upload"]:$_FILES[$k]["name"]));
+				$after_name = $temp_file_name[count($temp_file_name)-1];//å‰¯æª”å
 				$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
 				if ($ini_webset["web_set"]["uploadfile_rename"]==='0') $temp_file_name = $_FILES[$k]["name"];
 				/*
-				if (in_array($after_name,$image_array)) {//¤W¶ÇªºÀÉ®×¹Ï¤ù´NÁY¹Ï³B²z
+				if (in_array($after_name,$image_array)) {//ä¸Šå‚³çš„æª”æ¡ˆåœ–ç‰‡å°±ç¸®åœ–è™•ç†
 					ImageResize($_FILES[$k]["tmp_name"], $cpos["file_url"].$temp_file_name);
 				}else{
 				*/	
-					$temp_file_url = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name);
-					move_uploaded_file($_FILES[$k]["tmp_name"],$temp_file_url);
-					if (strtolower($after_name)=='jpeg'||strtolower($after_name)=='jpg') {jpeg_jwork($temp_file_url);}
-					if (strtolower($after_name)=='png') {png_jwork($temp_file_url);}
+					if (!isset($_SESSION["j_loop_file_upload"]) || $_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])]==''){
+						$temp_file_url = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' ? iconv("UTF-8", "big5",$cpos["file_url"].$temp_file_name):$cpos["file_url"].$temp_file_name);
+						if ($_POST["j_loop_upload"]) $_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])] = $temp_file_url;
+						move_uploaded_file($_FILES[$k]["tmp_name"],$temp_file_url);
+						$name_array[] = $cpos["file_url"].$temp_file_name;
+					}else{
+						$content=file_get_contents($_FILES[$k]["tmp_name"]);
+						file_put_contents($_SESSION["j_loop_file_upload"][md5($_POST["j_loop_upload"])], $content,FILE_APPEND);
+					}
+					
+					if (!isset($_SESSION["j_loop_file_upload"]) || $_POST["j_loop_upload_action"]=='end'){
+						$_SESSION["j_loop_file_upload"] = NULL;
+						unset($_SESSION["j_loop_file_upload"]);
+						if (strtolower($after_name)=='jpeg'||strtolower($after_name)=='jpg') {jpeg_jwork($temp_file_url);}
+						if (strtolower($after_name)=='png') {png_jwork($temp_file_url);}
+					}
 					//if (strtolower($after_name)=='gif') {gif_jwork($temp_file_url);}
 				//}
-				$name_array[] = $cpos["file_url"].$temp_file_name;
+				
 				$_SESSION["upload_temp"][] = $temp_file_name;
 			}
 		}
 	}
 	
-	//--°O¾Ğ¼È¦s¸ê®Æ edit by Jones 20150707
+	//--è¨˜æ†¶æš«å­˜è³‡æ–™ edit by Jones 20150707
 	/*
 	foreach ($name_array["ff"] as $k=>$v){
 		$v = explode('/',$v);
@@ -80,14 +111,14 @@ if ($_FILES){
 
 
 
-//-----º¥¶i¦¡¦s¨ú¹Ï¤ù jepg
+//-----æ¼¸é€²å¼å­˜å–åœ–ç‰‡ jepg
 function jpeg_jwork($file_name){
 	$im = imagecreatefromjpeg($file_name);
 	imageinterlace($im, 1);
 	imagejpeg($im, $file_name, 100);
 	imagedestroy($im); 
 }
-//-----¥æ¿ù¦¡¦s¨ú¹Ï¤ù png
+//-----äº¤éŒ¯å¼å­˜å–åœ–ç‰‡ png
 function png_jwork($file_name){
 	$im = @imagecreatefrompng($file_name);
 	$srcWidth = imagesx($im);

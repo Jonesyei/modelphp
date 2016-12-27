@@ -385,7 +385,7 @@ function upload_one(response){
 					({if $data.button.name!=null})$('#picspan_'+div_file).append('({$data.button.name}):<input type="text" name="name[]" placeholder="在此輸入({$data.button.name})" onclick="valcheck(this)">');({/if})
 				 	({if $data.button.href=='1'})$('#picspan_'+div_file).append('連結:<input type="text" name="href[]" placeholder="在此輸入連結"  onclick="valcheck(this)">');({/if})
 					({if $data.button.change_detail!=null})$('#picspan_'+div_file).append('({$data.button.change_detail}):<input type="text" name="detail[]" placeholder="在此輸入({$data.button.change_detail})"  onclick="valcheck(this)">');({/if})
-					$('#picspan_'+div_file).append('<input type="button" onclick="picdel('+div_file+')" value="刪除'+filename+'圖片"><br><br>');
+					$('#picspan_'+div_file).append('<input type="button" onclick="picdel(\''+div_file+'\')" value="刪除'+filename+'圖片"><br><br>');
 					$('[name="pic"]').remove();
 					({if $data.button.name!=null})$('[name="name"]').remove();({/if})
 					({if $data.button.href=='1'})$('[name="href"]').remove();({/if})
@@ -445,7 +445,7 @@ function re_sort(){
 <div style="float:right;">
 排序到<input type="text" id="pic_sort_({$smarty.section.picidx.index})" value="({$smarty.section.picidx.index+1})" size="2" style="text-align:center;">
 <input type="button" value="移動" onclick="pic_sort('({$smarty.section.picidx.index})',$('#pic_sort_({$smarty.section.picidx.index})').val());">
-<input type="button" value=" 刪除 " onclick="if (confirm('確定要移除這張圖片嘛?')) picdel(({$smarty.section.picidx.index}));">
+<input type="button" value=" 刪除 " onclick="if (confirm('確定要移除這張圖片嘛?')) picdel('({$smarty.section.picidx.index})');">
 </div>
 <img src="({$data.file_url})({$data.one.pic[picidx]})" height="150px">
 <input type="hidden" name="pic[]" value="({$data.one.pic[picidx]})"><br>
@@ -458,7 +458,7 @@ function re_sort(){
 ({if $data.button.name!=null})({$data.button.name}):<input type="text" name="name[]" value="({$data.one.name[picidx]})" style="width:300px;"><br>({/if})
 ({if $data.button.change_detail!=null})({$data.button.change_detail}):<input type="text" name="detail[]" value="({$data.one.detail[picidx]})" style="width:300px;"><br>({/if})
 ({if $data.button.href=='1'})連結:<input type="text" name="href[]" value="({$data.one.href[picidx]})" style="width:300px;"><br>({/if})
-<input type="button" onclick="picdel(({$smarty.section.picidx.index}))" value="刪除({$data.one.pic[picidx]})圖片"><br><br>
+<input type="button" onclick="picdel('({$smarty.section.picidx.index})')" value="刪除({$data.one.pic[picidx]})圖片"><br><br>
 </div>
 ({/if})
 ({/section})
@@ -472,7 +472,7 @@ function re_sort(){
     <div id="up_progress" ></div> 
     
     <div style="text-align:left;">
-	<input type="file" id="ff" name="ff[]" multiple ({if $data.uploadfilemax[m]<='1'})onchange="ajxupload();"({/if}) />
+	<input type="file" id="ff" name="ff[]" multiple ({if $data.uploadfilemax<='1'})onchange="ajxupload();"({/if}) />
 	<BR />
 	({if $data.uploadfilemax>1})<a href="javascript:ajxupload();" onclick="" style="color:#30F;"><b>批次上傳圖片</b></a>&nbsp;|&nbsp;({/if})
 	({if $data.uploadfilemax>1})<a href="javascript:$('#ff').val(null);">取消</a>&nbsp;|&nbsp;({/if})建議比例:({$data.pic_size_title})<BR />
@@ -481,28 +481,22 @@ function re_sort(){
     </div>
     <script>var file_upload = '?upload=({$data.file_url})';var drag_count = ({$data.uploadfilemax});</script>
     <script src="../includes/project/js/drag_file.js"></script>
-    <script src="../includes/project/js/ajaxfileupload.js"></script><!--動態上傳-->
     <script>
 	function ajxupload(){
+		var obj = new Object();
 		if ($('#ff')[0].files.length>0){
 			if ($('div#piclist div img').length*1+$('#ff')[0].files.length*1>drag_count*1){
 				return alert('已超過圖片上限所設定的 '+drag_count+' 張');
 			}
-		 $.ajaxFileUpload
-            (
-                {
-                    url: '../includes/project/js/Jones_upload.php'+file_upload,
-                    secureuri: false, //加密
-                    fileElementId: 'ff', //objid
-                    dataType: 'json', 
-                    success: function (data, status)  
-                    {
-						$('#ff').val(null);
-                        for (ee in data)
-							upload_one(data[ee]);
-                    }
-                }
-            );
+			obj.target = document.getElementById('dropDIV');
+			tt_now =0;
+			tt_old_now = -1;
+			j_file_split_start = 0;
+			j_file_split_end=0;
+			tt_total_send_size = 0;
+			tt = document.getElementById('ff').files;
+	
+			ajxupload_work(obj);
 		}
 	}
 	function aes (dname){

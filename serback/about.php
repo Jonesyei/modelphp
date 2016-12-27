@@ -68,15 +68,16 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
+			$data["button"]["file"] = '5';											//-設定檔案上限(一旦設定後則開啟檔案上傳功能)
+			$data["button"]["filename"] = '夾帶檔案';
 			
 			$data["button"]["pic"] = array('pic','mno');
 			$data["pic_size_title"] = array('任意比例','1x1');
-			$data["uploadfilemax"] = array('1','2');//圖檔上傳上限
+			$data["uploadfilemax"] = array('3','2');//圖檔上傳上限
 			$data["button"]["name"] = array('pic','mno');
 			$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
 			
 			$data["button"]["other"]["mno"][] = array('other_name'=>'內容','other_obj'=>'memo','other_data'=>explode('|__|',$data["one"]["memo"]));
-			
 		break;
 		case "test":
 				$data["one"]["name"] = "首頁EDM";
