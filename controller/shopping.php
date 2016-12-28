@@ -138,6 +138,12 @@ if ($_POST && $_REQUEST['submit']){
 	$pay_bill = $shopping_car->update($_POST);
 }
 
+//--訂單返回重新購物
+if ($_GET["pay_to_car"]){
+	$check_status = $shopping_car->pay_to_shoppingcar($_GET["pay_to_car"]);
+	alert($shopping_car->erromsg,'?list=1');
+	exit;
+}
 
 //--新增商品
 if ($_GET["addpro"]){

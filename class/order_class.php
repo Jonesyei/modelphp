@@ -933,6 +933,26 @@ class order_center
 			}
 		}
 		
+		//--舊訂單重新轉換
+		function pay_to_shoppingcar($order_no){
+			$car_data = $this->conn->GetRow("select * from ".$this->table." where step!='1' and pay_status=0 and order_no='".$order_no."'");
+			if ($car_data){
+				$up_status = $this->conn->Execute("UPDATE ".$this->table." SET step=1 WHERE id ='".$car_data["id"]."'");
+				if ($up_status){
+					$member = new member($this->conn,PREFIX."member");
+					$member->getmember(" where id='".$car_data["member_id"]."'",'login');
+					$member->point_work($car_data['deshpoint'],' 失效訂單回購物車返還紅利');
+					$del = $this->conn->Execute("DELETE FROM ".$this->table." where id='".$this->order['id']."'");
+					$this->erromsg = '已加入回購物車重新購物!!';
+				}else{
+					$this->erromsg = '系統異動失敗!!';
+				}
+					
+				return $up_status;
+			}
+			$this->erromsg ='無此訂單訊息';
+			return false;
+		}
 		
 		//--結帳
 		function paybill($data=NULL){
@@ -949,6 +969,15 @@ class order_center
 			foreach ($unset_array as $k=>$v){
 				unset($data[$v]);
 			}
+			
+			//--點數扣除
+			if (class_exists('member') && $this->order['deshpoint']*1>0){
+				$member = new member($this->conn,PREFIX."member");
+				$member->getmember(" where id='".$this->order["member_id"]."'",'login');
+				$member->point_work($data["addpoint"],($memo!='' ? $memo:'訂單'.$this->order['order_no'].'交易成功返回紅利'),$ind);
+				$this->conn->Execute("UPDATE ".$this->table." SET addpoint_status=1 where id='".$data["id"]."'");
+			}
+			
 			$cardata = $data;
 			$cardata["step"] = '2';
 			$cardata["create_date"] = $cardata["update_date"] = date("Y-m-d H:i:s");
@@ -1163,7 +1192,7 @@ class order_center
 			if (!is_array($data))
 				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
 				
-			if ($data && $data["member_id"]!='' && $data["addpoint_status"]!='1'){
+			if ($data && $data["member_id"]!='' && $data["addpoint_status"]!='1' && class_exists('member')){
 				$member = new member($this->conn,PREFIX."member");
 				$member->getmember(" where id='".$data["member_id"]."'",'login');
 				$ind['shopping_car_id'] = $data["id"];
@@ -1177,7 +1206,7 @@ class order_center
 			if (!is_array($data))
 				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
 				
-			if ($data && $data["member_id"]!='' && $data["addpoint_status"]=='1'){
+			if ($data && $data["member_id"]!='' && $data["addpoint_status"]=='1' && class_exists('member')){
 				$member = new member($this->conn,PREFIX."member");
 				$member->getmember(" where id='".$data["member_id"]."'",'login');
 				$ind['shopping_car_id'] = $data["id"];
