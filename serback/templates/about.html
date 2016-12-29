@@ -243,7 +243,7 @@ function upload_one(response,objname,other_func){
 					$('[name="'+objname+'"]').remove();
 					//--定義最後一個賦予排序					
 					$('div[piclist="'+objname+'"]').find('div[class="ui-state-default"][id]:last').on("mouseup",function(event){
-						if (event.srcElement.className!='')	window.setTimeout("re_sort('"+objname+"')",50);
+						if (typeof(event.srcElement)!="undefined" && event.srcElement.className!='')	window.setTimeout("re_sort('"+objname+"')",50);
 					})
 					
 }
@@ -361,7 +361,8 @@ function other_func_({$data.button.pic[m]})(other_obj){
 			tt = document.getElementById(dname).files;
 			if (tt.length>0)
 				for (aa in tt){
-					var check_image_type = ['jpeg','jpg','bmp','gif','png'];
+					if (typeof(tt[aa].name)=="undefined") break;
+					var check_image_type = ['jpeg','jpg','bmp','gif','png','pdf'];
 					var check_file_name = tt[aa].name.split('.');
 					check_file_name = check_file_name[check_file_name.length-1];
 					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');
@@ -518,7 +519,8 @@ function re_sort(){
 			tt = document.getElementById('ff').files;
 			if (tt.length>0)
 				for (aa in tt){
-					var check_image_type = ['jpeg','jpg','bmp','gif','png'];
+					if (typeof(tt[aa].name)=="undefined") break;
+					var check_image_type = ['jpeg','jpg','bmp','gif','png','pdf'];
 					var check_file_name = tt[aa].name.split('.');
 					check_file_name = check_file_name[check_file_name.length-1];
 					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');

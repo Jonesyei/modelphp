@@ -497,7 +497,8 @@ function re_sort(){
 			tt = document.getElementById('ff').files;
 			if (tt.length>0)
 				for (aa in tt){
-					var check_image_type = ['jpeg','jpg','bmp','gif','png'];
+					if (typeof(tt[aa].name)=="undefined") break;
+					var check_image_type = ['jpeg','jpg','bmp','gif','png','pdf'];
 					var check_file_name = tt[aa].name.split('.');
 					check_file_name = check_file_name[check_file_name.length-1];
 					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');
