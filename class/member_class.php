@@ -210,7 +210,7 @@ class member
 				//--進行 mail處理
 				if ($pagefile==NULL) {
 					$pagefile = explode('/',$_SERVER['SERVER_PROTOCOL']);
-					$pagefile = $pagefile[0].'://'.$_SERVER['HTTP_HOST'].'/member.php?act=fotgot';
+					$pagefile = $pagefile[0].'://'.$_SERVER['HTTP_HOST'].'/member?act=fotgot';
 				}
 				if (strpos($pagefile,'?')=='') {
 					$pagefile .= '?';
@@ -406,7 +406,7 @@ class member
 				
 				if ($pagefile==NULL) {
 					$pagefile = explode('/',$_SERVER['SERVER_PROTOCOL']);
-					$pagefile = $pagefile[0].'://'.$_SERVER['HTTP_HOST'].'/member.php?act=open';
+					$pagefile = $pagefile[0].'://'.$_SERVER['HTTP_HOST'].'/member?act=open';
 				}
 				if (strpos($pagefile,'?')=='') {
 					$pagefile .= '?';
@@ -538,6 +538,7 @@ class member
 		function point_work($mount,$memo,$other_data=array()){
 			$this->point_table_check();
 			$indata['before_point'] = $this->getinfo('point');
+			if ($mount*1==0) return true;
 			if ($mount>0){
 				$indata['after_point'] = $indata['before_point']*1+$mount;
 			}elseif ($memo<0){

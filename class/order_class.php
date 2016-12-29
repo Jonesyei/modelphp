@@ -938,11 +938,13 @@ class order_center
 			$car_data = $this->conn->GetRow("select * from ".$this->table." where step!='1' and pay_status=0 and order_no='".$order_no."'");
 			if ($car_data){
 				$up_status = $this->conn->Execute("UPDATE ".$this->table." SET step=1 WHERE id ='".$car_data["id"]."'");
+				$this->conn->Execute("UPDATE ".$this->table." set order_no='".$order_no."',status='-1' where id='".$this->order['id']."'");
+				$this->order = $this->conn->GetRow("select * from ".$this->table." where id='".$car_data["id"]."'");
 				if ($up_status){
 					$member = new member($this->conn,PREFIX."member");
 					$member->getmember(" where id='".$car_data["member_id"]."'",'login');
 					$member->point_work($car_data['deshpoint'],' 失效訂單回購物車返還紅利');
-					$del = $this->conn->Execute("DELETE FROM ".$this->table." where id='".$this->order['id']."'");
+					//$del = $this->conn->Execute("DELETE FROM ".$this->table." where id='".$this->order['id']."'");
 					$this->erromsg = '已加入回購物車重新購物!!';
 				}else{
 					$this->erromsg = '系統異動失敗!!';
@@ -956,6 +958,8 @@ class order_center
 		
 		//--結帳
 		function paybill($data=NULL){
+			$this->reload();
+			
 			if ($this->stock_mode!=0){	//--判斷是否需要扣除庫存
 				if (!$this->stock()){
 					return false;
