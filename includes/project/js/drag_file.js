@@ -2,18 +2,23 @@
 2014/03/24
 create by Jones 
 */
+document.write( '<script type="text/javascript" src="../includes/js/pdf/processing-api.min.js"></script>' );
+document.write( '<script type="text/javascript" src="../includes/js/pdf/pdf.js"></script>' );
+
 	//var sss = new FormData();
 	//var fr = new FileReader();
-	var j_file_split_size =2*1024*1024; //2MB
+	var j_file_split_size = 2*1024*1024; //2MB
 	var j_file_split_start = 0;
-	var j_file_split_end=0;
+	var j_file_split_end = 0;
 	var xhr; //--XML請求
 	var old_xhr;
 	var return_data; //--返回資料
+	var _old_upload_evt;
 	var tt; //--物件
 	var tt_now=0;
 	var tt_old_now=-1;
 	var tt_total_send_size = 0;//--統計已傳送位元組
+	var tt_pdf_file = [];
         function dragoverHandler(evt) {
 			evt.stopPropagation();
             evt.preventDefault();
@@ -27,6 +32,7 @@ create by Jones
 			evt.stopPropagation();
             evt.preventDefault();
 			tt = evt.dataTransfer.files;
+			_old_evt = evt;
             $.ajax( {
                 url: "../includes/project/js/Jones_upload.php?phpinfo=upload_max_filesize",
                 data: {},
@@ -37,16 +43,31 @@ create by Jones
                    //j_file_split_size =msg*1024*1024;
                 }
             });
-			if (typeof(file_upload)!="object"){
-		   		if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count) return alert('上傳已達到限制數量!!');
-			}else{
-				if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count[$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist')]) return alert('上傳已達到限制數量!!');
-			}
+			
 			ajxupload_work(evt);
         }
 		
+		function check_max_file_upload(evt){
+			if (typeof(file_upload)!="object"){
+		   		if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count) {
+					alert('上傳已達到限制數量!!');
+					upload_end();
+					return false;
+				}
+			}else{
+				if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count[$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist')]){
+					alert('上傳已達到限制數量!!');
+					upload_end();
+					return false;
+				}
+			}
+			return true;
+		}
+		
 		//--進行檔案上傳
 		function ajxupload_work(evt){
+			if (!check_max_file_upload(evt)) return false;
+			console.log('test');
 			xhr = new XMLHttpRequest();
             var up_progress ='#up_progress';
 			if (typeof(file_upload)!="object"){
@@ -92,8 +113,14 @@ create by Jones
 			if (typeof(tt[tt_now])!="undefined"){
 				var fd = new FormData();
 				check_file_max = tt[tt_now].slice().size; //--檔案大小判斷
-				//--判斷是否切割上傳
-				if (check_file_max>j_file_split_size){
+				
+				var check_filename = tt[tt_now].name.split('.');
+				check_filename = check_filename[check_filename.length-1];
+				//--判斷是否為pdf檔案
+				if (check_filename.toLowerCase()=="pdf"){
+					//--判斷是否經過轉換了
+					j_upload_pdf_to_image(evt);
+				}else if (check_file_max>j_file_split_size){ //--判斷是否切割上傳
 					j_file_split_start=j_file_split_end;
 					j_file_split_end+=j_file_split_size;
 					blob=tt[tt_now].slice(j_file_split_start,j_file_split_end);
@@ -121,5 +148,83 @@ create by Jones
             document.getElementById('imgDIV').appendChild(imgx);
         }
 		function upload_end() {
+			tt_now =0;
+			tt_old_now = -1;
+			j_file_split_start = 0;
+			j_file_split_end=0;
+			tt_total_send_size = 0;
 			$(up_progress).css('display','none');$(up_progress).removeAttr('class'); 
+		}
+		
+		
+		//--datauri轉file
+		function dataURItoBlob(dataURI) {
+			// convert base64/URLEncoded data component to raw binary data held in a string
+			var byteString;
+			if (dataURI.split(',')[0].indexOf('base64') >= 0)
+				byteString = atob(dataURI.split(',')[1]);
+			else
+				byteString = unescape(dataURI.split(',')[1]);
+		
+			// separate out the mime component
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+		
+			// write the bytes of the string to a typed array
+			var ia = new Uint8Array(byteString.length);
+			for (var i = 0; i < byteString.length; i++) {
+				ia[i] = byteString.charCodeAt(i);
+			}
+		
+			return new Blob([ia], {type:mimeString});
+		}
+		
+		//--pdf 檔案轉檔處理
+		function j_upload_pdf_to_image(evt){
+			_old_upload_evt = evt;
+			PDFJS.disableWorker = true;
+			if (file = tt[tt_now]) {
+				fileReader = new FileReader();
+				fileReader.onload = function(ev) {
+				  PDFJS.getDocument(fileReader.result).then(function getPdfHelloWorld(pdf) {
+					
+					for (i=1;i<=pdf.numPages;i++)
+					pdf.getPage(i).then(function getPageHelloWorld(page) {
+					  var scale = 1.5;
+					  var viewport = page.getViewport(scale);
+
+					  var canvas = document.createElement('canvas');
+					  var context = canvas.getContext('2d');
+					  canvas.height = viewport.height;
+					  canvas.width = viewport.width;
+
+					  var task = page.render({canvasContext: context, viewport: viewport})
+					  
+					  task.promise.then(function(){
+						tt_pdf_file[tt_pdf_file.length] = dataURItoBlob(canvas.toDataURL('image/jpeg'));
+						if (tt_pdf_file.length==pdf.numPages) window.setTimeout("check_upload_finsh_of_pdf(_old_upload_evt)",1500);
+					  });
+					});
+				  }, function(error){
+					console.log(error);
+				  });
+				};
+				fileReader.readAsArrayBuffer(file);
+			  }
+			tt_now++;
+		}
+		
+		function check_upload_finsh_of_pdf(evt){
+			if (tt.length*1<=tt_now){
+				console.log('work');
+				tt_now =0;
+				tt_old_now = -1;
+				j_file_split_start = 0;
+				j_file_split_end=0;
+				tt_total_send_size = 0;
+				tt = [];
+				for (aa in tt_pdf_file)
+					tt[aa] = new File([tt_pdf_file[aa]], 'pdf'+aa+'.jpg', {type: 'image/jpeg', lastModified: Date.now()});
+					
+				ajxupload_work(evt);
+			}
 		}
