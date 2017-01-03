@@ -42,17 +42,13 @@ $cpos["pagecount"] = 30;//每頁顯示筆數
 $cpos["table"] = PREFIX."shopping_car";
 $cpos["tablewhere"] = 'id='.$_GET["id"];
 $cpos["tablelistwhere"] = 'where step!=1 and status>=0';
+$cpos["del"] = '-1'; //-假刪除
 
 $cpos["listorderby"] = 'update_date desc,id desc';//列表頁排序方式
 $cpos["tablesearch"] = 'order_no';//文字搜尋關聯欄位
 $cpos["searchdate"] = 'create_date';
 $cpos["search"] = array('name'=>'keyword','order_no'=>'keyword','create_date'=>'daterange','status'=>'s_status','class'=>'searchclass');
 
-//--經銷商登入
-if ($_SESSION["admin_info"]["control"]=='3'){
-	$cpos["tablelistwhere"] .= " and company='".$_SESSION["admin_info"]["id"]."'";
-	$page_name .='_readonly';
-}
 
 
 //---更新前抓舊資料

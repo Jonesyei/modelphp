@@ -539,11 +539,8 @@ class member
 			$this->point_table_check();
 			$indata['before_point'] = $this->getinfo('point');
 			if ($mount*1==0) return true;
-			if ($mount>0){
-				$indata['after_point'] = $indata['before_point']*1+$mount;
-			}elseif ($memo<0){
-				$indata['after_point'] = $indata['before_point']*1+$mount;
-			}
+			
+			$indata['after_point'] = $indata['before_point']*1+$mount;
 			$indata["member_id"] = $this->session['id'];
 			$indata['point'] = $mount;
 			$indata['detail'] = $memo;

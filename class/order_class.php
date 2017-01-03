@@ -1,8 +1,13 @@
 <?php
 /*
 訂單類別庫 (Order)
-create by Jones
+create by Jones 2017/1/13 version
 
+-----
+edit logs
+2017/1/13	Jones	訂單返回功能新增
+
+-------
 宣告物件
 new order($conn,訂單資料表,訂單商品資料表,商品資料表);
 
@@ -42,10 +47,19 @@ $shopping_car->back_item(訂單商品唯一編號);
 購物車結帳
 $shopping_car->paybill(更動的資料陣列);
 
-開啟 庫存計算模式
-$shopping_car->stock_mode
+結帳訂單重新加入購物車 (補回紅利 庫存 商品金額不會因狀態異動)
+$shopping_car->pay_to_shoppingcar(訂單編號);
 
-訂單列表
+訂單確認信件
+$shopping_car->order_mail_send(function paybill返回結果,返回路徑)
+
+訂單付款(繳款)成功通知信 (通常用於金流付款後回傳)
+$shopping_car->ispay_mail(訂單編號)
+
+開啟 庫存計算模式 0關閉(預設) 1開啟
+$shopping_car->stock_mode=0
+
+訂單列表 (已經過重製資料結果請勿用來做資料操作)
 $shopping_car->order_list(訂單唯一編號(or條件式),起始筆數,顯示筆數);
 
 確認付款
@@ -69,6 +83,7 @@ class order_center
 		var $cartable;		//--購物車明細資料表
 		var $protable;		//--商品資料表
 		var $actable;		//--活動折扣資料表
+		var $membertable;	//--會員資料表
 		
 		var $namespace = 'member';	//--會員命名空間
 		
@@ -113,6 +128,7 @@ class order_center
 			$this->table = $table;
 			$this->cartable = $table2;
 			$this->protable = $table3;
+			$this->membertable = PREFIX.'member';
 			if ($table4==''){
 				$this->actable = PREFIX.'shopping_car_groups';
 			}else{
@@ -192,14 +208,14 @@ class order_center
 			return $console->tags($value,$para);
 		}
 		
-		/* 訂單編號自定義  標頭,長度,開始值 */
-		function order_auto_set($title,$count=10,$mask='1'){
+		/* 訂單編號自定義  標頭,長度,開始值,步進值 */
+		function order_auto_set($title,$count=10,$mask='1',$add=1){
 			global $_SESSION;
 			$temp = $this->conn->GetRow("SELECT *,REPLACE(order_no,'".$title."','') as _order_no FROM `".$this->table."` WHERE order_no like '".$title."%' order by _order_no desc limit 1");
 			if (substr($this->order['order_no'],0,strlen($title))==$title) return;
 			
 			if (substr($temp['order_no'],0,strlen($title))==$title){
-				$num = $temp['_order_no']*1+1;
+				$num = $temp['_order_no']*1+$add;
 			}else{
 				$num = $mask*1;
 			}
@@ -227,8 +243,7 @@ class order_center
 				$temp_table[$k] = $v[0];
 			}
 			if (!in_array($this->table,$temp_table)){
-				$sql_str = "CREATE TABLE `".$this->table."` (  `id` int(20) NOT NULL auto_increment,  `step` tinyint(1) default '1' COMMENT '購物流程指標',  `order_no` bigint(30) NOT NULL COMMENT '定單序號',  `total` int(20) default '0' COMMENT '總價(不含折價 不含運費)',  `deshpoint` int(11) default NULL COMMENT '扣除紅利點',  `addpoint` int(11) default NULL COMMENT '新增紅利點',  `post_fee` int(10) default '0' COMMENT '運費',  `paycardmode` tinyint(1) default '0' COMMENT '刷卡方式 1=聯邦 2=國泰世華 3=花旗 4=中信',  `MerchantNumber` varchar(50) default NULL COMMENT '金流串接商店編號',  `Code` varchar(30) default NULL COMMENT '金流串接商店編號對應code',  `Period` tinyint(1) default '0' COMMENT '分期期數',  `member_id` int(20) default NULL,  `type` varchar(100) NOT NULL default 'shopping_car',  `lang` varchar(20) default NULL,  `status` tinyint(1) default NULL,  `pay_status` tinyint(1) default '0' COMMENT '付款狀態',  `paymode_status` varchar(10) default '0' COMMENT '金流狀態 0未付款 1已付款 9失效狀態',  `cargo_status` tinyint(1) default '0' COMMENT '出貨狀態',  `email` varchar(50) default NULL,  `sex` varchar(50) default NULL,  `company` varchar(50) default NULL,  `country` varchar(50) default NULL,  `zip` varchar(50) default NULL,  `contact_time` varchar(50) default NULL,  `recive_name` varchar(50) default NULL,  `recive_email` varchar(50) default NULL,  `recive_address` varchar(100) default NULL,  `recive_zip` varchar(50) default NULL,  `recive_sex` varchar(50) default NULL,  `unity_no` varchar(40) default NULL COMMENT '統一編號',  `unity_title` varchar(20) default NULL,  `checksum` varchar(50) default NULL COMMENT '金流md5檢查碼',  `name` varchar(30) default NULL,  `birthday` varchar(30) default NULL,  `phone` varchar(30) default NULL,  `cellphone` varchar(30) default NULL,  `address` text,  `memo` text COMMENT '備註',  `create_date` datetime default NULL,  `update_date` datetime default NULL,  `create_name` varchar(20) default NULL,  `update_name` varchar(20) default NULL,  `ATMcode` text COMMENT 'ATM轉帳後四碼',  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+				$sql_str = "CREATE TABLE `".$this->table."` ( `id` int(20) NOT NULL auto_increment,  `namespace` text NOT NULL COMMENT '存放命名空間',  `step` tinyint(1) default '1' COMMENT '購物流程指標',  `order_no` VARCHAR( 30 ) NOT NULL COMMENT '定單序號',  `total` int(20) default '0' COMMENT '總價(不含折價 不含運費)',  `deshpoint` int(11) default NULL COMMENT '扣除紅利點',  `deshpoint_status` int(11) default '0' COMMENT '扣除紅利狀態 0未扣除 1已扣除',  `addpoint` int(11) default NULL COMMENT '新增紅利點',  `addpoint_status` int(11) default '0' COMMENT '點數支付狀態',  `post_fee` int(10) default '0' COMMENT '運費',  `back_total` int(20) default NULL COMMENT '退款總額',  `back_money` int(20) default NULL COMMENT '已退金額',  `back_memo` text COMMENT '退換貨描述',  `back_status` int(20) default '0' COMMENT '退換狀態 0未完成 1已完成',  `paycardmode` tinyint(1) default '0' COMMENT '刷卡方式 1=聯邦 2=國泰世華 3=花旗 4=中信',  `MerchantNumber` varchar(50) default NULL COMMENT '金流串接商店編號',  `Code` varchar(30) default NULL COMMENT '金流串接商店編號對應code',  `Period` tinyint(1) default '0' COMMENT '分期期數',  `member_id` int(20) default NULL,  `type` varchar(100) NOT NULL default 'shopping_car',  `lang` varchar(20) default NULL,  `status` tinyint(1) default NULL,  `pay_status` tinyint(1) default '0' COMMENT '付款狀態',  `paymode_status` varchar(10) default '0' COMMENT '金流狀態 0未付款 1已付款 9失效狀態',  `cargo_status` tinyint(1) default '0' COMMENT '出貨狀態',  `cargo_back_status` int(11) DEFAULT '0' COMMENT '庫存是否補回狀態',  `email` varchar(50) default NULL,  `sex` varchar(50) default NULL,  `company` varchar(50) default NULL,  `country` varchar(50) default NULL,  `zip` varchar(50) default NULL,  `contact_time` varchar(50) default NULL,  `recive_name` varchar(50) default NULL,  `recive_email` varchar(50) default NULL,  `recive_address` varchar(100) default NULL,  `recive_zip` varchar(50) default NULL,  `recive_sex` varchar(50) default NULL,  `recive_takemode` varchar(20) default NULL COMMENT '取貨方式',  `invoice` varchar(10) default NULL COMMENT '發票類型',  `unity_no` varchar(40) default NULL COMMENT '統一編號',  `unity_title` varchar(20) default NULL,  `checksum` varchar(50) default NULL COMMENT '金流md5檢查碼',  `name` varchar(30) default NULL,  `birthday` varchar(30) default NULL,  `phone` varchar(30) default NULL,  `cellphone` varchar(30) default NULL,  `address` text,  `memo` text COMMENT '備註',  `create_date` datetime default NULL,  `update_date` datetime default NULL,  `cargo_date` datetime default NULL COMMENT '出貨時間',  `create_name` varchar(20) default NULL,  `update_name` varchar(20) default NULL,  `ATMcode` text COMMENT 'ATM轉帳後四碼',  `order_img` longtext COMMENT '訂單圖像',  `ismailsend` int(11) NOT NULL default '0' COMMENT '訂單確認信件發送次數',  `buy_name` varchar(100) default NULL COMMENT '購買人姓名',  `buy_sex` varchar(2) default NULL COMMENT '購買人性別',  `buy_email` varchar(100) default NULL COMMENT '購買人信箱',  `buy_phone` varchar(20) default NULL COMMENT '購買人電話',  `buy_cellphone` varchar(20) default NULL COMMENT '購買人手機',  `buy_zipcode` varchar(10) default NULL COMMENT '購買人郵遞區號',  `buy_address` varchar(200) default NULL COMMENT '購買人地址',  `buy_memo` text COMMENT '購買人備註說明',  PRIMARY KEY  (`id`) ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
 				 $this->conn->Execute($sql_str);
 			}
 			if (!in_array($this->cartable,$temp_table)){
@@ -970,21 +985,24 @@ class order_center
 							$avalue = $this->conn->AutoExecute($this->protable,$v,"UPDATE"," id='".$v["id"]."'");
 						}
 				}
-				$this->conn->Execute("UPDATE ".$this->table." set order_no='".$order_no."',cargo_back_status='1',status='-1' where id='".$this->order['id']."'"); //--隱藏原有訂單
+				//--設定已補回庫存數量 隱藏此訂單
+				$up_status = $this->conn->Execute("UPDATE ".$this->table." set order_no='".$order_no."',cargo_back_status='1',status='-1' where id='".$this->order['id']."'"); //--隱藏原有訂單
 				if ($up_status){
-					//--返回紅利
-					$member = new member($this->conn,PREFIX."member");
+					//--返回已使用的紅利
+					$member = new member($this->conn,$this->membertable);
 					$member->getmember(" where id='".$car_data["member_id"]."'",'login');
-					$member->point_work($car_data['deshpoint'],' 失效訂單回購物車返還紅利');
-					//$del = $this->conn->Execute("DELETE FROM ".$this->table." where id='".$this->order['id']."'");
-					$this->erromsg = '已加入回購物車重新購物!!';
+					$check_status = $member->point_work($car_data['deshpoint'],' 失效訂單回購物車返還紅利');
+					//--更改成未扣除點數支付狀態
+					if ($check_status)
+						$this->conn->Execute("UPDATE ".$this->table." SET deshpoint_status=0 where id='".$car_data["id"]."'");
+					$this->erromsg = $this->tags('OLD_ORDER_ADD_TO_NEWCAR_FINSH'); //'已加入回購物車重新購物!!';
 				}else{
-					$this->erromsg = '系統異動失敗!!';
+					$this->erromsg = $this->tags('SYSTEM_ERRO'); //-系統異動失敗
 				}
 					
 				return $up_status;
 			}
-			$this->erromsg ='無此訂單訊息';
+			$this->erromsg = $this->tags('NOT_FOUND_ORDER');//無此訂單訊息
 			return false;
 		}
 		
@@ -1001,17 +1019,18 @@ class order_center
 				$this->erromsg = $this->tags('CAR_ITEM_IS_NULL_TO_PAY');//購物車無商品無法結帳!!
 				return false;
 			}
-			$unset_array = array('id','step','order_no','total','addpoint','deshpoint','post_fee'); //--禁止寫入的資料
+			$unset_array = array('id','step','order_no','total','addpoint','addpoint_status','deshpoint_status','deshpoint','post_fee'); //--禁止寫入的資料
 			foreach ($unset_array as $k=>$v){
 				unset($data[$v]);
 			}
 			
 			//--點數扣除
 			if (class_exists('member') && $this->order['deshpoint']*1>0){
-				$member = new member($this->conn,PREFIX."member");
+				$member = new member($this->conn,$this->membertable);
 				$member->getmember(" where id='".$this->order["member_id"]."'",'login');
-				$member->point_work($data["addpoint"],($memo!='' ? $memo:'訂單'.$this->order['order_no'].'交易成功返回紅利'),$ind);
-				$this->conn->Execute("UPDATE ".$this->table." SET addpoint_status=1 where id='".$data["id"]."'");
+				$check_status = $member->point_work(($this->order['deshpoint']*-1),'購物使用紅利折抵');
+				if ($check_status)
+					$this->conn->Execute("UPDATE ".$this->table." SET deshpoint_status=1 where id='".$data["id"]."'");
 			}
 			
 			$cardata = $data;
@@ -1176,7 +1195,7 @@ class order_center
 				$this->erromsg = $this->tags('ORDER_NOW_IS_SHOPCAR');//購物車環境中無法申請退貨
 				return false;
 			}else if ($temp_order["pay_status"]!='1'){ //-- 判斷是否已付款
-				$this->erromsg = $this->tags('ORDER_STATUS_NOT_SAME');//訂單狀態不符!!
+				$this->erromsg = $this->tags('ORDER_STATUS_NOT_SAME');//訂單狀態不符!! 需為已付款才可申請退貨
 				return false;
 			}
 			
@@ -1229,7 +1248,7 @@ class order_center
 				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
 				
 			if ($data && $data["member_id"]!='' && $data["addpoint_status"]!='1' && class_exists('member')){
-				$member = new member($this->conn,PREFIX."member");
+				$member = new member($this->conn,$this->membertable);
 				$member->getmember(" where id='".$data["member_id"]."'",'login');
 				$ind['shopping_car_id'] = $data["id"];
 				$member->point_work($data["addpoint"],($memo!='' ? $memo:'訂單'.$order_no.'交易成功返回紅利'),$ind);
@@ -1243,7 +1262,7 @@ class order_center
 				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
 				
 			if ($data && $data["member_id"]!='' && $data["addpoint_status"]=='1' && class_exists('member')){
-				$member = new member($this->conn,PREFIX."member");
+				$member = new member($this->conn,$this->membertable);
 				$member->getmember(" where id='".$data["member_id"]."'",'login');
 				$ind['shopping_car_id'] = $data["id"];
 				$member->point_work(($data["addpoint"]*-1),($memo!='' ? $memo:'訂單'.$order_no.'移除紅利'),$ind);
