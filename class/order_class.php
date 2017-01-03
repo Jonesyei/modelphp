@@ -935,12 +935,44 @@ class order_center
 		
 		//--舊訂單重新轉換
 		function pay_to_shoppingcar($order_no){
-			$car_data = $this->conn->GetRow("select * from ".$this->table." where step!='1' and pay_status=0 and order_no='".$order_no."'");
+			$car_data = $this->conn->GetRow("select * from ".$this->table." where step!='1' and pay_status=0 and order_no='".$order_no."' and status!='-1'");
 			if ($car_data){
-				$up_status = $this->conn->Execute("UPDATE ".$this->table." SET step=1 WHERE id ='".$car_data["id"]."'");
-				$this->conn->Execute("UPDATE ".$this->table." set order_no='".$order_no."',status='-1' where id='".$this->order['id']."'");
-				$this->order = $this->conn->GetRow("select * from ".$this->table." where id='".$car_data["id"]."'");
+				$car_list = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id=".$car_data["id"]);
+				$change_car_list = array();
+				if ($car_list){
+					foreach ($car_list as $k=>$v){
+						unset($v["shopping_car_list_id"]);
+						$indata = $v;
+						$indata["shopping_car_id"] = $this->order['id'];
+						$this->conn->AutoExecute($this->cartable,$indata,"INSERT");
+						
+						///--回補庫存
+						$s_p_list[] = $v["id"];
+						$p_stock_search_sid[$v["id"]][] = $v["size"];
+						$p_stock_search_count[$v["id"]][] = $v["count"];
+					}
+					//-逐個商品補回庫存
+					$pro_list = $this->conn->GetArray("select * from ".$this->protable." where id in (".implode(',',$s_p_list).")");
+					if ($pro_list)
+						foreach ($pro_list as $k=>$v){
+							$v["stock_no"] = explode('|__|',$v["stock_no"]);
+							$v["stock"] = explode('|__|',$v["stock"]);
+							if (count($p_stock_search_sid[$v["id"]])>0){
+								foreach ($p_stock_search_sid[$v["id"]] as $a=>$b){
+									$aid = array_search($b,$v["stock_no"]);
+									if ($aid!==false){
+										$v["stock"][$aid] += $p_stock_search_count[$v["id"]][$a];
+									}
+								}
+							}
+							$v["stock_no"] = implode('|__|',$v["stock_no"]);
+							$v["stock"] = implode('|__|',$v["stock"]);
+							$avalue = $this->conn->AutoExecute($this->protable,$v,"UPDATE"," id='".$v["id"]."'");
+						}
+				}
+				$this->conn->Execute("UPDATE ".$this->table." set order_no='".$order_no."',cargo_back_status='1',status='-1' where id='".$this->order['id']."'"); //--隱藏原有訂單
 				if ($up_status){
+					//--返回紅利
 					$member = new member($this->conn,PREFIX."member");
 					$member->getmember(" where id='".$car_data["member_id"]."'",'login');
 					$member->point_work($car_data['deshpoint'],' 失效訂單回購物車返還紅利');

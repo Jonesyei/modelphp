@@ -41,7 +41,7 @@ switch ($_GET["class"])
 $cpos["pagecount"] = 30;//每頁顯示筆數
 $cpos["table"] = PREFIX."shopping_car";
 $cpos["tablewhere"] = 'id='.$_GET["id"];
-$cpos["tablelistwhere"] = 'where step!=1';
+$cpos["tablelistwhere"] = 'where step!=1 and status>=0';
 
 $cpos["listorderby"] = 'update_date desc,id desc';//列表頁排序方式
 $cpos["tablesearch"] = 'order_no';//文字搜尋關聯欄位
