@@ -19,7 +19,7 @@ include_once(APP_PATH."includes/project/function.php");
 //---qrcode
 include_once(APP_PATH."includes/phpqrcode/qrlib.php");
 
-include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
+include_once(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
 
 $tpl = new Smarty();
 $tpl->left_delimiter = '({';

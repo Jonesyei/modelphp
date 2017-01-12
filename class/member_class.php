@@ -1,5 +1,5 @@
 <?php
-include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
+include_once(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
 /*
 會員類別庫 (Memeber)
 create by Jones

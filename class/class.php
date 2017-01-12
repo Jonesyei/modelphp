@@ -4,7 +4,7 @@
 */
 
 //--mailer 信件套件
-include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
+include_once(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
 
 //-設計版面模組
 include_once(APP_PATH."class/design_class.php");

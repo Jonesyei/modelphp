@@ -7,7 +7,7 @@ define('ROOT_PATH', str_replace('includes/main_back_inc.php', '', str_replace('\
 include_once(APP_PATH.'includes/adodb5/adodb.inc.php');
 include_once(APP_PATH."includes/smarty/Smarty.class.php");
 
-include_once(APP_PATH."includes/phpmailer/class.phpmailer.php");
+include_once(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
 include_once(APP_PATH."includes/function/seback_func.php");
 include_once(APP_PATH."includes/function/func.php");
 include_once(APP_PATH."includes/config/conn.php");
