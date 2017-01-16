@@ -4,19 +4,19 @@ session_start();
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));
 define('ROOT_PATH', str_replace('includes/main_back_inc.php', '', str_replace('\\', '/', __FILE__)));
 
-include_once(APP_PATH.'includes/adodb5/adodb.inc.php');
-include_once(APP_PATH."includes/smarty/Smarty.class.php");
+include(APP_PATH.'includes/adodb5/adodb.inc.php');
+include(APP_PATH."includes/smarty/Smarty.class.php");
 
-include_once(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
-include_once(APP_PATH."includes/function/seback_func.php");
-include_once(APP_PATH."includes/function/func.php");
-include_once(APP_PATH."includes/config/conn.php");
-include_once(APP_PATH."includes/config/config.php");
+include(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
+include(APP_PATH."includes/function/seback_func.php");
+include(APP_PATH."includes/function/func.php");
+include(APP_PATH."includes/config/conn.php");
+include(APP_PATH."includes/config/config.php");
 
 //---Jones 函數
-include_once(APP_PATH."includes/project/function.php");
+include(APP_PATH."includes/project/function.php");
 //---qrcode
-include_once(APP_PATH."includes/phpqrcode/qrlib.php");
+include(APP_PATH."includes/phpqrcode/qrlib.php");
 
 //--ini設定檔案讀取
 if (!$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
@@ -120,5 +120,5 @@ if ($smtp_set){
 }
 
 //各類別庫
-include_once(APP_PATH."class/class.php");
+include(APP_PATH."class/class.php");
 ?>

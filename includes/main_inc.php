@@ -4,22 +4,22 @@ session_start();
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));
 define('ROOT_PATH', str_replace('includes/main_inc.php', '', str_replace('\\', '/', __FILE__)));
 
-include_once(APP_PATH.'includes/adodb5/adodb.inc.php');
-include_once(APP_PATH."includes/smarty/Smarty.class.php");
+include(APP_PATH.'includes/adodb5/adodb.inc.php');
+include(APP_PATH."includes/smarty/Smarty.class.php");
 
-include_once(APP_PATH."includes/function/func.php");
-include_once(APP_PATH."includes/config/conn.php");
-include_once(APP_PATH."includes/config/config.php");
+include(APP_PATH."includes/function/func.php");
+include(APP_PATH."includes/config/conn.php");
+include(APP_PATH."includes/config/config.php");
 
 //-環境引用模組
-include_once(APP_PATH."class/global.php");
+include(APP_PATH."class/global.php");
 
 //---Jones 函數
-include_once(APP_PATH."includes/project/function.php");
+include(APP_PATH."includes/project/function.php");
 //---qrcode
-include_once(APP_PATH."includes/phpqrcode/qrlib.php");
+include(APP_PATH."includes/phpqrcode/qrlib.php");
 
-include_once(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
+include(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
 
 $tpl = new Smarty();
 $tpl->left_delimiter = '({';
@@ -88,7 +88,7 @@ if ($smtp_set){
 }
 
 //各類別庫
-include_once(APP_PATH."class/class.php");
+include(APP_PATH."class/class.php");
 $design = new design($conn,PREFIX."design",$lang);
 
 //MVC架框設定
