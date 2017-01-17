@@ -159,7 +159,7 @@ class order_center
 				
 				//-判斷是否存在暫存購物
 				if ($_SESSION["temp_order_no"][$this->namespace]){
-					$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and order_no='".$_SESSION["temp_order_no"][$this->namespace]."'");
+					$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where status=1 and step='1' and order_no=?"),array($_SESSION["temp_order_no"][$this->namespace]));
 				}
 				
 				if (!$_SESSION['temp_order_no'][$this->namespace] || !$temp){
@@ -169,13 +169,13 @@ class order_center
 					$cardata["namespace"] = $this->namespace;
 					$cardata["create_date"] = date("Y-m-d H:i:s");
 					$this->conn->AutoExecute($this->table,$cardata,"INSERT");
-					$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and order_no='".$_SESSION["temp_order_no"][$this->namespace]."'");
+					$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where status=1 and step='1' and order_no=?"),array($_SESSION["temp_order_no"][$this->namespace]));
 				}
 			}else{
 				
 				if (isset($_SESSION["temp_order_no"]) && isset($_SESSION["temp_order_no"][$this->namespace])) unset($_SESSION["temp_order_no"][$this->namespace]);
 				//--檢查是否有購物車 沒有就創建一個
-				$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and namespace='".$this->namespace."' and member_id='".$_SESSION["login_info"][$this->namespace]["id"]."'");	
+				$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where status=1 and step='1' and namespace=? and member_id=?"),array($this->namespace,$_SESSION["login_info"][$this->namespace]["id"]));	
 				if (!$temp && $_SESSION["login_info"][$this->namespace]["id"]!=NULL){
 					$cardata["namespace"] = $this->namespace;
 					$cardata["member_id"] = $_SESSION["login_info"][$this->namespace]["id"];
@@ -183,7 +183,7 @@ class order_center
 					$cardata["status"] = 1;
 					$cardata["create_date"] = date("Y-m-d H:i:s");
 					$this->conn->AutoExecute($this->table,$cardata,"INSERT");
-					$temp = $this->conn->GetRow("select * from ".$this->table." where status=1 and step='1' and member_id='".$_SESSION["login_info"][$this->namespace]["id"]."'");
+					$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where status=1 and step='1' and member_id=?"),array($_SESSION["login_info"][$this->namespace]["id"]));
 				}	
 			}
 			$this->order = $temp;
@@ -199,7 +199,11 @@ class order_center
 			//--回覆已到期的庫存項目
 			$this->reset_stock();
 			
-			$this->conn->Execute("UPDATE ".$this->table." set create_date='".date("Y-m-d H:i:s")."' where id = '".$this->order["id"]."'");
+			$this->conn->Execute($this->Prepare("UPDATE ".$this->table." set create_date='".date("Y-m-d H:i:s")."' where id=?"),array($this->order["id"]));
+		}
+		
+		function Prepare($sql){
+			return $this->conn->Prepare($sql);
 		}
 		
 		//--對應參數標籤
@@ -211,7 +215,7 @@ class order_center
 		/* 訂單編號自定義  標頭,長度,開始值,步進值 */
 		function order_auto_set($title,$count=10,$mask='1',$add=1){
 			global $_SESSION;
-			$temp = $this->conn->GetRow("SELECT *,REPLACE(order_no,'".$title."','') as _order_no FROM `".$this->table."` WHERE order_no like '".$title."%' order by _order_no desc limit 1");
+			$temp = $this->conn->GetRow("SELECT *,REPLACE(order_no,'".quotes($title)."','') as _order_no FROM `".$this->table."` WHERE order_no like '".quotes($title)."%' order by _order_no desc limit 1");
 			if (substr($this->order['order_no'],0,strlen($title))==$title) return;
 			
 			if (substr($temp['order_no'],0,strlen($title))==$title){
@@ -275,11 +279,11 @@ class order_center
 			
 			//假使有尺寸規格資料對應尺寸規格
 			if ($size!=NULL){
-				$carlist = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and id='".$value."' and size='".$size."'");
+				$carlist = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and id=? and size=?"),array($this->order["id"],$value,$size));
 			}else{
-				$carlist = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and id='".$value."'");
+				$carlist = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and id=?"),array($this->order["id"],$value));
 			}
-			$product = $this->conn->GetRow("select * from ".$this->protable." where id='".$value."' and status=1");
+			$product = $this->conn->GetRow($this->Prepare("select * from ".$this->protable." where id=? and status=1"),array(quotes($value)));
 			if (!$product) {
 				$this->erromsg = $this->tags('NO_HAVE_ITEM_INFO');//無此商品訊息!!
 				return false;
@@ -333,7 +337,7 @@ class order_center
 			
 			//--判斷是否庫存模式
 			if ($this->stock_mode!=0){
-				$carlist = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and id='".$value."' and size='".$size."'"); //--庫存模式			
+				$carlist = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and id=? and size=?"),array($this->order["id"],$value,$size)); //--庫存模式			
 				if ($carlist){//--判斷購物車有否 相同 規格資料
 					if (!$this->check_stock($carlist["id"],$carlist["size"],$carlist["count"]*1+$count*1)){
 						return false;
@@ -348,7 +352,7 @@ class order_center
 			//--購物車有資料 且 為資料重疊時
 			if ($carlist && $act==false){
 				//--舊資料
-				$old_list_data = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and shopping_car_list_id='".$carlist["shopping_car_list_id"]."'");
+				$old_list_data = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and shopping_car_list_id=?"),array($this->order["id"],$carlist["shopping_car_list_id"]));
 				
 				if ($size!=NULL) $carlist["size"] = $size;
 				$carlist["count"] = $carlist["count"]*1+$count*1;
@@ -403,7 +407,7 @@ class order_center
 				
 				//--訂單活動判斷
 				if ($this->active_group_check()){
-					$status = $this->conn->Execute("DELETE FROM ".$this->cartable." WHERE shopping_car_id='".$this->order['id']."' order by id desc LIMIT 1");
+					$status = $this->conn->Execute($this->Prepare("DELETE FROM ".$this->cartable." WHERE shopping_car_id=? order by id desc LIMIT 1"),array($this->order['id']));
 					$this->reload();
 					return false;
 				}
@@ -414,7 +418,7 @@ class order_center
 		
 		//--商品規格重新設定
 		function car_change_size($id,$count,$size){	
-			$car_pro = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and shopping_car_list_id='".$id."'");
+			$car_pro = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and shopping_car_list_id=?"),array($this->order["id"],$id));
 								
 			//--判斷是否為0值以下
 			if ($count*1<=0){
@@ -429,7 +433,7 @@ class order_center
 			}		
 			
 			if ($car_pro){	
-				$temp = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and id='".$car_pro['id']."' and size='".$size."'"); 
+				$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and id=? and size=?"),array($this->order["id"],$car_pro['id'],$size)); 
 				
 				if ($temp){//--判斷購物車有否 相同 規格資料
 					//--判斷是否庫存模式
@@ -474,7 +478,7 @@ class order_center
 		
 		//--商品數量重新設定
 		function car_change($id,$count){
-			$car_pro = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and shopping_car_list_id='".$id."'");
+			$car_pro = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and shopping_car_list_id=?"),array($this->order["id"],$id));
 			
 			//--判斷是否庫存模式
 			if (!$this->check_stock($car_pro["id"],$car_pro["size"],$count)){
@@ -520,7 +524,7 @@ class order_center
 			
 			//--活動清單重製
 			//--刪除所有資料
-			$this->conn->Execute("DELETE FROM ".$this->actable." WHERE shopping_car_id in (".$this->order["id"].")");
+			$this->conn->Execute("DELETE FROM ".$this->actable." WHERE shopping_car_id in (".quotes($this->order["id"]).")");
 			
 			//---活動任選折扣
 			if ($this->active_any_array!=NULL){
@@ -533,8 +537,8 @@ class order_center
 			}
 
 			//---重新寫入訂單目前總額
-			$car = $this->conn->GetRow("select * from ".$this->table." where id='".$this->order["id"]."'");
-			$carlist = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and status=1");
+			$car = $this->conn->GetRow("select * from ".$this->table." where id='".quotes($this->order["id"])."'");
+			$carlist = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".quotes($this->order["id"])."' and status=1");
 			$total = 0;
 			$post_fee = $this->post_fee1;
 			foreach ($carlist as $k=>$v){
@@ -572,7 +576,7 @@ class order_center
 				print_r($car);
 				return false;
 			}
-			$this->order = $this->conn->GetRow("select * from ".$this->table." where id='".$this->order["id"]."'");//-重新讀取訂單資料
+			$this->order = $this->conn->GetRow("select * from ".$this->table." where id='".quotes($this->order["id"])."'");//-重新讀取訂單資料
 			return $carstatus;
 		}
 		
@@ -581,7 +585,7 @@ class order_center
 			$group_out_money = 0;
 			if (count($this->active_any_array)>0){
 				//--更新消除數量
-				$this->conn->Execute("UPDATE ".$this->cartable." SET decount=0 WHERE shopping_car_id in (".$this->order["id"].")");
+				$this->conn->Execute("UPDATE ".$this->cartable." SET decount=0 WHERE shopping_car_id in (".quotes($this->order["id"]).")");
 				
 				//--用以統計運算過多少活動筆
 				$group_count = 0;
@@ -601,7 +605,7 @@ class order_center
 					$decode = $v[3];
 					
 					//--確認購物車是否有陣列組合商品達到條件
-					$sql ="select sum(count-decount) as sum from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and id in (".implode(',',$pro_array).") and status=1 group by shopping_car_id";
+					$sql ="select sum(count-decount) as sum from ".$this->cartable." where shopping_car_id='".quotes($this->order["id"])."' and id in (".implode(',',$pro_array).") and status=1 group by shopping_car_id";
 					$carlist = $this->conn->GetRow($sql);
 					if ($carlist['sum']*1>=$count && $count>0){ //大於設定
 						$active_count = floor($carlist['sum']/$count);
@@ -612,7 +616,7 @@ class order_center
 						}
 						
 						$fns = $active_count*$count; //--取得要扣除的數量金額
-						$carlist = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".$this->order["id"]."' and status=1");
+						$carlist = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".quotes($this->order["id"])."' and status=1");
 						if ($carlist)
 							foreach ($carlist as $a=>$b){
 								if (!in_array($b['id'],$pro_array)) continue; //--不是屬於活動商品跳過計算過程
@@ -671,7 +675,7 @@ class order_center
 		//--活動項目樹確認
 		function active_group_check(){
 			if ($this->active_group_count!=NULL){
-				$check_count = $this->conn->GetRow("select sum(groupcount) as sum,max(groupcount) as count from ".$this->actable." where shopping_car_id='".$this->order['id']."'");
+				$check_count = $this->conn->GetRow("select sum(groupcount) as sum,max(groupcount) as count from ".$this->actable." where shopping_car_id='".quotes($this->order['id'])."'");
 				$backcount = $check_count['sum']*1;
 				if ($check_count['count']*1>0)
 				if ($backcount>$this->active_group_count*1 && $this->active_any_other=='1'){
@@ -679,7 +683,7 @@ class order_center
 					return true;
 				}else{
 					//--判斷是否有多餘的餘數商品於訂單中
-					$check_count = $this->conn->GetRow("select sum(count-decount) as sum from ".$this->cartable." where shopping_car_id='".$this->order['id']."' group by shopping_car_id");
+					$check_count = $this->conn->GetRow("select sum(count-decount) as sum from ".$this->cartable." where shopping_car_id='".quotes($this->order['id'])."' group by shopping_car_id");
 					if ($backcount==$this->active_group_count && $check_count['sum']*1>0 && $this->active_any_other=='1'){
 						$this->erromsg = $this->tags('CAR_ACTIVE_FULL_COUNT',array($this->active_group_count));//'已超過訂單活動數量限制'.$this->active_group_count.'，請刪除後再操作'
 						return true;
@@ -787,9 +791,9 @@ class order_center
 		//--活動列表資料
 		function active_list($sid=NULL){
 			if ($sid==NULL){
-				return $this->conn->GetArray("select * from ".$this->actable." where shopping_car_id='".$this->order['id']."'");
+				return $this->conn->GetArray($this->Prepare("select * from ".$this->actable." where shopping_car_id=?"),array($this->order['id']));
 			}else{
-				return $this->conn->GetArray("select * from ".$this->actable." where shopping_car_id='".$sid."'");
+				return $this->conn->GetArray($this->Prepare("select * from ".$this->actable." where shopping_car_id=?"),array($sid));
 			}
 		}
 		
@@ -855,11 +859,11 @@ class order_center
 			//---判斷有參數抓取 參數訂單的商品列表
 			switch ($order){
 				case NULL:
-					$data = $this->conn->GetArray("select * from ".$this->cartable." ".$left_join." where shopping_car_id='".$this->order["id"]."' and status=1 order by ".$sort);				
+					$data = $this->conn->GetArray("select * from ".$this->cartable." ".$left_join." where shopping_car_id='".quotes($this->order["id"])."' and status=1 order by ".$sort);				
 				break;
 				
 				default:
-					$data = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".$order."' and status=1 order by ".$sort);		
+					$data = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".quotes($order)."' and status=1 order by ".$sort);		
 				break;
 			}
 			
@@ -890,9 +894,9 @@ class order_center
 		//--購物車商品 移除
 		function car_remove($value=NULL){
 			if ($value==NULL){
-				$this->conn->Execute("DELETE FROM ".$this->cartable." WHERE shopping_car_id in (".$this->order["id"].")");
+				$this->conn->Execute("DELETE FROM ".$this->cartable." WHERE shopping_car_id in (".quotes($this->order["id"]).")");
 			}else{
-				$this->conn->Execute("DELETE FROM ".$this->cartable." WHERE shopping_car_list_id in (".$value.")");
+				$this->conn->Execute("DELETE FROM ".$this->cartable." WHERE shopping_car_list_id in (".quotes($value).")");
 			}
 			return $this->reload();
 		}
@@ -928,11 +932,11 @@ class order_center
 			
 			//--判斷有參數抓取 參數訂單
 			if ($value!=NULL && is_numeric($value)){
-				$temp = $this->conn->GetArray("select * from ".$this->table." where status!=0 and step='2' and id='".$value."' order by create_date desc".$limitsql);
+				$temp = $this->conn->GetArray($this->Prepare("select * from ".$this->table." where status!=0 and step='2' and id=? order by create_date desc".$limitsql),array($value));
 			}else if ($value!=NULL && trim($value)!=''){
 				$temp = $this->conn->GetArray("select * from ".$this->table." where status!=0 and step='2' and ".$value." and member_id='".$_SESSION["login_info"][$this->namespace]["id"]."' order by create_date desc".$limitsql);
 			}else{
-				$temp = $this->conn->GetArray("select * from ".$this->table." where status!=0 and step='2' and member_id='".$_SESSION["login_info"][$this->namespace]["id"]."' order by create_date desc".$limitsql);
+				$temp = $this->conn->GetArray($this->Prepare("select * from ".$this->table." where status!=0 and step='2' and member_id=? order by create_date desc".$limitsql),array($_SESSION["login_info"][$this->namespace]["id"]));
 			}
 			return $temp;
 		}
@@ -950,9 +954,9 @@ class order_center
 		
 		//--舊訂單重新轉換
 		function pay_to_shoppingcar($order_no){
-			$car_data = $this->conn->GetRow("select * from ".$this->table." where step!='1' and pay_status=0 and order_no='".$order_no."' and status!='-1'");
+			$car_data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where step!='1' and pay_status=0 and order_no=? and status!='-1'"),array($order_no));
 			if ($car_data){
-				$car_list = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id=".$car_data["id"]);
+				$car_list = $this->conn->GetArray($this->Prepare("select * from ".$this->cartable." where shopping_car_id=?"),array($car_data["id"]));
 				$change_car_list = array();
 				if ($car_list){
 					foreach ($car_list as $k=>$v){
@@ -986,7 +990,7 @@ class order_center
 						}
 				}
 				//--設定已補回庫存數量 隱藏此訂單
-				$up_status = $this->conn->Execute("UPDATE ".$this->table." set order_no='".$order_no."',cargo_back_status='1',status='-1' where id='".$this->order['id']."'"); //--隱藏原有訂單
+				$up_status = $this->conn->Execute($this->Prepare("UPDATE ".$this->table." set order_no=?,cargo_back_status='1',status='-1' where id=?"),array($order_no,$this->order['id'])); //--隱藏原有訂單
 				if ($up_status){
 					//--返回已使用的紅利
 					$member = new member($this->conn,$this->membertable);
@@ -1030,7 +1034,7 @@ class order_center
 				$member->getmember(" where id='".$this->order["member_id"]."'",'login');
 				$check_status = $member->point_work(($this->order['deshpoint']*-1),'購物使用紅利折抵');
 				if ($check_status)
-					$this->conn->Execute("UPDATE ".$this->table." SET deshpoint_status=1 where id='".$data["id"]."'");
+					$this->conn->Execute($this->Prepare("UPDATE ".$this->table." SET deshpoint_status=1 where id=?"),array($data["id"]));
 			}
 			
 			$cardata = $data;
@@ -1064,7 +1068,7 @@ class order_center
 			}
 				
 			if ($temp){
-				return $this->getorder(" where id='".$this->order["id"]."'");
+				return $this->getorder(" where id='".quotes($this->order["id"])."'");
 			}else{
 				return $temp;
 			}
@@ -1153,7 +1157,7 @@ class order_center
 		function check_stock($pid,$size,$count){
 			//--判斷是否庫存模式
 			if ($this->stock_mode!=0){
-				$product = $this->conn->GetRow("select * from ".$this->protable." where id='".$pid."' and status=1");
+				$product = $this->conn->GetRow($this->Prepare("select * from ".$this->protable." where id=? and status=1"),array($pid));
 				//$temp_pro["size"] = explode('|__|',$product["size"]);
 				$temp_pro["size"] = explode('|__|',$product["stock_no"]);
 				$temp_pro["stock"] = explode('|__|',$product["stock"]);
@@ -1182,7 +1186,7 @@ class order_center
 		//--申請退貨商品 (訂單物品編號)
 		function back_item($id){
 			//--檢測商品詳細
-			$temp_item = $this->conn->GetRow("select * from ".$this->cartable." where shopping_car_list_id='".$id."'");
+			$temp_item = $this->conn->GetRow($this->Prepare("select * from ".$this->cartable." where shopping_car_list_id=?"),array($id));
 			if (!$temp_item){
 				$this->erromsg = $this->tags('PRO_ERRO'); //商品錯誤!!
 				return false;
@@ -1220,32 +1224,32 @@ class order_center
 		//--退款訂單資料重新記錄
 		function back_reload($order_id){
 			//-抓取出訂單中需要退貨的商品
-			$temp_item = $this->conn->GetArray("select * from ".$this->cartable." where shopping_car_id='".$order_id."' and status='2'");
+			$temp_item = $this->conn->GetArray($this->Prepare("select * from ".$this->cartable." where shopping_car_id=? and status='2'"),array($order_id));
 			foreach ($temp_item as $k=>$v){
 				$back_total += $v["count"]*$v["price2"];
 			}
 			$write["back_total"] = $back_total;
-			return $this->conn->AutoExecute($this->table,$write,"UPDATE","id='".$order_id."'");
+			return $this->conn->AutoExecute($this->table,$write,"UPDATE","id='".quotes($order_id)."'");
 		}
 		
 		//--確認付款
 		function paycheck($order_no){
 			$carlist["pay_status"] = 1; //--付款狀態
 			$carlist["paymode_status"] = 1;//--金流付款狀態
-			$check_data = $this->conn->GetRow("select * from ".$this->table." where order_no='".$order_no."'");
+			$check_data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where order_no=?"),array($order_no));
 			//--點數發放
 			$this->pay_point($check_data);
 			//--第一次收到付款完成 則寄通知信 否者 都當作已付款已發送通知
 			if ($check_data["pay_status"]!='1')
 				$this->ispay_mail($order_no);
-			return $this->conn->AutoExecute($this->table,$carlist,"UPDATE","order_no='".$order_no."'");
+			return $this->conn->AutoExecute($this->table,$carlist,"UPDATE","order_no='".$check_data["order_no"]."'");
 		}
 		
 		//--訂單點數發放
 		// patten $data 訂單資料
 		function pay_point($data,$memo=''){
 			if (!is_array($data))
-				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
+				$data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where id=?"),array($data));
 				
 			if ($data && $data["member_id"]!='' && $data["addpoint_status"]!='1' && class_exists('member')){
 				$member = new member($this->conn,$this->membertable);
@@ -1259,7 +1263,7 @@ class order_center
 		//--訂單點數回收
 		function back_point($data,$memo=''){
 			if (!is_array($data))
-				$data = $this->conn->GetRow("select * from ".$this->table." where id='".$data."'");
+				$data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where id=?"),array($data));
 				
 			if ($data && $data["member_id"]!='' && $data["addpoint_status"]=='1' && class_exists('member')){
 				$member = new member($this->conn,$this->membertable);
@@ -1280,8 +1284,8 @@ class order_center
 			global $_SETUP;
 			
 			//網站設定 $web_set
-			$sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
-			$tmp = $this->conn->GetArray($sql);
+			$sql = $this->Prepare(" select * from ".PREFIX."setting WHERE lang=? order by id");
+			$tmp = $this->conn->GetArray($sql,array(quotes($lang)));
 			$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
 			$web_set["keyword"] = deQuotes($tmp["1"]["detail"],-1);
 			$web_set["receive_email"] = $tmp["2"]["detail"];
@@ -1299,7 +1303,7 @@ class order_center
 				}
 			}
 			
-			$temp = $this->conn->GetRow("select * from ".$this->table." where order_no='".$order_no."'");
+			$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where order_no=?"),array($order_no));
 			
 			
 			$mail->From = $web_set["send_email"];         // 設定寄件者信箱        
@@ -1324,8 +1328,8 @@ class order_center
 			global $tpl; //-樣板
 			global $lang; //-語系
 			//網站設定 $web_set
-			$sql = " select * from ".PREFIX."setting WHERE lang = '".quotes($lang)."' order by id";
-			$tmp = $this->conn->GetArray($sql);
+			$sql = $this->Prepare(" select * from ".PREFIX."setting WHERE lang=? order by id");
+			$tmp = $this->conn->GetArray($sql,array(quotes($lang)));
 			$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
 			$web_set["keyword"] = deQuotes($tmp["1"]["detail"],-1);
 			$web_set["receive_email"] = $tmp["2"]["detail"];
@@ -1375,7 +1379,7 @@ class order_center
 			ob_end_clean(); //關閉快取
 			
 			//--寫入發送次數
-			$this->conn->Execute("UPDATE ".$this->table." SET ismailsend=ismailsend+1 where id='".$pay_bill["id"]."'");
+			$this->conn->Execute($this->Prepare("UPDATE ".$this->table." SET ismailsend=ismailsend+1 where id=?"),array($pay_bill["id"]));
 
 			//---關閉錯誤訊息
 			$mail->SMTPDebug = false;

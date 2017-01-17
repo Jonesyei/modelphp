@@ -80,7 +80,8 @@ class member
 			$this->table = $table;
 			
 			//--取得資料表內所有欄位 比對傳入的資料
-			foreach ($conn->GetArray("desc ".$table) as $k=>$v){ //--取得資料表欄位資料進行判斷
+			$check_all_row = $conn->GetArray($this->Prepare("desc ".$table));
+			foreach ($check_all_row as $k=>$v){ //--取得資料表欄位資料進行判斷
 				$this->table_rows[] = $v[0];
 			}
 			
@@ -112,11 +113,15 @@ class member
 			if ($this->namespace != 'member') $this->namespace_sql = " and namespace='".$this->namespace."'";
 			
 			if ($_SESSION["login_info"][$this->namespace]){
-				$this->session = $this->conn->GetRow("select * from ".$this->table." WHERE id='".$_SESSION["login_info"][$this->namespace]["id"]."' ".$this->namespace_sql);
+				$this->session = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE id=? ".$this->namespace_sql),array($_SESSION["login_info"][$this->namespace]["id"]));
 			}
 			$this->iswork = true;
 		}
 		
+		function Prepare($sql){
+			return $this->conn->Prepare($sql);
+		}
+				
 		/*
 			拷貝資料
 		*/
@@ -164,7 +169,7 @@ class member
 		{
 			global $_SESSION;
 			if ($account==NULL || $account=='' || $password==NULL || $password=='') return false;
-			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE account='".quotes($account)."' and password='".md5($password)."' and status=1 ".$this->namespace_sql);
+			$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE account=? and password=? and status=1 ".$this->namespace_sql),array(quotes($account),md5($password)));
 			if ($temp) {
 				$this->session = $temp;
 				$_SESSION["login_info"][$this->namespace] = $temp;
@@ -177,7 +182,7 @@ class member
 		{
 			global $_SESSION;
 			
-			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE ".$row."='".$data["account"]."' and status=1 ".$this->namespace_sql);
+			$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE ".$row."=? and status=1 ".$this->namespace_sql),array($data["account"]));
 			if ($temp) {
 				$this->session = $temp;
 				$_SESSION["login_info"][$this->namespace] = $temp;
@@ -197,13 +202,13 @@ class member
 			}
 		}
 		function fotgot($row,$value,$pagefile=NULL){ //--忘記密碼
-			$temp = $this->conn->GetRow("select * from ".$this->table." WHERE ".$row."='".$value."' ".$this->namespace_sql);
+			$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE ".$row."=? ".$this->namespace_sql),array($value));
 			if ($temp){
 				$rndstring = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 				for($i=0;$i<9;$i++){
 					$new_pwd .= $rndstring[rand(0,24)];
 				}
-				$this->conn->Execute("UPDATE ".$this->table." SET password='".md5($new_pwd)."' WHERE id=".$temp["id"]); 
+				$this->conn->Execute($this->Prepare("UPDATE ".$this->table." SET password=? WHERE id=?"),array(md5($new_pwd),$temp["id"])); 
 				$temp["new_password"] = $new_pwd;
 				$temp["new_password"] = md5($temp["new_password"]);
 				
@@ -243,7 +248,7 @@ class member
 				$ipd["update_name"] = $this->getinfo("name");
 				$ipd = $this->data_array_implode($ipd,$this->file_upload());
 				$am = $this->conn->AutoExecute($this->table,$ipd,"UPDATE","id=".$this->session["id"]);
-				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow("select * from ".$this->table." WHERE id=".$this->session["id"]);
+				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE id=?"),array($this->session["id"]));
 				return $am;
 		}
 		//---移除文字陣列數據中的一項資料
@@ -274,12 +279,12 @@ class member
 		function row_data_chagnge($row,$data,$act=NULL){ //--欄位資料更新運算
 			switch (strtolower($act)){
 				case NULL:
-					$am = $this->conn->Execute("UPDATE ".$this->table." SET ".$row."='".$data."' WHERE id=".$this->session["id"]);
+					$am = $this->conn->Execute($this->Prepare("UPDATE ".$this->table." SET ".$row."=? WHERE id=?"),array($data,$this->session["id"]));
 					return $am;
 				break;
 				default:
 					if (in_array($act,array("+","-","*","/"))){
-						$am = $this->conn->Execute("UPDATE ".$this->table." SET ".$row."=".$row."+(".$data.") WHERE id=".$this->session["id"]);
+						$am = $this->conn->Execute($this->Prepare("UPDATE ".$this->table." SET ".$row."=".$row."+(".quotes($data).") WHERE id=?"),array($this->session["id"]));
 						return $am;
 					}else{
 						return false;
@@ -301,9 +306,9 @@ class member
 			//判斷是否社群登入
 			if ($net_link){
 				if ($data["email"]=='' || $data["email"]==NULL) $data["email"] = $data["account"].'@'.$data['netclass'];
-				$check = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."' ".$this->namespace_sql);
+				$check = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE account=? ".$this->namespace_sql),array($data["account"]));
 			}else{
-				$check = $this->conn->GetRow("select * from ".$this->table." WHERE (account='".$data["account"]."' or email='".$data["email"]."') ".$this->namespace_sql);
+				$check = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE (account=? or email=?) ".$this->namespace_sql),array($data["account"],$data["email"]));
 				if ($check){
 					return $this->tags('MEMBER_ACCOUNT_EMAIL_SAME_ERRO');//帳號 或者 email 資料已重複!!
 				}
@@ -320,7 +325,7 @@ class member
 			$data = $this->data_array_implode($data,$mpic = $this->file_upload());
 			$this->row_have_check($data); //-欄位資料判斷是否建立
 			$am = $this->conn->AutoExecute($this->table,$data,"INSERT");
-			$data = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
+			$data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE account=?"),array($data["account"]));
 			
 			//--判斷是否需要寄出認證信函
 			if ($this->check_mail!=0){
@@ -331,14 +336,15 @@ class member
 					return $this->tags('MEMBER_REVICE_MAIL_SEND_FILED');//'發送驗證信時發生錯誤!!,請確認郵件資訊是否正確'
 				}
 			}else{
-				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow("select * from ".$this->table." WHERE account='".$data["account"]."'");
+				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE account=?"),array($data["account"]));
 				return $this->session;
 			}
 		}
 		//--自動建立欄位資料
 		function row_have_check($data){
 			//---判斷是否有欄位資料 沒有的話自動建立欄位
-			foreach ($this->conn->GetArray("desc ".$this->table) as $k=>$v){ //--取得資料表欄位資料進行判斷
+			$check_all_row = $this->conn->GetArray("desc ".$this->table);
+			foreach ($check_all_row as $k=>$v){ //--取得資料表欄位資料進行判斷
 				$row_colum[] = $v[0];
 			}
 
@@ -445,12 +451,12 @@ class member
 			}
 			
 			//判斷與資料是否一致
-			$temp_data = $this->conn->GetRow("select * from ".$this->table." where id='".$temp[2]."' and password='".base64_decode($temp[0])."'");
+			$temp_data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where id=? and password=?"),array($temp[2],base64_decode($temp[0])));
 			if ($temp_data){
 				//--解鎖
 				$ipd["status"] = '1';
 				$am = $this->conn->AutoExecute($this->table,$ipd,"UPDATE","id=".$temp[2]);
-				$this->session = $_SESSION["login_info"][$this->namespace] = $this->conn->GetRow("select * from ".$this->table." where id='".$temp[2]."' and status='1'");
+				$this->session = $_SESSION["login_info"][$this->namespace] = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where id=? and status='1'"),array($temp[2]));
 				if ($this->session){
 					return $this->session;
 				}else{
