@@ -1,32 +1,20 @@
-//關聯商品 排序功能
+
 $(document).ready(
 	function()
 	{
-		if( $( ".UploadPicList").size() > 0 )
-		{
-			$( ".UploadPicList").sortable();
-			$( ".UploadPicList").disableSelection();
-		}
-		
-		
-		$('body').on('click','.DelUploadPic',function()
-		  {
-			 if(confirm("確定要刪除圖片嗎?")==true)
-			 {
-				var eq = $('.DelUploadPic').index(this);
-				
-				$('.UploadPicList li:eq('+eq+')').css( {"display":"none"} );
-				$('.UploadPicList img:eq('+eq+')').remove();
-				$('.UploadPicList a:eq('+eq+')').remove();				
-				$('.UploadPicList li:eq('+eq+')').append('<input name="del_pic[]" value="'+$('.UploadPicList input:eq('+eq+')').val()+'">');
-				$('.UploadPicList input:eq('+eq+')').attr( {"value":""} );
-				
-			 }
-		  });
-		
+		//--針對chrome 56版修正 input type=password 非https 不安全性提示
+		$('form').attr('autocomplete','off');
+		$('input:password').each(function(idx,obj){
+			$(obj).val('');
+			$(obj)[0].type='text';
+			$(obj).bind('focus',function(){
+				$(obj).removeAttr('style')[0].type='password';
+			}).bind('blur',function(){
+				$(event.target).css('color','black').css('background-color','black')[0].type='text';
+			})
+		});
 	}
 );
-
 
 /*行動裝置事件賦予*/
 var mouseEventTypes = {

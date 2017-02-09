@@ -351,8 +351,8 @@ function other_func_({$data.button.pic[m]})(other_obj){
 			if ($('div[piclist="'+objname+'"] div img').length*1+$('#'+dname)[0].files.length*1>drag_count[objname]*1){
 				return alert('已超過圖片上限所設定的 '+drag_count[objname]+' 張');
 			}
-			
-			obj.target = document.getElementById('dropDIV');
+
+			obj.target = $('[name="'+dname+'[]"]').parentsUntil('.dropDIV').parent();
 			tt_now =0;
 			tt_old_now = -1;
 			j_file_split_start = 0;

@@ -32,7 +32,7 @@ if (window.localStorage.getItem('serback_editor')!=null){
 		$.ajax( {
 			url: "/ckeditor/ckeditor.js",
 			data: {},
-			type:"GET",
+			type:"HEAD",
 			dataType:'text',
 			async: false,
 			success: function(msg){
@@ -193,6 +193,17 @@ domready = 	function(){
 				if (WDJQ(this).attr('tsrc')!=null && WDJQ(this).attr('tsrc')!=''){
 					WDJQ(this).removeAttr('tsrc');
 				}
+			});
+		});
+		
+		//--針對chrome 56版修正 input type=password 非https 不安全性提示
+		$('form').attr('autocomplete','off');
+		$('input:password').each(function(idx,obj){
+			$(obj)[0].type='text';
+			$(obj).bind('focus',function(){
+				$(obj).removeAttr('style')[0].type='password';
+			}).bind('blur',function(){
+				$(event.target).css('color','black').css('background-color','black')[0].type='text';
 			});
 		});
 }
