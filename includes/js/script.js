@@ -197,13 +197,19 @@ domready = 	function(){
 		});
 		
 		//--針對chrome 56版修正 input type=password 非https 不安全性提示
-		$('form').attr('autocomplete','off');
+		$('form').each(function(idx,obj){
+			if ($(obj).find('input:password').length>0)
+				$(obj).attr('autocomplete','off');
+		});
 		$('input:password').each(function(idx,obj){
 			$(obj)[0].type='text';
 			$(obj).bind('focus',function(){
 				$(obj).removeAttr('style')[0].type='password';
 			}).bind('blur',function(){
-				$(event.target).css('color','black').css('background-color','black')[0].type='text';
+				if ($(event.target).val()!=""){
+					$(event.target).css('color','transparent')[0].type='text';
+				}else
+					$(event.target)[0].type = 'text';
 			});
 		});
 }

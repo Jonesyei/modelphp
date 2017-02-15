@@ -2,8 +2,9 @@
  * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
+CKEDITOR.timestamp = 'jonesckeditorv101';
 
- CKEDITOR.stylesSet.add('vipcase',[
+CKEDITOR.stylesSet.add('vipcase',[
     // Block-level styles
 	
 	/*

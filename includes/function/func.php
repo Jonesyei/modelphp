@@ -957,6 +957,58 @@ function safefilerewrite($fileName, $dataToSave)
 
 }
 
+//--密碼強度驗證
+// password_security(str password)
+// return 分數 (10分滿分)
+// create by Jones
+function password_security($str){
+	   $score = 0;
+	   //--密碼加分
+	   $regexp = array(
+	   				"/[0-9]+/",
+					"/[0-9]+/",
+					"/[a-z]+/",
+					"/[a-z]+/",
+					"/[A-Z]+/",
+					"/[A-Z]+/",
+					"/[_|\-|+|=|*|!|@|#|$|%|^|&|(|)]+/",
+					"/[_|\-|+|=|*|!|@|#|$|%|^|&|(|)]+/",
+					"/[_|\-|+|=|*|!|@|#|$|%|^|&|(|)]+/",
+					);
+		foreach ($regexp as $k=>$v){
+			if(preg_match($v,$str))
+			{
+				$score ++;
+			}
+		}
+		if(strlen($str) >= 10)
+		{
+		  $score ++; 
+		}
+		
+		//--扣分項目
+		$regexp = array(
+					"/[0-9]{3,}/",
+					"/[a-z]{3,}/",
+					"/[A-Z]{3,}/",
+					);
+		foreach ($regexp as $k=>$v){
+			if (preg_match($v,$str)){
+				$score --;
+			}
+		}
+		//--連續字段判斷扣分
+		$check_amr_same = 3;
+		$check_amrstring = array('0123456789','9876543210','ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz');
+		foreach ($check_amrstring as $k=>$v){
+			for ($i=0;$i<strlen($str)-$check_amr_same;$i++){
+				if (strpos($v,substr($str,$i,$check_amr_same))!==false) $score--;
+			}
+		}
+		
+		return ($score>=0 ? $score:0);
+}
+
 
 /*
 	頁碼檔案加載文件前先設置 

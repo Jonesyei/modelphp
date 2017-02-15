@@ -61,6 +61,8 @@ class member
 		var $from_mail;
 		var $erromsg;
 		
+		var $max_file_size = '2048'; //kb 上傳檔案限制大小(程式控制)
+		
 		var $namespace = 'member'; //--會員命名空間
 		var $namespace_sql = '';	//--
 		var $iswork = false;
@@ -246,10 +248,16 @@ class member
 				
 				$ipd["update_date"] = date("Y-m-d H:i:s");
 				$ipd["update_name"] = $this->getinfo("name");
-				$ipd = $this->data_array_implode($ipd,$this->file_upload());
-				$am = $this->conn->AutoExecute($this->table,$ipd,"UPDATE","id=".$this->session["id"]);
-				$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE id=?"),array($this->session["id"]));
-				return $am;
+				$file_data = $this->file_upload();
+				if (is_array($file_data) || $file_data==NULL || $file_data==''){
+					$ipd = $this->data_array_implode($ipd,$file_data);
+					$am = $this->conn->AutoExecute($this->table,$ipd,"UPDATE","id=".$this->session["id"]);
+					$_SESSION["login_info"][$this->namespace] = $this->session = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE id=?"),array($this->session["id"]));
+					return $am;
+				}else{
+					$this->erromsg = $file_data;
+					return false;
+				}
 		}
 		//---移除文字陣列數據中的一項資料
 		// ex  $member->remove('pic','abc.jpg');
@@ -299,6 +307,16 @@ class member
 			return true;
 		}
 		
+		//--資料處理
+		function data_output(){
+			$data = $this->session;
+			$temp_pic = explode('/',$data['pic']);
+			if (count($temp_pic)<=1 && $data['pic']!=NULL && $data['pic']!='') $data['pic'] = 'upload/member/'.$data['pic'];
+			$temp_pic = explode('/',$data['banner']);
+			if (count($temp_pic)<=1 && $data['banner']!=NULL && $data['banner']!='') $data['banner'] = 'upload/member/'.$data['banner'];
+			return $data;
+		}
+		
 		//-註冊
 		function newjoin($data,$point=0,$net_link=false){
 		
@@ -317,7 +335,7 @@ class member
 			$data["namespace"] = $this->namespace;
 			$data["password"] = md5($data["password"]);
 			$data["status"] = '1';
-			$data["type"] = 'member';
+			//$data["type"] = 'member';
 			$data["lang"] = 'ch';
 			$data["point"] = $point;
 			$data["create_date"] = $data["update_date"] = date("Y-m-d H:i:s");
@@ -328,7 +346,7 @@ class member
 			$data = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE account=?"),array($data["account"]));
 			
 			//--判斷是否需要寄出認證信函
-			if ($this->check_mail!=0){
+			if (!$net_link && $this->check_mail!=0){
 				if ($this->send_check_mail($data)){
 					$am = $this->conn->AutoExecute($this->table,$data,"INSERT");
 					return $this->tags('MEMBER_REVICE_MAIL_SEND_SURE');//已寄出帳號確認信件!!
@@ -377,15 +395,18 @@ class member
 			$this->smtp_set->FromName = $this->web_name;                 // 設定寄件者姓名              
 			$this->smtp_set->Subject = $this->web_name.' '.$header;    // 設定郵件標題        
 			$this->smtp_set->Body = $body;
-			return $this->smtp_set->Send();
+			$check = $this->smtp_set->Send();
+			if (!$check) {print_r($this->from_mail);exit;}
+			return $check;
 		}
 		
 		//--SMTP 設定
 		function smtp_setting($host,$account=NULL,$password=NULL,$port=NULL,$type='tls'){
+			
 			$mail = new PHPMailer();                        // 建立新物件        
 			$mail->IsSMTP();                                // 設定使用SMTP方式寄信 
 			
-			if ($account!=NULL){
+			if ($account!=NULL){	
 				$mail->SMTPAuth = true;                       // 設定SMTP需要驗證
 				$mail->Username = $account;				      // 設定驗證帳號        
 				$mail->Password = $password;				  // 設定驗證密碼        
@@ -403,6 +424,7 @@ class member
 			$mail->WordWrap = 50;                           // 每50個字元自動斷行
 				  
 			$mail->IsHTML(true);                            // 設定郵件內容為HTML
+		
 			$this->smtp_set = $mail;
 			$this->smtp_set_option = 1;
 		}
@@ -512,25 +534,49 @@ class member
 			global $_FILES;
 			
 			$data = array();
-			if ($_FILES)
-			foreach ($_FILES as $k=>$v){
-				if (is_array($_FILES[$k]["name"])){ //---判斷為陣列名稱相同物件上傳
-					foreach ($_FILES[$k]["name"] as $n1=>$n2){
-						if ($n2!=''||$n2!=NULL){
-						$temp_file_name = explode('.',$n2);
-						$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
-						$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
-						move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$this->upload_url.$temp_file_name);
-						$data[$k][] = $temp_file_name;
+			if ($_FILES){
+				//--限制大小檢查
+				foreach ($_FILES as $k=>$v){
+					if (is_array($_FILES[$k]["name"])){ //---判斷為陣列名稱相同物件上傳
+						foreach ($_FILES[$k]["name"] as $n1=>$n2){
+							if ($n2!=''||$n2!=NULL){
+								if ($_FILES[$k]["size"][$n1]=='0'){
+									return '上傳檔案大小為0或者已超出主機限制大小';
+								}elseif ($_FILES[$k]["size"][$n1]>$this->max_file_size*1024){
+									return '上傳檔案超出檔案大小'.$this->max_file_size.'的設定';
+								}
+							}
+						}	
+					}else{
+						if ($_FILES[$k]["name"]!=''||$_FILES[$k]["name"]!=NULL){
+							if ($_FILES[$k]["size"]=='0'){
+								return '上傳檔案大小為0或者已超出主機限制大小';
+							}elseif ($_FILES[$k]["size"]>$this->max_file_size*1024){
+								return '上傳檔案超出檔案大小'.$this->max_file_size.'的設定';
+							}
 						}
-					}	
-				}else{
-					if ($_FILES[$k]["name"]!=''||$_FILES[$k]["name"]!=NULL){
-						$temp_file_name = explode('.',$_FILES[$k]["name"]);
-						$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
-						$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
-						move_uploaded_file($_FILES[$k]["tmp_name"],$this->upload_url.$temp_file_name);
-						$data[$k] = $temp_file_name;
+					}
+				}
+				//--檔案存放
+				foreach ($_FILES as $k=>$v){
+					if (is_array($_FILES[$k]["name"])){ //---判斷為陣列名稱相同物件上傳
+						foreach ($_FILES[$k]["name"] as $n1=>$n2){
+							if ($n2!=''||$n2!=NULL){
+							$temp_file_name = explode('.',$n2);
+							$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
+							$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+							move_uploaded_file($_FILES[$k]["tmp_name"][$n1],$this->upload_url.$temp_file_name);
+							$data[$k][] = $temp_file_name;
+							}
+						}	
+					}else{
+						if ($_FILES[$k]["name"]!=''||$_FILES[$k]["name"]!=NULL){
+							$temp_file_name = explode('.',$_FILES[$k]["name"]);
+							$after_name = $temp_file_name[count($temp_file_name)-1];//副檔名
+							$temp_file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.'.$after_name;
+							move_uploaded_file($_FILES[$k]["tmp_name"],$this->upload_url.$temp_file_name);
+							$data[$k] = $temp_file_name;
+						}
 					}
 				}
 			}
