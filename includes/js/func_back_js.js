@@ -12,7 +12,7 @@ $(document).ready(
 			$(obj)[0].type='text';
 			$(obj).bind('focus',function(){
 				$(obj).removeAttr('style')[0].type='password';
-			}).bind('blur',function(){
+			}).bind('blur',function(event){
 				if ($(event.target).val()!="")
 					$(event.target).css('color','transparent')[0].type='text';
 				else

@@ -29,7 +29,7 @@ var no_image_ava = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAA
 
 
 if (window.localStorage.getItem('serback_editor')!=null){
-		$.ajax( {
+		WDJQ.ajax( {
 			url: "/ckeditor/ckeditor.js",
 			data: {},
 			type:"HEAD",
@@ -205,7 +205,7 @@ domready = 	function(){
 			$(obj)[0].type='text';
 			$(obj).bind('focus',function(){
 				$(obj).removeAttr('style')[0].type='password';
-			}).bind('blur',function(){
+			}).bind('blur',function(event){
 				if ($(event.target).val()!=""){
 					$(event.target).css('color','transparent')[0].type='text';
 				}else
@@ -256,11 +256,6 @@ windowload = function (){
 	}
 	*/
 	
-	//--編輯器圖片 自動最大全屏寬度
-	var detail_obj = '*[detail]';
-	WDJQ(detail_obj).each(function (idx,obj){
-		
-	})
 	
 	//--後台引導式編輯
 	if (window.localStorage.getItem('serback_editor')!=null){

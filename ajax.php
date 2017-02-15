@@ -1,13 +1,19 @@
 <?php
 include_once("head.php");
 
+
+if ($_GET["check_password"]){
+	echo '密碼強度: '.password_security($_GET["check_password"]).' / 10(最高)';
+	exit;
+}
+
 //---驗證碼確認
 if ($_GET["vcode"]){
 	if(md5($_GET["vcode"])!=$_SESSION["__validate_code"])
 	{
 		echo '驗證碼錯誤!!';
 	}else{
-		$temp = $conn->GetRow("select * from ".PREFIX."member where account='".$_GET["account"]."' or email='".$_GET["email"]."'");
+		$temp = $conn->GetRow($conn->Prepare("select * from ".PREFIX."member where account=? or email=?"),array($_GET["account"],$_GET["email"]));
 		if ($temp){
 			echo '帳號或者email資料重複!!';
 		}else{
