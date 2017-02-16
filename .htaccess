@@ -9,10 +9,11 @@
 	ErrorDocument 500 /modelphp/ErrorDocument/500
 	ErrorDocument 502 /modelphp/ErrorDocument/502
 	
-	RewriteRule ^(.*)ckfinder/(.*)$ $1ckfinder/$2 [QSA,L]
+	#RewriteRule ^(.*)ckfinder/(.*)$ $1ckfinder/$2 [QSA,L]
 	RewriteRule ^(.*).jsx(.*)$ $1.php$2 [L]
 	
 	
-	RewriteCond $1 !^(test\.php|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
-    RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+	RewriteRule ^(.*)serback/ajx.php$ serback/ajx.php [QSA,L]
+	RewriteCond $1 !^(views|test\.pdf|test2\.php|test4\.php|test3\.php|test1\.php|test\.php|ajax\.php|favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
+    RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>

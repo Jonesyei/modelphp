@@ -1,6 +1,7 @@
 <?php
 /*
 	Create by Jones MVC核心框架
+	@2016/11/1
 */
 
 
@@ -53,19 +54,14 @@ namespace console{
 		var $tpl;
 		var $lang;
 		var $tag;
-		function __construct($lang)
+		var $config;
+		function __construct($lang,$lang_list=array())
 		{
 			global $_GET;
 			global $_SERVER;
 			global $_j_web_set;
 			$this->get = $_GET;
 			$this->_j_web_set = $_j_web_set;
-			
-			//--設定語系
-			$this->setlang($lang);
-			
-			//--環境預設值設立
-			$this->work();
 			
 			//--路由轉換
 			if (!$_SERVER['PATH_INFO']){
@@ -80,6 +76,20 @@ namespace console{
 				$this->path = explode('/',$_SERVER['PATH_INFO']);
 			}
 			$this->path = array_values(array_filter($this->path));
+			
+			//--第二參數多語系判斷
+			if ($this->path[0] && $lang_list && in_array($this->path[0],$lang_list)) {
+				if (array_search($this->path[0],$lang_list)!==0) $this->config['setlang'] = $this->path[0];
+				$lang = $this->path[0];
+				unset($this->path[0]);
+			}
+			$this->path = array_values(array_filter($this->path));
+			//--設定語系
+			$this->setlang($lang);
+			
+			//--環境預設值設立
+			$this->work();
+			
 			$this->check_path_url();
 			//--讀取模組宣告
 			$this->load = new loadplugin;
@@ -100,6 +110,7 @@ namespace console{
 			//--原頁面含有post 資料處理
 			if (isset($_SESSION['_J_MVC_POST_SESSION_'])){
 				$_POST = $_SESSION['_J_MVC_POST_SESSION_'];
+				$_SESSION['_J_MVC_POST_SESSION_'] = NULL;
 				unset($_SESSION['_J_MVC_POST_SESSION_']);
 			}
 		}
@@ -132,7 +143,7 @@ namespace console{
 			global $$value;
 			if (!$this->path) $this->path[0] = $this->_j_web_set['default_controller'];
 			if (is_file(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php')){
-				include_once(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php');			
+				include_once(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php');
 			}else{
 				echo $this->tags('THE_CONTROLLER_LOADING_ERROR',array($this->_j_web_set['controller_path'].$this->path[0]));exit;
 			}
@@ -142,9 +153,11 @@ namespace console{
 		function check_path_url(){
 			global $_SERVER;
 			$path = $this->path;
+			
 			if ($path)
 				foreach ($path as $k=>$v){
 					if (!in_array($v,$this->_j_web_set['controller_ninclude'])){
+						$path[$k] = NULL;
 						unset($path[$k]);
 					}else
 						break;
@@ -153,7 +166,7 @@ namespace console{
 				$path = array_values($path);
 				$path = implode('/',$path);
 				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo $this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
-				$this->movePage(301,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
+				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].($this->config['setlang'] ? '/views/'.$this->config['setlang']:'').'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}
 		

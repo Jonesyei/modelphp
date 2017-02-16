@@ -25,7 +25,7 @@ $_SESSION["admin_info"]["file_url"] = $cpos["file_url"] = "../upload/member/";
 
 //--判斷別名是否使用重複
 if ($_POST && $_POST["b_name"]!='' && $_GET["id"]!=$_POST["b_name"]){
-	$check_data = $conn->GetRow("select * from ".$cpos["table"]." where b_name='".$_POST["b_name"]."' and type='".$_GET["type"]."'");
+	$check_data = $conn->GetRow("select * from ".$cpos["table"]." where b_name='".$_POST["b_name"]."' and type='".$_GET["type"]."' and lang='".$_SESSION["admin_info"]["lang"]."'");
 	if ($check_data && $check_data["id"]!=$_GET["id"]) alert('此別名已重複使用',-1);
 }
 

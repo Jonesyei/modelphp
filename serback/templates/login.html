@@ -11,14 +11,10 @@
 <script type="text/javascript" src="../includes/js/jquery.js"></script>
 <script type="text/javascript" src="../includes/js/jquery-ui.js"></script>
 
-<script type="text/javascript" src="../includes/js/jquery.validate.js" ></script><!--JQ驗證用套件-->
-<script type="text/javascript" src="../includes/js/cmxforms.js" ></script><!--JQ驗證用套件-->
-
-<script type="text/javascript" src="../includes/js/datepick/jquery.datepick.js"></script><!--datepick-->
-<script type="text/javascript" src="../includes/js/datepick/jquery.datepick-zh-TW.js"></script><!--datepick-->
-<script type="text/javascript" src="../includes/js/ui/ui.core.js"></script><!--tabs分頁用-->
 <script type="text/javascript" src="../includes/js/func_back_js.js" ></script><!--自定後台js-->
 
+<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="../ckfinder/ckfinder.js"></script>
 
 
 <link href="style/ui.all.css" rel="stylesheet" type="text/css" /><!--tabs分頁用-->
@@ -89,7 +85,7 @@
      
      
 ({if count($data.list)>1})
-<p class="ps_id"><span style="padding-left:4px; padding-right:4px;">語系選擇</span>
+<p class="ps_id" style="position:relative;top:-90px;"><span style="padding-left:4px; padding-right:4px;">語系選擇</span>
       <select name="lang" id="lang">
       ({section name=l loop=$data.list})
 	  <option value="({$data.list[l].detail})">({$data.list[l].name})</option>

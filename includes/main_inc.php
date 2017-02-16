@@ -36,9 +36,15 @@ if ($_GET["lang"]!=NULL && $_GET["lang"]!=''){
 }else{
 	$_SESSION["mode_lang"] = 'ch';
 }
+//--取得後臺設定所有語系
+$lang_list = array('ch');
+$lang_all = $conn->GetArray("select detail from ".PREFIX."language where status=1 order by sort");
+if ($lang_all) foreach ($lang_all as $k=>$v) $lang_list[] = $v["detail"];
+if ($_SETUP['MVC']) {
+	$console = new console\word_console($_SESSION["mode_lang"],array_unique($lang_list));
+	$_SESSION["mode_lang"] = $console->lang;
+}
 $record["lang"] = $post["lang"] = $lang = $_SESSION["member_info"]["lang"] = $_SESSION["mode_lang"];
-if ($_SETUP['MVC']) $console = new console\word_console($lang);
-
 	
 $page_name = Now_file();
 
@@ -89,7 +95,7 @@ if ($smtp_set){
 
 //各類別庫
 include(APP_PATH."class/class.php");
-$design = new design($conn,PREFIX."design",$lang);
+$design = new design($conn,PREFIX."design",$console->lang);
 
 //MVC架框設定
 if ($console){

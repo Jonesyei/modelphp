@@ -1,4 +1,6 @@
 <?php
+ini_set("memory_limit","256M");
+set_time_limit(300);
 //--ip 判斷
 $def_token_code = array(
 'localhost'=>'5a474f3854154daec579fb224d1fb780',
@@ -67,7 +69,7 @@ if ($_POST) {
 	if ($_POST["mvc"]=='true'){
 	$settingstr = str_replace('%mvc%',"
 	RewriteRule ^(.*)serback/ajx.php$ serback/ajx.php [QSA,L]
-	RewriteCond $1 !^(ajax\.php|favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
+	RewriteCond $1 !^(views|ajax\.php|favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
     RewriteRule ^(.*)$ index.php [L,QSA]",$settingstr);
 	}else{
 		$settingstr = str_replace('%mvc%','',$settingstr);
@@ -218,8 +220,8 @@ font-family:"微軟正黑體"; font-size:15px; line-height:1.5em; padding:2px 10
     </tr>
     <tr>
       <td>前端程式框架</td>
-      <td><input type="radio" name="mvc" value="true" checked>MVC框架<font color=red>(new)</font>
-         <input type="radio" name="mvc" value="false" onclick="alert('選擇傳統框架 日後可能不支援相關模組功能哦!!')"><font color="#666666">傳統框架(將不再使用)</font></a></td>
+      <td><input type="radio" name="mvc" value="true" checked>MVC框架
+         <input type="radio" name="mvc" value="false" onclick="alert('選擇傳統框架 日後可能不支援相關模組功能哦!!')" disabled><font color="#666666">傳統框架(不再使用)</font></a></td>
     </tr>
     <tr>
       <td>環境授權碼</td>
