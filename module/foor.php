@@ -28,7 +28,7 @@ class foor
 			global $console;
 			global $web_set;
 			$this->data['pageget'] = $_GET;
-			$this->data['main_path'] = $console->_j_web_set['main_path'];
+			$this->data['main_path'] = $console->_j_web_set['main_path'].($console->config['setlang'] ? '/'.$console->config['setlang']:'');
 			$this->data['path'] = $console->path;
 			
 			$this->web_set = $web_set;
