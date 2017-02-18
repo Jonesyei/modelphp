@@ -54,7 +54,9 @@ namespace console{
 		var $tpl;
 		var $lang;
 		var $tag;
-		var $config;
+		
+		var $config; //--參數設置
+		var $use_memory; //已使用記憶體 (檢測用)
 		function __construct($lang,$lang_list=array())
 		{
 			global $_GET;
@@ -144,6 +146,7 @@ namespace console{
 			if (!$this->path) $this->path[0] = $this->_j_web_set['default_controller'];
 			if (is_file(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php')){
 				include_once(APP_PATH.$this->_j_web_set['controller_path'].$this->path[0].'.php');
+				$this->use_memory = memory_get_usage();
 			}else{
 				echo $this->tags('THE_CONTROLLER_LOADING_ERROR',array($this->_j_web_set['controller_path'].$this->path[0]));exit;
 			}
@@ -165,7 +168,7 @@ namespace console{
 			if ($path){
 				$path = array_values($path);
 				$path = implode('/',$path);
-				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo $this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
+				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude']) && !$this->config['setlang']){echo $this->path[0].' '.$this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
 				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].($this->config['setlang'] ? '/views/'.$this->config['setlang']:'').'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}
@@ -221,6 +224,12 @@ namespace console{
 			   503 => "HTTP/1.1 503 Service Unavailable",
 			   504 => "HTTP/1.1 504 Gateway Time-out"
 		   );
+		   $cache_length = 300;
+		   $cache_expire_date = gmdate("D, d M Y H:i:s", time() + $cache_length);
+		   header("Expires: $cache_expire_date");
+		   header("Pragma: cache");
+		   header("Cache-Control: max-age=".$cache_length);
+		   header("User-Cache-Control: max-age=".$cache_length);
 		   header($http[$num]);
 		   header("Location: $url");
 		   exit;
