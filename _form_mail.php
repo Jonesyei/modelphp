@@ -12,7 +12,7 @@ include_once("includes/main_inc.php");
 if($_POST)
 {
 	
-	if(md5((strtoupper($_POST["code"])))!=($_SESSION["__validate_code"]))
+	if(!verifycode_check($_POST["code"]))
 	{
 		alert("驗證碼錯誤",-1);
 	}else{

@@ -162,7 +162,7 @@ switch ($act){
 			linkto($_SERVER['PHP_SELF'].'?act=detail');
 		}
 		if ($_POST){
-			if ($_SESSION["__validate_code"]!=md5($_POST["code"])){
+			if (!verifycode_check($_POST["code"])){
 				alert('驗證碼錯誤!!',-1);exit;
 			}
 			if (!$_POST["account"]) $_POST["account"] = $_POST["email"];

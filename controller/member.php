@@ -56,6 +56,8 @@ switch ($act){
 			if ($member->update($_POST)){
 				alert($console->tags('UPDATE_SURE'),$console->_j_web_set['main_path']."/member/detail"); // 修改成功!!
 				exit;
+			}else{
+				alert($member->erromsg,-1);exit;
 			}
 		}
 	break;
@@ -87,7 +89,7 @@ switch ($act){
 		if ($_GET["auth"]){
 			if ($member->recive_check_mail($_GET)){
 				print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>";
-				echo '<form id="form1" action="member?cpw&nock=1" method="post"><input type="hidden" name="password" value="'.base64_decode(urldecode($_GET["auth"])).'"><br>';
+				echo '<form id="form1" action="member?act=cpw&nock=1" method="post"><input type="hidden" name="password" value="'.base64_decode(urldecode($_GET["auth"])).'"><br>';
 				echo $console->tags('PLEASE_ENTER_PASSWORD').':<input type="password" name="new_password" id="password" value=""><br>';
 				echo $console->tags('PLEASE_ENTER_PASSWORD_AGAIN').':<input type="password" id="new_password" value=""><br>';
 				echo '<input type="button" value=" '.$console->tags('SEND').' " onclick="checkdata()"></form>
@@ -158,7 +160,7 @@ switch ($act){
 			linkto($_SERVER['PHP_SELF'].'?act=detail');
 		}
 		if ($_POST){
-			if ($_SESSION["__validate_code"]!=md5($_POST["code"])){
+			if (!verifycode_check($_POST["code"])){
 				alert($console->tags('VAILD_CODE_ERRO'),-1);exit;
 			}
 			if (!$_POST["account"]) $_POST["account"] = $_POST["email"];

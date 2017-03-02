@@ -1,24 +1,25 @@
-
 $(document).ready(
 	function()
 	{
+		/*
 		//--針對chrome 56版修正 input type=password 非https 不安全性提示
+		var password_obj = 'input:password,input[password]';
 		$('form').each(function(idx,obj){
-			if ($(obj).find('input:password').length>0)
+			if ($(obj).find(password_obj).length>0)
 				$(obj).attr('autocomplete','off');
 		});
-		$('input:password').each(function(idx,obj){
-			$(obj).val('');
+		$(password_obj).each(function(idx,obj){
 			$(obj)[0].type='text';
-			$(obj).bind('focus',function(){
-				$(obj).removeAttr('style')[0].type='password';
+			$(obj).bind('focus',function(event){
+				$(event.target).removeAttr('style')[0].type='password';
 			}).bind('blur',function(event){
-				if ($(event.target).val()!="")
+				if ($(event.target).val()!=""){
 					$(event.target).css('color','transparent')[0].type='text';
-				else
+				}else
 					$(event.target)[0].type = 'text';
-			})
+			});
 		});
+		*/
 	}
 );
 
@@ -42,14 +43,11 @@ $(window).load(function (){
 	}
 });
 
-
-
 function lock_view(){
 	$('body')[0].onmousewheel = function (){ return false;}
 	$('body')[0].onmousedown = function (){return false;}
 	$('body')[0].onmouseup = function (){ return false;}
 	$('body')[0].onmousemove = function (){ return false;}
-
 	$('body')[0].ontouchmove = function (){ return false;}
 }
 
@@ -58,7 +56,6 @@ function unlock_view(){
 	$('body')[0].onmousedown = function (){return ;}
 	$('body')[0].onmouseup = function (){ return ;}
 	$('body')[0].onmousemove = function (){ return ;}
-
 	$('body')[0].ontouchmove = function (){ return ;}
 }
 

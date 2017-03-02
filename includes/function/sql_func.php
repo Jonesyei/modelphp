@@ -1,102 +1,58 @@
 <?php
-/*
-	後台數據引導使用
-	@2015 create and edit by Jones
-*/
-
-//$record["create_date"] = date("Y-m-d H:i:s");
 
 
-
-//資料table,$_POST資料,分類排序之欄位名稱,分類排序之欄位之值   <新增資料>
-function Sql_add($conn,$table,$post,$type = NULL,$type_value = NULL)
-{		
-	$record= array();
-	foreach($post as $k => $v)
-		$record[$k]=($v);
-			
-	$record["sort"] = 1 ;
-	
-	$sql = "UPDATE ".$table." SET sort = sort + 1 where 1 = 1 and ";
-	
-	
-	
-	if($type!=NULL) //插入 WHERE 的條件
-	{
-		$type = explode(",",$type);
-		$type_value = explode(",",$type_value);
-		
-		if(count($type)>1)
-		{	
-			foreach($type as $k => $v)
-				$sql .= $v ." = '".($type_value[$k])."' and ";
-		}
-		else
-		{
-			$sql .= $type[0] ." = '".($type_value[0])."' and ";
-		}
-	}
-	$sql .= " 1 = 1 ";
-	
-	
-	$conn->Execute($sql);//更新排序
-	
-	$conn->AutoExecute($table,$record,"INSERT");
-}
-
-//選擇資料之id,資料table,更新之post  <更新資料>
-function Sql_upd($conn,$id,$table,$post)
-{	
-	$record= array();
-	foreach($post as $k => $v)
-		$record[$k]=($v);
-
-	unset($record["sort"]);//暫時不開放明細頁SORT(排序)設定
-	
-	if(count(explode(",",$id))>1)
-		$where = " id in (".($id).")";
+//-- 字串陣列查詢語句返回
+function array_sql_search($row,$data){
+	if ($data)
+		return " and (".$row." like '%|".quotes($data)."|%' or ".$row." like '%|".quotes($data)."' or ".$row." like '".quotes($data)."|%' or ".$row."='".quotes($data)."')";
 	else
-		$where = " id =".($id);
-
-	$conn->AutoExecute($table,$record,"UPDATE",$where);
+		return '';
 }
 
-//選擇資料之id,資料table,分類排序之欄位名稱,分類排序之欄位之值  <刪除資料>
-function Sql_del($conn,$id,$table,$type = NULL,$type_value = NULL)
-{	
-	$id_str = explode(",",$id);
-	foreach($id_str as $k => $v)
-	{
-		$sql="select * from ".$table." WHERE id = ".($v);
-		$sort = $conn->GetRow($sql);
-
-		$sql = "UPDATE ".$table." SET sort = sort-1 WHERE sort > ".($sort['sort'])." and "; //更新其餘資料的sort
-
-		if($type!=NULL) //插入 WHERE 的條件
-		{
-			$type_temp = explode(",",$type);
-			//$type_value_temp = explode(",",$type_value);
-			
-			if(count($type_temp)>1)
-			{	
-				foreach($type_temp as $k => $v)
-					$sql .= $v ." = '". $sort[$v]."' and ";
-			}
-			else
-			{
-				$sql .= $type_temp[0] ." = '". $sort[ $type_temp[0] ] ."' and ";
-			}
-		}
+/*
+	依分類條件排序顯示
+	ex:
+	$sql = "select * from table"; //--只能做單個資料表操作
+	orderbysort($sql語句,array('class'=>$_GET["class"],'第二個KEY'=>'第二個值'),鍵值)
+*/
+function orderbysort($sql,$patten,$rowkey='id'){
+	global $_SESSION;
+	global $conn;
+	$temp_patten='';
+	foreach ($patten as $k=>$v){
+		$temp_patten.=$k.$v;
+	}
 	
-		$sql .= " 1 = 1 ";
-		
-		
-		$conn->Execute($sql);
+	//--查詢語句處理
+	$sql = explode('order by',strtolower($sql));
+	$data_sql = $sql = $sql[0];
+	$sql = str_replace('*',$rowkey,$sql);
+	
+	//--先查詢所有資料id
+	$item_list = $conn->GetArray($sql);
+	if ($item_list)
+		foreach ($item_list as $k=>$v)
+			$item_array[] = $v[$rowkey];
+	
+	//--處理將輸出的sql
+	$false_sql = $data_sql;
+	$data_sql = explode('where',$data_sql);
+	$data_sql = $data_sql[0];
 
-		$sql="delete from ".$table." where id =".($sort['id']); //刪除資料
-
-		$conn->Execute($sql);	
+	//--判斷是否含有設定排序資料確認
+	if (!$item_array) { 
+		echo $sql.'<BR>sql 語句中，未取得任何資料項目';
+		return $false_sql.' ORDER BY sort';
+	}else
+		$cpos_sort_check = $conn->GetArray('select data_id from '.PREFIX.'centerpoes_sort where data_id in ('.implode(',',$item_array).') and keyset="'.$temp_patten.'" and lang="'.$_SESSION["admin_info"]["lang"].'" order by sort');
+		
+	if ($cpos_sort_check){
+		foreach ($cpos_sort_check as $k=>$v){
+			$feild[] = $v["data_id"];
+		}
+		return $data_sql.' WHERE '.$rowkey.' IN ('.implode(',',$item_array).') ORDER BY FIELD(`'.$rowkey.'`,'.implode(',',$feild).')';
+	}else{
+		return $false_sql.' ORDER BY sort';
 	}
 }
-
 ?>

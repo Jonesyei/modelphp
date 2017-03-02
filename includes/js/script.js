@@ -197,14 +197,16 @@ domready = 	function(){
 		});
 		
 		//--針對chrome 56版修正 input type=password 非https 不安全性提示
+		/*
+		var password_obj = 'input:password,input[password]';
 		$('form').each(function(idx,obj){
-			if ($(obj).find('input:password').length>0)
+			if ($(obj).find(password_obj).length>0)
 				$(obj).attr('autocomplete','off');
 		});
-		$('input:password').each(function(idx,obj){
+		$(password_obj).each(function(idx,obj){
 			$(obj)[0].type='text';
-			$(obj).bind('focus',function(){
-				$(obj).removeAttr('style')[0].type='password';
+			$(obj).bind('focus',function(event){
+				$(event.target).removeAttr('style')[0].type='password';
 			}).bind('blur',function(event){
 				if ($(event.target).val()!=""){
 					$(event.target).css('color','transparent')[0].type='text';
@@ -212,6 +214,7 @@ domready = 	function(){
 					$(event.target)[0].type = 'text';
 			});
 		});
+		*/
 }
 
 

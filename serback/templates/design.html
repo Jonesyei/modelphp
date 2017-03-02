@@ -351,12 +351,13 @@ page_initial('table-style01');
 			editor.setOption("theme", 'vibrant-ink');
 			editor.markText( {line: 1, ch: 6}, {line: 1, ch: 15}, {className: "styled-background"} );
 			editor.on('keyup', function(cm, e) {change_url();
-				var arrows = [37, 38, 39, 40, 13, 27, 36, 16, 188, 8, 190, 113]
-				if (arrows.indexOf(e.keyCode) < 0) {
+				var arrows = [33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 13, 17, 18, 27, 36, 16, 188, 8, 9, 190, 113, 115, 118, 120, 122]
+				if (arrows.indexOf(e.keyCode) < 0 && !e.ctrlKey && !e.altKey) {
 					//alert(e.keyCode);
 					editor.execCommand("autocomplete")
 				  }
 			});
+			editor.on('mousedown', function(cm, e) {change_url();});
 			editor.on('scroll', function(cm, e) {change_url();});
 			//--畫面拖曳
 			edit_obj = editor.display.wrapper;
@@ -579,14 +580,24 @@ function change_url(){
 		_changestr = _changestr.replace('%&gt;','%&gt;</a>');
 		*/
 		//--含特殊標籤處理
-		
+		/*
 		_changestr = $(obj).text();
 		id = _changestr.search('<%file=')+7;
 		id = _changestr.substr(id,_changestr.search('%>')-id);
 		_changestr = _changestr.replace('<%file=','<a href="design.php?type=ban&id='+id+'" class="j_ahref" target="_blank"><%file=');
 		_changestr = _changestr.replace('%>','%></a>');
 		$(obj).html('<span class="cm-tag">'+_changestr+'</span>');
-		
+		*/
+		if ($(obj).find('span').length>0){
+			var _changestr = $(obj).text();
+			id = _changestr.search('<%file=')+7;
+			id = _changestr.substr(id,_changestr.search('%>')-id);
+			//$(obj).html('<span>'+$(obj).html()+'</span>');
+			//$(obj).css('color','red').css('cursor','pointer').on('click',function(){window.open('design.php?type=ban&id='+id);}).find('span').css('color','red');
+			if ($(obj).find('a').length<=0){
+				$(obj).append('<a href="design.php?type=ban&id='+id+'" class="j_ahref" target="_blank">[點此連結]</a>');
+			}
+		}	
 	});
 }
 function Copy_data()

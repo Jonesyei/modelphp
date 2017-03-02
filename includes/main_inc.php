@@ -8,6 +8,7 @@ include(APP_PATH.'includes/adodb5/adodb.inc.php');
 include(APP_PATH."includes/smarty/Smarty.class.php");
 
 include(APP_PATH."includes/function/func.php");
+include(APP_PATH."includes/function/sql_func.php");
 include(APP_PATH."includes/config/conn.php");
 include(APP_PATH."includes/config/config.php");
 

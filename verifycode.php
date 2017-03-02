@@ -39,7 +39,8 @@ for($i=0; $i<4; $i++){
    $verification__session.= $str[$num];
 }
 $_SESSION["vlcode"] = $verification__session;
-$_SESSION["__validate_code"] = md5($verification__session);
+$_SESSION['__validate_code_list'][] = $_SESSION["__validate_code"] = md5($verification__session);
+$_SESSION['__validate_code_time'][] = strtotime(date("Y-m-d H:i:s"));
 
 $imageWidth = 122; 
 $imageHeight = 32;
