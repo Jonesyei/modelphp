@@ -2,6 +2,25 @@
 /*
 	Create by Jones MVC核心框架
 	@2016/11/1
+	
+	new word_console(當前語系別名,所有語系陣列array()) 呼叫環境框架
+	debug_erro([1 or 0]) //debug 程式碼開關
+	setlang(語系別名)  //設定當前語系
+	tags('標籤字串','取得的字串中做文字取代 $1=>$str[0]') ex: $console->tags('test $1 , $2 ok?',array('project','are you')); 則結果:test project , are you ok?
+	controller(控制器名稱)  ///呼叫控制器 (基本上不需設定此參數)
+	load->module(模組名稱即classname) //讀取模組
+	module->模組名稱() //呼叫已載入的模組 進行物件操作
+	
+	config //--環境參數設定 參考以下設定值
+	
+	//--csrf 表單安全性驗證
+	$this->config['csrf_verifty'] = true; //-預設開啟
+	$this->config['csrf_verifty_setting']['token'] = true; //--POST操作須加上input name=token 回應 (value 需從 function get_token獲取)
+	$this->config['csrf_verifty_setting']['time'] = 3600; //請求回應時間(秒)
+	$this->config['csrf_verifty_setting']['maxcount'] = 30; //最高紀錄多少授權(超過該授權則舊的授權會優先移除)
+	$this->config['csrf_verifty_setting']["method"] = array('GET','POST','REQUEST'); //SQL注碼攻擊防範資料來源，預設全部請求來源
+	$this->config['csrf_verifty_setting']['type'] = 'md5';  //--加密模式(採用金鑰混和加密) md5 sha1 sha256
+	$this->config['csrf_verifty_setting']['key'] = 'WD';	//--加密密鑰
 */
 
 
