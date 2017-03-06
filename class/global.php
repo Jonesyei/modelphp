@@ -315,12 +315,12 @@ namespace console{
 					unset($_SESSION['_J_MVC_CSRF_TOKEN_'][$keytime]);
 				}else{
 					header("Content-Type:text/html; charset=utf-8");
-					echo $this->tags('CSRF_TOKEN_TIMEOUT',array($time));
+					alert($this->tags('CSRF_TOKEN_TIMEOUT',array($time)),-1);
 					exit;						
 				}
 			}else{
 				header("Content-Type:text/html; charset=utf-8");
-				echo $this->tags('CSRF_TOKEN_ERROR');
+				alert($this->tags('CSRF_TOKEN_ERROR'),"-1");
 				exit;
 			}
 		}
