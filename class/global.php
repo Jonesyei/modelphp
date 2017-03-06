@@ -67,6 +67,9 @@ namespace console{
 			$this->get = $_GET;
 			$this->_j_web_set = $_j_web_set;
 			
+			//--debug訊息
+			$this->debug_erro();
+			
 			//--路由轉換
 			if (!$_SERVER['PATH_INFO']){
 				if ($_SERVER['REDIRECT_URL']){
@@ -114,6 +117,15 @@ namespace console{
 			if ($this->_j_web_set["module_autoload"])
 				foreach ($this->_j_web_set["module_autoload"] as $k=>$v)
 					$this->load->module($v);
+		}
+		
+		function debug_erro($value=0){
+			ini_set('log_errors',$value);
+			ini_set('log_errors_max_len','1024');
+			if ($value)
+				error_reporting(E_ALL);
+			else
+				error_reporting(0);
 		}
 		
 		function work(){
