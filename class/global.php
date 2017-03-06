@@ -62,6 +62,8 @@ namespace console{
 			global $_GET;
 			global $_SERVER;
 			global $_j_web_set;
+			global $_SESSION;
+			
 			$this->get = $_GET;
 			$this->_j_web_set = $_j_web_set;
 			
@@ -93,6 +95,15 @@ namespace console{
 			$this->work();
 			
 			$this->check_path_url();
+			
+			//--資安資訊防護SQL injection XSS CSRF
+			$this->config['csrf_verifty'] = true; //-預設開啟
+			$this->config['csrf_verifty_setting']['token'] = true; //--POST操作須加上input name=token 回應 (value 需從 function get_token獲取)
+			$this->config['csrf_verifty_setting']['time'] = 3600; //請求回應時間(秒)
+			$this->config['csrf_verifty_setting']['maxcount'] = 30; //最高紀錄多少授權(超過該授權則舊的授權會優先移除)
+			$this->csrf_verifty();
+			$this->token_resh();
+			//PRINT_r(hash_algos());EXIT;
 			//--讀取模組宣告
 			$this->load = new loadplugin;
 			$this->load->_j_web_set = $this->_j_web_set;
@@ -168,7 +179,7 @@ namespace console{
 			if ($path){
 				$path = array_values($path);
 				$path = implode('/',$path);
-				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude']) && !$this->config['setlang']){echo $this->path[0].' '.$this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
+				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo $this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
 				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].($this->config['setlang'] ? '/views/'.$this->config['setlang']:'').'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}
@@ -224,15 +235,112 @@ namespace console{
 			   503 => "HTTP/1.1 503 Service Unavailable",
 			   504 => "HTTP/1.1 504 Gateway Time-out"
 		   );
-		   $cache_length = 300;
-		   $cache_expire_date = gmdate("D, d M Y H:i:s", time() + $cache_length);
-		   header("Expires: $cache_expire_date");
-		   header("Pragma: cache");
-		   header("Cache-Control: max-age=".$cache_length);
-		   header("User-Cache-Control: max-age=".$cache_length);
 		   header($http[$num]);
 		   header("Location: $url");
 		   exit;
+		}
+		/*
+			$this->config['csrf_verifty_setting']["method"] = array('GET','POST','REQUEST'); //驗證請求模式
+		*/
+		function csrf_verifty(){
+			global $_GET;
+			global $_POST;
+			global $_REQUEST;
+			global $_SERVER;
+			global $_SESSION;
+			//--接收資料處理
+			if ($this->config['csrf_verifty']){
+				if (!$this->config['csrf_verifty_setting']["method"])
+					$this->config['csrf_verifty_setting']["method"] = array('GET','POST','REQUEST');
+				else
+					foreach ($this->config['csrf_verifty_setting']["method"] as $k=>$v){
+						$this->config['csrf_verifty_setting']["method"][$k] = strtoupper($v);
+					}
+				if ($_GET && in_array('GET',$this->config['csrf_verifty_setting']["method"]));
+				foreach ($_GET as $k=>$v){
+					$_GET[$k] =  $this->csrf_press($v);
+				}
+				if ($_POST && in_array('POST',$this->config['csrf_verifty_setting']["method"]))
+				foreach ($_POST as $k=>$v){
+					$_POST[$k] = $this->csrf_press($v);
+				}
+				if ($_REQUEST && in_array('REQUEST',$this->config['csrf_verifty_setting']["method"]))
+				foreach ($_REQUEST as $k=>$v){
+					$_REQUEST[$k] = $this->csrf_press($v);
+				}
+			}
+			//--XSRF判斷
+			if ($this->config['csrf_verifty'] && $_SERVER['HTTP_REFERER'] && strtoupper($_SERVER['REQUEST_METHOD'])=='POST'){
+				$check_csrf = explode('//',$_SERVER['HTTP_REFERER']);
+				$check_csrf = explode('/',$check_csrf[1]);
+				if ($_SERVER['HTTP_HOST']!=$check_csrf[0]) {header("Content-Type:text/html; charset=utf-8");echo $this->tags('XSRF_REFFRER_NOT_TRUE');exit;}
+			}
+			
+			//--token 確認參數是否於資料中包含資訊
+			if ($this->config['csrf_verifty_setting']['token'] && strtoupper($_SERVER['REQUEST_METHOD'])=='POST'){
+				$this->check_token();
+			}
+		}
+		function csrf_press($str){
+			if (is_array($str)){
+				foreach ($str as $k=>$v){
+					$str[$k] = $this->csrf_press($v);
+				}
+			}else{
+				return addslashes(htmlspecialchars(strip_tags($str)));
+			}
+			return $str;
+		}
+		function check_token($token=''){
+			global $_REQUEST;
+			global $_POST;
+			global $_SESSION;
+			if ($token=='') $token = ($_REQUEST["token"] ? $_REQUEST["token"]:$_POST["token"]);
+			$keytime = array_search($token,$_SESSION['_J_MVC_CSRF_TOKEN_']);
+			if ($keytime!=false){
+				$time = ($this->config['csrf_verifty_setting']['time'] ? $this->config['csrf_verifty_setting']['time']:3600);
+				if ($keytime>=strtotime(date("Y-m-d H:i:s"))-$time){
+					unset($_SESSION['_J_MVC_CSRF_TOKEN_'][$keytime]);
+				}else{
+					header("Content-Type:text/html; charset=utf-8");
+					echo $this->tags('CSRF_TOKEN_TIMEOUT',array($time));
+					exit;						
+				}
+			}else{
+				header("Content-Type:text/html; charset=utf-8");
+				echo $this->tags('CSRF_TOKEN_ERROR');
+				exit;
+			}
+		}
+		function get_token($config=array()){
+			global $_SESSION;
+			$now_time = strtotime(date("Y-m-d H:i:s"));
+			$type = ($this->config['csrf_verifty_setting']['type'] ? $this->config['csrf_verifty_setting']['type']:'md5'); //--加密模式
+			$key = ($this->config['csrf_verifty_setting']['key'] ? $this->config['csrf_verifty_setting']['key']:'WD');	//--加密密鑰
+			$_SESSION['_J_MVC_CSRF_TOKEN_'][$now_time] = hash_hmac($type,rand(10000000,99999999),$key);
+			switch ($config['format']){
+				case "text":
+					return $_SESSION['_J_MVC_CSRF_TOKEN_'][$now_time];
+				break;
+				default:
+					return '<input type="hidden" name="token" value="'.$_SESSION['_J_MVC_CSRF_TOKEN_'][$now_time].'">';
+				break;
+			}
+		}
+		//--超時授權移除
+		function token_resh(){
+			global $_SESSION;
+			
+			$time = ($this->config['csrf_verifty_setting']['time'] ? $this->config['csrf_verifty_setting']['time']:3600);
+
+			if ($_SESSION["_J_MVC_CSRF_TOKEN_"]){
+				foreach ($_SESSION["_J_MVC_CSRF_TOKEN_"] as $k=>$v){
+					if ($k+$time<strtotime(date("Y-m-d H:i:s")) || !is_numeric($k) || count($_SESSION["_J_MVC_CSRF_TOKEN_"])>$this->config['csrf_verifty_setting']['maxcount'])
+						unset($_SESSION["_J_MVC_CSRF_TOKEN_"][$k]);
+					else
+						break;
+				}
+			}
 		}
 	
 	}///-end class world_console

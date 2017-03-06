@@ -10,15 +10,12 @@ $cpos["pagecount"] = 30; //每頁顯示筆數
 $cpos["table"] = $data["pageget"]["data_table"] = PREFIX."products";
 //$cpos["tablejoin"] = ' LEFT JOIN (select id as cid,name as classname from '.PREFIX.'category) AS cc ON cc.cid=class';
 $cpos["tablewhere"] = 'id='.$_GET["id"];
-$cpos["tablesearch"] = 'name,detail';//搜尋關聯欄位
-$cpos["searchstatus"] = 'status';//搜尋狀態參照欄位
-$cpos["listorderby"] = 'sort';//列表頁排序方式
-$cpos["searchclass"] = 'class';//收尋分類對照欄位
+$cpos["search"] = array('name'=>'keyword','detail'=>'keyword','create_date'=>'daterange','status'=>'s_status');
+$cpos['search_left']  = array('class','name');//針對欄位字串陣列or比對
 $_SESSION["admin_info"]["file_url"] = $data["file_url"] = $cpos["file_url"] = "../upload/products/"; //--存檔路徑
 $cpos["file_check"] = "pic,stock_pic"; //-檔案檢核欄位
-$cpos["tablelistwhere"] = 'WHERE type="products"';//列表顯示資料的條件
+$cpos["tablelistwhere"] = 'WHERE type="products" and lang="'.$_SESSION["admin_info"]["lang"].'"';//列表顯示資料的條件
 $cpos["cate_root"] = '1';	///--分類樹根
-
 $cpos["sort_set"] = array('class'=>$_GET["s_class"]);
 
 

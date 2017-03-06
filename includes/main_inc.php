@@ -44,6 +44,10 @@ if ($lang_all) foreach ($lang_all as $k=>$v) $lang_list[] = $v["detail"];
 if ($_SETUP['MVC']) {
 	$console = new console\word_console($_SESSION["mode_lang"],array_unique($lang_list));
 	$_SESSION["mode_lang"] = $console->lang;
+	$console->config = array(
+		'csrf_verifty'=>true, //--CSRF驗整功能開啟(包含sql注碼攻擊防範)
+		'csrf_verifty_setting'=>array('token'=>true,'time'=>3600,'maxcount'=>30) //表單CSRF驗證功能開啟 token狀態 time授權效用秒數 maxcount最大授權數
+	);
 }
 $record["lang"] = $post["lang"] = $lang = $_SESSION["member_info"]["lang"] = $_SESSION["mode_lang"];
 	
