@@ -375,10 +375,7 @@ function datepicker($name,$value,$attr='',$format=array()){
 	return $tmp;
 }
 
-//-- 字串陣列查詢語句返回
-function array_sql_search($row,$data){
-	return " and (".$row." like '%|".quotes($data)."|%' or ".$row." like '%|".quotes($data)."' or ".$row." like '".quotes($data)."|%' or ".$row."='".quotes($data)."')";
-}
+
 
 //提示
 function alert($messages,$url=NULL)
@@ -886,14 +883,7 @@ function curl($long_url,$type='GET',$data=NULL) {
 }
 
 
-function cpos_sort_value($value=array()){
-	$temp_str = '';
-	if ($value)
-		foreach ($value as $k=>$v){
-			$temp_str .=$k.$v;
-		}
-	return $temp_str;
-}
+
 
 /*
 	Hex 轉 rgb
@@ -1008,6 +998,143 @@ function password_security($str){
 		
 		return ($score>=0 ? $score:0);
 }
+
+
+/*
+	EMAIL信箱驗證程序
+	create by Jones 2017/02/21
+*/
+function verifyEmail($toemail, $fromemail='Jones@vipcase.net', $getdetails = false)
+{
+    // 取得EMAIL服務域名
+    $email_arr = explode('@', $toemail);
+    $domain = array_slice($email_arr, -1);
+    $domain = $domain[0];
+    // 域名字段取得
+    $domain = ltrim($domain, '[');
+    $domain = rtrim($domain, ']');
+
+    if ('IPv6:' == substr($domain, 0, strlen('IPv6:'))) {
+        $domain = substr($domain, strlen('IPv6') + 1);
+    }
+
+    $mxhosts = array();
+        //检查域名是否有分配给它IP地址
+    if (filter_var($domain, FILTER_VALIDATE_IP)) {
+        $mx_ip = $domain;
+    } else {
+        // 未分配IP 獲取主機名的MX記錄
+        getmxrr($domain, $mxhosts, $mxweight);
+    }
+
+    if (!empty($mxhosts)) {
+        $mx_ip = $mxhosts[array_search(min($mxweight), $mxhosts)];
+    } else {
+        // 如果未找到MX記錄，請獲取主機的A DNS記錄
+        if (filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $record_a = dns_get_record($domain, DNS_A);
+             // 否則獲取AAAA IPv6地址記錄
+        } elseif (filter_var($domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $record_a = dns_get_record($domain, DNS_AAAA);
+        }
+
+        if (!empty($record_a)) {
+            $mx_ip = $record_a[0]['ip'];
+        } else {
+            // 未獲取MX紀錄
+            $result = '不正確';
+            $details .= 'No suitable MX records found.';
+
+            return ((true == $getdetails) ? array($result, $details) : $result);
+        }
+    }
+
+    //連線域名開啟 smtp 25 port
+    $connect = @fsockopen($mx_ip, 25);
+
+    if ($connect) {
+
+        // 啟動發送SMTP郵件
+        if (preg_match('/^220/i', $out = fgets($connect, 1024))) {
+
+            // 發送HELO指令 至SMTP
+            fputs($connect, "HELO $mx_ip\r\n");
+            $out = fgets($connect, 1024);
+            $details .= $out."\n";
+
+            // 設定發件人對象
+            fputs($connect, "MAIL FROM: <$fromemail>\r\n");
+            $from = fgets($connect, 1024);
+            $details .= $from."\n";
+
+            // 發送帶有收件者的RCPT指令
+            fputs($connect, "RCPT TO: <$toemail>\r\n");
+            $to = fgets($connect, 1024);
+            $details .= $to."\n";
+
+            //使用QUIT指令 結束連線SMTP服務器
+            fputs($connect, 'QUIT');
+            fclose($connect);
+
+            // 判斷是否有效回應 有效回應須包含250回應代碼
+            if (!preg_match('/^250/i', $from) || !preg_match('/^250/i', $to)) {
+                $result = '不正確'; //失敗
+            } else {
+                $result = '正確';	//成功
+            }
+        }
+    } else {
+		//--未成功連線
+        $result = '不正確';
+        $details .= 'Could not connect to server';
+    }
+	
+    if ($getdetails) {
+        return array($result, $details);
+    } else {
+        return $result;
+    }
+}
+
+
+
+
+
+
+/*
+	多數組驗證碼功能
+	verifycode_check(未加密代碼,驗證碼作用時間[秒])
+	create by jones 2017 03 01
+*/
+function verifycode_check($code,$time=600){
+	global $_SESSION;
+	$code = md5(strtoupper($code));
+	
+	//--清除已過時驗證碼
+	if ($_SESSION['__validate_code_list'])
+		foreach ($_SESSION['__validate_code_list'] as $k=>$v){
+			if (strtotime(date("Y-m-d H:i:s"))-$time>$_SESSION['__validate_code_time'][$k]){
+				unset($_SESSION['__validate_code_time'][$k]);
+				unset($_SESSION['__validate_code_list'][$k]);
+			}
+		}
+	
+	//--判斷驗證碼是否在資料之中
+	if (is_array($_SESSION['__validate_code_list']) && in_array($code,$_SESSION['__validate_code_list'])){
+		$key = array_search($code,$_SESSION['__validate_code_list']);
+		if (strtotime(date("Y-m-d H:i:s"))-$time<=$_SESSION['__validate_code_time'][$key]){
+			unset($_SESSION['__validate_code_time'][$key]);
+			unset($_SESSION['__validate_code_list'][$key]);
+			return true;
+		}else{
+			unset($_SESSION['__validate_code_time'][$key]);
+			unset($_SESSION['__validate_code_list'][$key]);
+			return false;
+		}
+	}
+	return false;
+}
+
 
 
 /*
