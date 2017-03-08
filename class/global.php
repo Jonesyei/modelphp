@@ -119,12 +119,14 @@ namespace console{
 			$this->check_path_url();
 			
 			//--資安資訊防護SQL injection XSS CSRF
+			if (!$this->check_nincould()){
 			$this->config['csrf_verifty'] = true; //-預設開啟
 			$this->config['csrf_verifty_setting']['token'] = true; //--POST操作須加上input name=token 回應 (value 需從 function get_token獲取)
 			$this->config['csrf_verifty_setting']['time'] = 3600; //請求回應時間(秒)
 			$this->config['csrf_verifty_setting']['maxcount'] = 30; //最高紀錄多少授權(超過該授權則舊的授權會優先移除)
 			$this->csrf_verifty();
 			$this->token_resh();
+			}
 			//PRINT_r(hash_algos());EXIT;
 			//--讀取模組宣告
 			$this->load = new loadplugin;
@@ -193,7 +195,21 @@ namespace console{
 				echo $this->tags('THE_CONTROLLER_LOADING_ERROR',array($this->_j_web_set['controller_path'].$this->path[0]));exit;
 			}
 		}
-		
+		//--判斷是否包含項目
+		function check_nincould(){
+			global $_SERVER;
+			$path = $this->path;
+	
+			if (!$path) return true;
+			if ($path)
+				foreach ($path as $k=>$v){
+					if (in_array($v,$this->_j_web_set['controller_ninclude'])){
+						return true;
+					}else
+						break;
+				}
+			return false;
+		}
 		//--確認路由中是否包含已設定的目錄
 		function check_path_url(){
 			global $_SERVER;
@@ -326,6 +342,7 @@ namespace console{
 			global $_REQUEST;
 			global $_POST;
 			global $_SESSION;
+			global $_SERVER;
 			if ($token=='') $token = ($_REQUEST["token"] ? $_REQUEST["token"]:$_POST["token"]);
 			$keytime = array_search($token,$_SESSION['_J_MVC_CSRF_TOKEN_']);
 			if ($keytime!=false){
@@ -339,7 +356,6 @@ namespace console{
 				}
 			}else{
 				header("Content-Type:text/html; charset=utf-8");
-				alert($this->tags('CSRF_TOKEN_ERROR'),"-1");
 				exit;
 			}
 		}

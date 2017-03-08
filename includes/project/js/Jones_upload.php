@@ -1,5 +1,5 @@
 <?php
-include_once("../../main_inc.php");
+include_once("../../main_back_inc.php");
 include_once("../function.php");
 
 
