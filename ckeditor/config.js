@@ -4,20 +4,19 @@
  */
 CKEDITOR.timestamp = 'jonesckeditorv101';
 
+/*
 CKEDITOR.stylesSet.add('vipcase',[
     // Block-level styles
-	
-	/*
 	{ name : '運送及付款方式', element : 'div', attributes : { 'class' : 'customer-shipping' } }
     { name : '資訊頁區塊', element : 'div', attributes : { 'class' : 'aboutted' } },        
     { name : '最新消息說明區塊', element : 'div', attributes : { 'class' : 'newssection' } },    
     // Inline styles
-    { name : '最新消息標題' , element : 'div', attributes : { 'class' : 'title' } }*/
+    { name : '最新消息標題' , element : 'div', attributes : { 'class' : 'title' } }
 ]);
- 
+*/
 
  var __arr = new Object();
- 
+CKEDITOR.dtd.$removeEmpty.i = 0;
 CKEDITOR.editorConfig = function( config ) {
 	
 	// %REMOVE_START%
