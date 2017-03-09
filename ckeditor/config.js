@@ -1,21 +1,18 @@
-﻿/**
- * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
+/**
+ * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 CKEDITOR.timestamp = 'jonesckeditorv101';
-
 /*
-CKEDITOR.stylesSet.add('vipcase',[
-    // Block-level styles
-	{ name : '運送及付款方式', element : 'div', attributes : { 'class' : 'customer-shipping' } }
-    { name : '資訊頁區塊', element : 'div', attributes : { 'class' : 'aboutted' } },        
-    { name : '最新消息說明區塊', element : 'div', attributes : { 'class' : 'newssection' } },    
-    // Inline styles
-    { name : '最新消息標題' , element : 'div', attributes : { 'class' : 'title' } }
-]);
+CKEDITOR.editorConfig = function( config ) {
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
+};
 */
 
- var __arr = new Object();
+
+var __arr = new Object();
 CKEDITOR.dtd.$removeEmpty.i = 0;
 CKEDITOR.editorConfig = function( config ) {
 	
@@ -24,7 +21,8 @@ CKEDITOR.editorConfig = function( config ) {
 	//config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,language,link,list,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,scayt,stylescombo,tab,table,tabletools,undo,wsc,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
 	config.plugins = 'about,basicstyles,blockquote,colorbutton,colordialog,menu,contextmenu,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,link,list,liststyle,magicline,maximize,newpage,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,stylescombo,tab,table,tabletools,undo,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
 	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
-	config.skin = 'moonocolor';
+	//config.skin = 'moonocolor';
+	config.uiColor = '#746543';
 	
 	//--編輯器檔案預設起始路徑
 	config.baseHref = window.location.href.split('serback')[0];
