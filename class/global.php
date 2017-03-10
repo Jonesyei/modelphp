@@ -356,6 +356,7 @@ namespace console{
 				}
 			}else{
 				header("Content-Type:text/html; charset=utf-8");
+				alert($_SERVER['REQUEST_URI'].' '.$this->tags('CSRF_TOKEN_ERROR'),"-1");
 				exit;
 			}
 		}

@@ -19,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// %REMOVE_START%
 	// The configuration options below are needed when running CKEditor from source files.
 	//config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,language,link,list,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,scayt,stylescombo,tab,table,tabletools,undo,wsc,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
-	config.plugins = 'about,basicstyles,blockquote,colorbutton,colordialog,menu,contextmenu,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,link,list,liststyle,magicline,maximize,newpage,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,stylescombo,tab,table,tabletools,undo,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
+	config.plugins = 'dragresize,tableresize,youtube,about,basicstyles,blockquote,colorbutton,colordialog,menu,contextmenu,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,link,list,liststyle,magicline,maximize,newpage,pastetext,pastefromword,preview,print,removeformat,selectall,showblocks,showborders,specialchar,stylescombo,tab,table,tabletools,undo,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
 	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
 	//config.skin = 'moonocolor';
 	config.uiColor = '#746543';
@@ -65,14 +65,14 @@ CKEDITOR.editorConfig = function( config ) {
 			{ name: 'colors', groups: [ 'colors' ] },
 			'/',
 			{ name: 'tools', groups: [ 'tools' ] },
-			{ name: 'others', groups: [ 'others' ] },
+			{ name: 'others', groups: [ 'others' , 'youtube' ] },
 			{ name: 'about', groups: [ 'about' ] }
 		];
 		config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Scayt,Language,Link,Unlink,Anchor,Image,Flash,PageBreak,Iframe,ShowBlocks,Maximize,About'; 
 	}
 	
 	
-	config.extraPlugins = 'inlinesave,sourcedialog';
+	config.extraPlugins = 'inlinesave,sourcedialog,codemirror';
 	config.removePlugins = 'sourcearea';
 	var inline_option;
 	if (this.name && document.getElementById(this.name)) {
@@ -99,6 +99,10 @@ CKEDITOR.editorConfig = function( config ) {
 	  useJSON: false,
 	  useColorIcon: false
 	};
+	//--原始碼編輯器
+	config.codemirror = {
+		mode:'htmlmixed'
+	}
 	
 	config.enterMode = CKEDITOR.ENTER_BR;
 	config.shiftEnterMode = CKEDITOR.ENTER_BR;
@@ -113,7 +117,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 };
 
-
+/*
 var temp_editor_uploadimage_check_status=null;
 function editor_uploadimage_check(){
 	if ($('.cke_dialog_ui_input_text input:eq(0)').length>0){
@@ -129,3 +133,4 @@ window.setInterval('editor_uploadimage_check()',500);
 $(window).load(function(){
 	$('.cke_button.cke_button__image.cke_button_off').bind('click',function (){editor_uploadimage_check();})
 });
+*/
