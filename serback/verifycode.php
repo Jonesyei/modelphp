@@ -113,9 +113,9 @@ if($use_transparent_text == true) {
 	  $g = substr($colors[$idx], 3, 2);
 	  $b = substr($colors[$idx], 5, 2);
 	  if($use_transparent_text == true) {
-		$font_color = imagecolorallocatealpha($im, "0x$r", "0x$g", "0x$b", $alpha);
+		$font_color = @imagecolorallocatealpha($im, "0x$r", "0x$g", "0x$b", $alpha);
 	  } else {
-		$font_color = imagecolorallocate($im, "0x$r", "0x$g", "0x$b");
+		$font_color = @imagecolorallocate($im, "0x$r", "0x$g", "0x$b");
 	  }
 	}
 	$font_color = imagecolorallocate($im, rand(0,150), rand(0,150), rand(0,150)); //--隨機色彩
@@ -125,8 +125,8 @@ if($use_transparent_text == true) {
   } //for loop
 /*imagettftext($im, 28, 0, 29, 28, $Color,$font,$verification__session);*/
 //邊框
-$borderColor=imagecolorallocate($im,"0x99","0x99","0x99");
-$borderColor=imagecolorallocate($im,'129','186','213');
+$borderColor=@imagecolorallocate($im,"0x99","0x99","0x99");
+$borderColor=@imagecolorallocate($im,'129','186','213');
 imagerectangle($im,0,0,$imageWidth-1,$imageHeight-1,$borderColor);
 
 //for($i=0;$i<250;$i++){

@@ -1,20 +1,12 @@
 <?php
 include_once("head.php");
 
-//------語系
-if ($_GET["lang"]!=NULL && $_GET["lang"]!=''){
-	$_SESSION["mode_lang"] = $_GET["lang"];
-}
-//--預設語系
-if (($_SESSION["mode_lang"]==NULL||$_SESSION["mode_lang"]=='')&&($_GET["lang"]==NULL||$_GET["lang"]=='')){
-	$_SESSION["mode_lang"] = 'ch';
-}
-
 
 //--判斷使用MVC框架
 if ($_SETUP['MVC']){
 	//--控制器操作
 	$console->controller('console');
+
 	//--輸出樣板
 	$tploutput = $console->design->views;
 }else{
@@ -55,26 +47,18 @@ $_SESSION["fileauth_time_array"]['jones_demo']=array();
 
 
 //--seo處理
-if(extension_loaded('zlib'))
-ob_start('ob_gzhandler');
-header('Last-Modified: '.gmdate('D, d M Y').' 00:00:00'.' GMT', true, 200); //--最後頁面編輯時間
-header('Date: '.gmdate('D, d M Y H:i:s').' GMT', true, 200);
-header('Expires: '.gmdate('D, d M Y H:i:s',mktime(0,0,0,1,1,1998)).' GMT', true, 200); //--快取時間
-echo html2txt($smarty_output);
-ob_end_flush();
+if ($_SETUP['MVC']){
+	$console->seo->work($smarty_output);
+	$console->seo->output();
+}else{
+	$seo->work($smarty_output);
+	$seo->output();
+}
+
 $conn->close();
 unset($design);
 unset($mail);
 unset($tpl);
 unset($conn);
 
-function html2txt($document){ 
-$search = array(
-				'/<!--(.*)-->/Uis',	//--html註解標籤清除
-				'/\/\*(.*)\*\//',	// /* XXX */ 標籤清除
-				//'/\/\/(.*)\n/'		//  //XXXXXXX(\n換行) 註解方式清除
-); 
-$text = preg_replace($search, '', $document); 
-return $text; 
-} 
 ?>

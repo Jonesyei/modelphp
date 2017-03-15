@@ -17,7 +17,7 @@ if(Auth_check($conn)==false && !in_array(Now_file(),$menu_list_data))
 //左側選單
 $menu_html = Make_menu($conn);
 
-if($_SESSION["admin_info"]["open_menu"]) $menu_html .= "<script>Open_menu('".$_SESSION["admin_info"]["open_menu"]."')</script>";
+if(isset($_SESSION["admin_info"]["open_menu"])) $menu_html .= "<script>Open_menu('".$_SESSION["admin_info"]["open_menu"]."')</script>";
 
 
 
@@ -57,7 +57,7 @@ $_SESSION["admin_info"]["db_bar_width"] = ( $db_now_total_disk / ($ini_webset["w
 //---登入閒置時間驗證
 foreach ($set as $k=>$v){
 	if($v["type"]=='delay_time')
-	if($_SESSION["admin_info"]["delay_time"]!=NULL&&$_SESSION["admin_info"]["delay_time"]!=''&&$_SESSION["admin_info"]["delay_time"]*1+$v["detail"]*1 <=strtotime(date("Y-m-d H:i:s")))
+	if(isset($_SESSION["admin_info"]["delay_time"])&&$_SESSION["admin_info"]["delay_time"]!=''&&$_SESSION["admin_info"]["delay_time"]*1+$v["detail"]*1 <=strtotime(date("Y-m-d H:i:s")))
 	{
 		session_unset();
 		alert('登入閒置過久，因安全因素請您重新登入!!','login.php');
@@ -85,7 +85,7 @@ foreach($_REQUEST as $k => $v)
 
 
 //現在使用table記錄
-$_SESSION["admin_info"]["table"] = $table;//SORT_SET用
+$_SESSION["admin_info"]["table"] = @$table;//SORT_SET用
 
 //--判斷是否加載 centerpoes.php  檔案
 foreach (get_included_files() as $k=>$v){
@@ -93,7 +93,7 @@ foreach (get_included_files() as $k=>$v){
 		$data["pageget"] = $_GET;
 		$data["pagename"] = $page_name;
 		//--還原操作按鈕路徑
-		if ($_SESSION["admin_info"]["data_temp"]!=''&&$_SESSION["admin_info"]["data_temp"]!=NULL){
+		if (isset($_SESSION["admin_info"]["data_temp"]) && $_SESSION["admin_info"]["data_temp"]!=''){
 			$data["data_temp"] = $_SERVER['REQUEST_URI'];
 			if ($_SERVER['QUERY_STRING']!=''){
 				$data["data_temp"] .= "&re_data_temp=1";
@@ -107,21 +107,21 @@ foreach (get_included_files() as $k=>$v){
 
 
 
-if (!$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
+if (!@$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
 
-$tpl->assign("admin_info",$_SESSION["admin_info"]);//admin_info所有設定
-$tpl->assign("setup", $_SETUP);//config設定檔
-$tpl->assign("menu", $menu_html); //menu
-$tpl->assign("data",$data); //別的頁面傳送來的data
-$tpl->assign("close",$close); //關閉功能
-$tpl->assign("set",$set); //網站設定
-$tpl->assign('ini_webset',$ini_webset);///--ini設定黨
+$tpl->assign("admin_info",@$_SESSION["admin_info"]);//admin_info所有設定
+$tpl->assign("setup", @$_SETUP);//config設定檔
+$tpl->assign("menu", @$menu_html); //menu
+$tpl->assign("data",@$data); //別的頁面傳送來的data
+$tpl->assign("close",@$close); //關閉功能
+$tpl->assign("set",@$set); //網站設定
+$tpl->assign('ini_webset',@$ini_webset);///--ini設定黨
 
 $tpl->assign("search_form",ROOT_PATH.$admin_path."templates/_search_form.html");//搜尋form
 $tpl->assign("page_table_html",ROOT_PATH.$admin_path."templates/page_table.html");//頁碼table
 
 
-if($include != true)
+if(@$include != true)
 {
 	//--首頁開發訊息自動接收更新
 	$aa = curl($ini_webset["web_set"]["info_page"]);

@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));
 define('ROOT_PATH', str_replace('includes/main_back_inc.php', '', str_replace('\\', '/', __FILE__)));
 
@@ -10,7 +10,7 @@ include(APP_PATH."includes/smarty/Smarty.class.php");
 include(APP_PATH."includes/phpmailer/PHPMailerAutoload.php");
 include(APP_PATH."includes/function/seback_func.php");
 include(APP_PATH."includes/function/func.php");
-include(APP_PATH."includes/function/sql_func.php");
+
 include(APP_PATH."includes/config/conn.php");
 include(APP_PATH."includes/config/config.php");
 
@@ -20,7 +20,7 @@ include(APP_PATH."includes/project/function.php");
 include(APP_PATH."includes/phpqrcode/qrlib.php");
 
 //--ini設定檔案讀取
-if (!$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
+if (!@$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
 	$ini_webset = $_SESSION["web_ini_data"] = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
 	$_SESSION["web_ini_time"] = strtotime(date("Y-m-d H:i:s"));
 	if (count($ini_webset)>0 && $ini_webset["web_set"]["upload_check_status"]=='1') {
@@ -48,28 +48,28 @@ $_SESSION["admin_info"]["tmp"] = "";
 $no_check_array = array('login','ajax','ajx');
 
 //func.php 檢查是否登入
-if(!$_GET['_center_token'] && Check_Admin($conn,$_POST["account"],$_POST["password"],($_POST["g-recaptcha-response"] ? $_POST["g-recaptcha-response"]:strtoupper($_POST["code"])),$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
+if(!@$_GET['_center_token'] && Check_Admin($conn,@$_POST["account"],@$_POST["password"],(@$_POST["g-recaptcha-response"] ? @$_POST["g-recaptcha-response"]:strtoupper(@$_POST["code"])),@$_POST["lang"]) == false && !in_array(Now_file(),$no_check_array))
 {
-	if ($_SESSION["re_url"]==NULL) $_SESSION["re_url"] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+	if (@$_SESSION["re_url"]==NULL) $_SESSION["re_url"] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	LinkTo("login.php");
 	exit;
 }elseif (Now_file()=='index'||Now_file()=='login'){//-判斷在登入的時候是否有傳送語系參數
 
 //--傳語系才判定語系
-	if ($_POST["lang"]!=NULL) {
+	if (@$_POST["lang"]!=NULL) {
 		$_SESSION["admin_info"]["lang"] = $_POST["lang"];//有參數
 		$temp = $conn->GetRow("select * from ".PREFIX."language where detail='".$lang."'");
 		$_SESSION["admin_info"]["lang_title"] = $temp["name"];
-	}elseif ($_POST || !$_SESSION["admin_info"]["lang"]){
+	}elseif ($_POST || !@$_SESSION["admin_info"]["lang"]){
 		$_SESSION["admin_info"]["lang"] = 'ch';//無參數給予預設值
 		$_SESSION["admin_info"]["lang_title"] = '中文';
 	}
 }
 
-$record["lang"] = $post["lang"] = $lang = $_SESSION["admin_info"]["lang"];
+$record["lang"] = $post["lang"] = $lang = @$_SESSION["admin_info"]["lang"];
 
 
-if ($_SESSION["re_url"]!=NULL && $_SESSION["admin_info"]["account"]!=NULL){//-判斷是否經由內頁連入 登入後導回內頁
+if (@$_SESSION["re_url"]!=NULL && @$_SESSION["admin_info"]["account"]!=NULL){//-判斷是否經由內頁連入 登入後導回內頁
 	$url_s = $_SESSION["re_url"];
 	unset($_SESSION["re_url"]);
 	LinkTo($url_s);

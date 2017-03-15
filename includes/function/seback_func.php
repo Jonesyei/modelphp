@@ -339,7 +339,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 {
 	$pass = true;
 
-	if($_SESSION["admin_info"]["account"]) $account = $_SESSION["admin_info"]["account"];
+	if(isset($_SESSION["admin_info"]["account"])) $account = $_SESSION["admin_info"]["account"];
 	
 	$sql = "select * from ".PREFIX."admin WHERE account = '".quotes(strtolower($account))."'";
 	$detail = $conn->GetRow($sql);
@@ -352,7 +352,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 			exit;
 		}
 		
-		if($_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
+		if(@$_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
 		{
 			
 			if ($_POST){

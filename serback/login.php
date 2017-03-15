@@ -10,7 +10,7 @@ if ($data['recaptcha'])
 	$data['recaptcha'] = explode(',',$data['recaptcha']['detail']);
 
 $data["list"] = $conn->GetArray("select * from ".PREFIX."language where status>0");//取出所有語系資料
-if ($_GET["forgot"]){
+if (@$_GET["forgot"]){
 	$forgot_data = $conn->GetRow("select * from ".PREFIX."admin where account='".quotes($_GET["forgot"])."' or email like '%".quotes(strtolower($_GET["forgot"]))."%'");//取出所有語系資料
 
 	if ($forgot_data){
@@ -49,9 +49,7 @@ if ($_GET["forgot"]){
 	}
 }
 
-if ($_GET["checkpwd"]){
 
-}
 
 
 //--連線測試

@@ -3,12 +3,12 @@ include_once("../includes/main_back_inc.php");
 unset($_SESSION["re_url"]);
 
 
-if ($_GET["logout"]!=NULL){
+if (@$_GET["logout"]!=NULL){
 	unset($_SESSION["admin_info"]);
 }
 
 ///-----商品內頁截取加價購資訊
-if ($_GET["pidlist"]!=NULL && $_GET["pidlist"] != ''){
+if (@$_GET["pidlist"]){
 	$sql = "select * from ".PREFIX."products where class='".$_GET["pidlist"]."'";
 	$data = $conn->GetArray($sql);
 	foreach ($data as $k=>$v){
@@ -19,7 +19,7 @@ if ($_GET["pidlist"]!=NULL && $_GET["pidlist"] != ''){
 }
 
 //--商品目錄選擇最後一層
-if ($_GET["pro_class"]){
+if (@$_GET["pro_class"]){
 	$temp = $conn->GetArray("select * from ".PREFIX."category where parent_id='".$_GET["pro_class"]."'");
 	if ($temp) {
 		echo 'false';
@@ -27,7 +27,7 @@ if ($_GET["pro_class"]){
 	exit;
 }
 
-if ($_GET["design"]){
+if (@$_GET["design"]){
 	$temp = $conn->GetRow("select * from ".PREFIX."design where id='".quotes($_GET["design"])."'");
 	$temp["detail"] = dequotes($temp["detail"],-1);
 	echo json_encode($temp);
@@ -36,7 +36,7 @@ if ($_GET["design"]){
 
 
 //--商品尺寸規格圖片及時存檔
-if ($_POST["data_img"]){
+if (@$_POST["data_img"]){
 	//$img = str_replace('data:image/png;base64,', '', $img);
 	$img = preg_replace('/^data:image\/(png|jpg);base64,/','',$_POST["data_img"]);
 	$img = str_replace(' ', '+', $img);
@@ -50,7 +50,7 @@ if ($_POST["data_img"]){
 
 
 //--design 參考資料輸出
-if ($_GET["c_about"]){
+if (@$_GET["c_about"]){
 	$temp_str = '';
 	$temp_output = $conn->GetRow("select * from ".PREFIX."data_list where type='set_about' and id='".$_GET["c_about"]."'");
 	if ($temp_output){
@@ -67,16 +67,16 @@ if ($_GET["c_about"]){
 	echo $temp_str;
 	exit;
 }
-if ($_GET["page_select"]){
-	$temp_tr2 = $conn->GetArray("select * from ".PREFIX."data_list where type='set_about' and status='1' and lang='".$_SESSION["admin_info"]["lang"]."' order by sort");
+if (@$_GET["page_select"]){
+	$temp_tr2 = $conn->GetArray("select * from ".PREFIX."data_list where type='set_about' and status='1' and lang='".@$_SESSION["admin_info"]["lang"]."' order by sort");
 	foreach ($temp_tr2 as $k=>$v) $temp5[$v["id"]] = $v["name"];
 	echo '<select name="page_type[]" onchange="p_memo()">'.Make_list($temp5,'').'</select><span id="page_type_item"></span>';
 	exit;
 }
 
 //--表單回應信件
-if ($_GET["revice_mail_to_form"]){
-	$sql = " select * from ".PREFIX."setting WHERE lang = '".$_SESSION["admin_info"]["lang"]."' order by id";
+if (@$_GET["revice_mail_to_form"]){
+	$sql = " select * from ".PREFIX."setting WHERE lang = '".@$_SESSION["admin_info"]["lang"]."' order by id";
 	$tmp = $conn->GetArray($sql);
 	
 	$web_set["title"] = deQuotes($tmp["0"]["detail"],-1);
@@ -103,7 +103,7 @@ if ($_GET["revice_mail_to_form"]){
 
 
 //--前端畫面調整異動資料
-if ($_GET["ajx_view_design"]){
+if (@$_GET["ajx_view_design"]){
 	
 	//--table 檢查
 	foreach ($conn->GetArray("SHOW TABLES") as $k=>$v){
@@ -130,7 +130,7 @@ if ($_GET["ajx_view_design"]){
 		$indata[$_POST["row"]] = quotes($_POST["editabledata"]);
 	}
 	if ($_SESSION["admin_info"]["account"] && $conn->AutoExecute($_POST["table"],$indata,"UPDATE",$where_sql))
-		echo '更新成功';
+		print_r($indata);//echo '更新成功';
 	else
 		echo '更新失敗';
 }
@@ -138,7 +138,7 @@ if ($_GET["ajx_view_design"]){
 
 
 //--訂單紅利操作
-if ($_GET["back_point"]){
+if (@$_GET["back_point"]){
 	$member = new member($conn,PREFIX."member");
 	$check_data = $conn->GetRow("select * from ".PREFIX."shopping_car where id='".$_GET["back_point"]."'");
 	$member->getmember(" where id='".$check_data["member_id"]."'",'login');
