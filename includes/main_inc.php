@@ -32,7 +32,7 @@ $tpl->cache_dir = APP_PATH . "cache/";
 
 
 //------語系
-if ($_GET["lang"]!=NULL && $_GET["lang"]!=''){
+if (@$_GET["lang"]){
 	$_SESSION["mode_lang"] = $_GET["lang"];
 }else{
 	$_SESSION["mode_lang"] = 'ch';
@@ -101,6 +101,7 @@ if ($smtp_set){
 //各類別庫
 include(APP_PATH."class/class.php");
 $design = new design($conn,PREFIX."design",$console->lang);
+$seo = new seo();
 
 //MVC架框設定
 if ($console){
@@ -109,5 +110,6 @@ if ($console){
 	$console->design = $design;
 	$console->web_set = $web_set;
 	$console->tpl = $tpl;
+	$console->seo = $seo;
 }
 ?>

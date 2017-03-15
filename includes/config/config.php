@@ -7,7 +7,7 @@ define('DATE',date("Y-m-d H:i:s"));
 
 //---------MVC前台參數設定
 $_j_web_set['host']					=	$_SERVER['HTTP_HOST'];	//--域名
-$_j_web_set['main_path']			=	'/modelphp';			//--主目錄路徑
+$_j_web_set['main_path']			=	'/modelphp';			//--主目錄路徑 (根目錄下請設定空值'')
 $_j_web_set['host_path']			=	'//'.$_j_web_set['host'].$_j_web_set['main_path'].'/';	//--完整域
 $_j_web_set['module_path']			=	'module/';				//--模組路徑
 $_j_web_set['controller_path']		=	'controller/';			//--控制器路徑
@@ -34,7 +34,7 @@ $_SETUP["payment_status"] = array('0'=>'未付款','1'=>'已付款','2'=>'回傳
 $_SETUP["paytype"] = array('1'=>'線上刷卡','2'=>'超商付款','3'=>'ATM轉帳','4'=>'貨到付款','5'=>'WEBATM');
 
 
-$_SETUP["json"] .= " var SETUP = ".json_encode($_SETUP).";";//json
+$_SETUP["json"] = " var SETUP = ".json_encode($_SETUP).";";//json
 
 //--後台設定頁面
 $_SETUP["setting_type"] = array('backup','website_status','website_url','delay_time','demo_show','web_css','recaptcha');
