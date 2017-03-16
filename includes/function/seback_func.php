@@ -379,6 +379,13 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 			{
 				$pass = false;
 				$_SESSION["admin_info"]["account"] = "";
+				echo '<script>
+				localStorage.removeItem("serback_account");
+				localStorage.removeItem("serback_password");
+				localStorage.removeItem("serback_lang");
+				localStorage.removeItem("serback_saveaccount");
+				</script>';
+				alert('帳號密碼錯誤!!',-1);
 			}
 			else
 			{
