@@ -337,6 +337,7 @@ function Make_menu($conn)
 //檢查 後臺admin 是否登入   $_POST帳號,$_POST密碼,$_SESSION admin_info 資料
 function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 {
+	global $_POST;
 	$pass = true;
 
 	if(isset($_SESSION["admin_info"]["account"])) $account = $_SESSION["admin_info"]["account"];
@@ -355,7 +356,7 @@ function Check_Admin($conn,$account,$password,$checkcode,$tolang=NULL)
 		if(@$_SESSION["admin_info"]["account"] == NULL) //--判斷是否沒登入過
 		{
 			
-			if ($_POST){
+			if ($_POST && !@$_POST["tokencode"]){
 				$recaptcha_setting = $conn->GetRow("select * from ".PREFIX."setting where type='recaptcha'");
 				if ($recaptcha_setting && strlen($checkcode)>10){
 					//--recaptcha 驗證

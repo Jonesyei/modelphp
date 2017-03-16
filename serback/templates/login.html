@@ -39,7 +39,7 @@
   
   
   
-     <div style="position:relative;">
+     <div style="position:relative; display:none;" tab1>
          <form name="form" id="form" method="post" action="index.php" enctype="multipart/form-data" >
      <ul>
      <li><img src="images/login-id.png" width="15" height="15" /> <input name="account" id="account" type="text" class="login-id" placeholder="後台管理帳號" style="width:180px" /></li>
@@ -96,6 +96,26 @@
      
 	    </form>
      </div>
+     
+      <div style="position:relative; display:none; text-align:center; width:250px; background-color:rgba(255, 255, 255, 0.41);" tab2>
+       <h2 style="color:#4a4bc1;">再次登入確認</h2><HR>
+       <div>帳號:<mn account></mn></div>
+       <br>
+       <button style="cursor:pointer;" onclick="relogin();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                 </button><BR>
+       <span style="float:left;color:#885d38; cursor:pointer;" onclick="back_insert();">換一組?</span>
+       <HR style="clear:both;	">
+      </div>
+     <script>
+	 function back_insert(){
+		 $('#form input:password').val('');
+		 $('#checkbox')[0].checked=false;
+		 $('div[tab2]').fadeOut(function(){$('div[tab1]').fadeIn();});
+	 }
+	 function relogin(){
+		 $('#form').append('<input type="hidden" name="tokencode" value="tokencode">');
+		 $('#form').submit();
+	 }
+	 </script>
    </div>
 </div>
 
@@ -149,7 +169,7 @@ $(window).bind('load',function (){
 			localStorage.removeItem("serback_account");
 			localStorage.removeItem("serback_password");
 			localStorage.removeItem("serback_lang");
-			localStorage.removeItem("serback_saveaccount")
+			localStorage.removeItem("serback_saveaccount");
 		}
 	});
 	$('[name="account"]').val(localStorage.getItem('serback_account'));
@@ -157,6 +177,11 @@ $(window).bind('load',function (){
 	if (localStorage.getItem('serback_lang')!=null) $('[name="lang"]').val(localStorage.getItem('serback_lang'));
 	if (localStorage.getItem('serback_saveaccount')!=null){
 		$('#checkbox')[0].checked=true;
+		//登入歡迎頁建構
+		$('div[tab2]').fadeIn();
+		$('div[tab2] mn[account]').html(localStorage.getItem('serback_account')).fadeIn('slow');
+	}else{
+		$('div[tab1]').fadeIn();$
 	}
 });
 </script>
