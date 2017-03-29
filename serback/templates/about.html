@@ -171,7 +171,6 @@ page_initial('table-style01');
 
 
 ({if $admin_info.view == 'detail'})
-<script language="javascript" src="../includes/js/jquery-ui.js"></script>
 <div class="col-02"><!-- 右邊內容區塊 -->
        <div class="right-main">
        
@@ -368,6 +367,7 @@ function other_func_({$data.button.pic[m]})(other_obj){
 					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');
 				}
 			ajxupload_work(obj);
+			$('#'+dname).val('');
 		}
 	}
 	function aes(dname,objname){
@@ -526,6 +526,7 @@ function re_sort(){
 					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');
 				}
 			ajxupload_work(obj);
+			$('#ff').val('');
 		}
 	}
 	function aes (dname){
