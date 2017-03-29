@@ -176,7 +176,7 @@ namespace console{
 			$value = $this->tag[$value];
 			//--參數轉換
 			if (is_array($setting) && count($setting)>0){
-				sort($setting);
+				ksort($setting);
 				foreach ($setting as $k=>$v)
 					$value = str_replace('$'.($k+1),$v,$value);
 			}
