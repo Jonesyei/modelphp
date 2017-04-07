@@ -55,7 +55,7 @@ document.write( '<script type="text/javascript" src="../includes/js/pdf/pdf.js">
 					return false;
 				}
 			}else{
-				if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count[$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist')]){
+				if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+1> drag_count[$(evt.target).parentsUntil('tr').last().find('div:eq(0)').attr('piclist')]){
 					alert('上傳已達到限制數量!!');
 					upload_end();
 					return false;
@@ -67,6 +67,7 @@ document.write( '<script type="text/javascript" src="../includes/js/pdf/pdf.js">
 		//--進行檔案上傳
 		function ajxupload_work(evt){
 			if (!check_max_file_upload(evt)) return false;
+			__evnet_div = evt.target
 			console.log('test');
 			xhr = new XMLHttpRequest();
             var up_progress ='#up_progress';
@@ -153,6 +154,7 @@ document.write( '<script type="text/javascript" src="../includes/js/pdf/pdf.js">
 			j_file_split_start = 0;
 			j_file_split_end=0;
 			tt_total_send_size = 0;
+			$(__evnet_div).find('input:file').val('')
 			$(up_progress).css('display','none');$(up_progress).removeAttr('class'); 
 		}
 		

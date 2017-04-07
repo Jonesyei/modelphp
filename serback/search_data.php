@@ -4,7 +4,7 @@ include_once("../includes/main_back_inc.php");
 //搜尋 全部以GET 判斷
 
 
-
+$_SESSION["admin_info"]["tmp"] = array();
 
 
 //撈出 目錄 預設網址
@@ -37,13 +37,13 @@ foreach($_GET as $k=>$v)
 
 
 if($default_option=="") $default_option = '<option value="">選擇狀態</option>';
-$_SESSION["admin_info"]["tmp"]["status"] = $default_option . Make_list($_SETUP["status"],$_GET["status"]);
+$_SESSION["admin_info"]["tmp"]["status"] = $default_option . Make_list($_SETUP["status"],$_GET["s_status"]);
 
 
-if(@$_GET["status"]!=NULL)
+if(isset($_GET["s_status"]) && $_GET["s_status"]!=='')
 {
-	$sql .= " status=".quotes($_GET["status"])." and ";
-	$sql_count .= " status=".quotes($_GET["status"])." and ";
+	$sql .= " status=".quotes($_GET["s_status"])." and ";
+	$sql_count .= " status=".quotes($_GET["s_status"])." and ";
 }
 
 if(@$_GET["keyword"]!=NULL)
@@ -76,12 +76,13 @@ if(@$_GET["keyword"]!=NULL)
 }
 
 
-if(@$_GET["daterange"]!=NULL)
+if(@$_GET["daterange"]!=NULL && $_GET["daterange"][0]!='' && $_GET["daterange"][1]!='')
 {
 	$row = "create_date";
 	if($include_set["date_range_search"]!=NULL) $row = $include_set["date_range_search"];
 
-	$tmp = explode("-",$_GET["daterange"]);
+	//$tmp = explode("-",$_GET["daterange"]);
+	$tmp = $_GET["daterange"];
 	foreach($tmp as $k => $v)
 		$tmp[$k] = str_replace(",","-",$v);
 	$sql .= " ".$row." >= '".quotes($tmp[0])." 00:00:00' and ".$row." <= '".quotes($tmp[1])." 23:59:59' and ";	
