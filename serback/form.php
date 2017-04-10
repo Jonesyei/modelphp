@@ -49,7 +49,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	if ($data["one"])
 		foreach ($data["one"] as $k=>$v){
 			if (!is_numeric($k)) $data["one"][$k] = (is_array($v) ? implode('<br>',$v):str_replace('|__|','<br>',$v));
-			if (!is_numeric($k) && ereg("[a-zA-Z0-9\._\+]+@([a-zA-Z0-9\.-]\.)*[a-zA-Z0-9\.-]+", $v)){
+			if (!is_numeric($k) && preg_match("/[a-zA-Z0-9\._\+]+@([a-zA-Z0-9\.-]\.)*[a-zA-Z0-9\.-]+/", $v)){
 				$data["one"]["_default_email"] = $v;
 			}
 		}
