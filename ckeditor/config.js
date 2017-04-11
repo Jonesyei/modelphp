@@ -31,7 +31,7 @@ CKEDITOR.editorConfig = function( config ) {
 		config.bodyClass = document.getElementById(this.name).getAttribute('bodyclass');
 	}
 	//---式樣含蓋貼上
-	CKEDITOR.config.forcePasteAsPlainText = true;
+	//CKEDITOR.config.forcePasteAsPlainText = true;
 	
 	
 	config.language = 'zh';
