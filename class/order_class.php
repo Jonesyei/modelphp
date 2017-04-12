@@ -173,7 +173,17 @@ class order_center
 				}
 			}else{
 				
-				if (isset($_SESSION["temp_order_no"]) && isset($_SESSION["temp_order_no"][$this->namespace])) unset($_SESSION["temp_order_no"][$this->namespace]);
+				if (isset($_SESSION["temp_order_no"]) && isset($_SESSION["temp_order_no"][$this->namespace])){
+					//--檢查是否有暫存購物資料 有的話則取代
+					$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where status=1 and step='1' and order_no=?"),array($_SESSION["temp_order_no"][$this->namespace]));
+					$temp_car_list = $this->car_list($temp['id']);
+					if (count($temp_car_list)>=1){
+						$this->conn->Execute("DELETE from ".$this->table." where member_id='".$_SESSION["login_info"][$this->namespace]["id"]."' and step='1'");
+						$this->conn->Execute("UPDATE ".$this->table." SET member_id='".$_SESSION["login_info"][$this->namespace]["id"]."' where id='".$temp["id"]."'");
+					}
+					unset($_SESSION["temp_order_no"][$this->namespace]);
+				}
+				
 				//--檢查是否有購物車 沒有就創建一個
 				$temp = $this->conn->GetRow($this->Prepare("select * from ".$this->table." where status=1 and step='1' and namespace=? and member_id=?"),array($this->namespace,$_SESSION["login_info"][$this->namespace]["id"]));	
 				if (!$temp && $_SESSION["login_info"][$this->namespace]["id"]!=NULL){
