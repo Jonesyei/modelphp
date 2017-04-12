@@ -130,7 +130,7 @@ if (@$_GET["ajx_view_design"]){
 		$indata[$_POST["row"]] = quotes($_POST["editabledata"]);
 	}
 	if ($_SESSION["admin_info"]["account"] && $conn->AutoExecute($_POST["table"],$indata,"UPDATE",$where_sql))
-		print_r($indata);//echo '更新成功';
+		echo '更新成功';
 	else
 		echo '更新失敗';
 }
