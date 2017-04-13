@@ -1,4 +1,6 @@
 <?php
+global $_SETUP;
+global $web_set;
 $console->load->module('foor');
 $act = $console->path[1];
 //--引用與設定
@@ -38,7 +40,7 @@ if (!$member->status() && !in_array($act,$no_check)){
 //--社群按鈕
 $data["twitterurl"] = '//'.$_SERVER['HTTP_HOST'].'/includes/twitter/twitterapi.php?callback='.urlencode('//'.$_SERVER['HTTP_HOST'].'/member/net_login');
 $data["yahoourl"] = '//'.$_SERVER['HTTP_HOST'].'/includes/openid/yahooapi.php?callback='.urlencode('//'.$_SERVER['HTTP_HOST'].'/member/net_login');
-$data["fburl"] = '//'.$_SERVER['HTTP_HOST'].'/includes/openid/fbapi.php?callback='.urlencode('//'.$_SERVER['HTTP_HOST'].'/member/net_login');
+$data["fburl"] = 'javascript:fblogin();';
 $data["googleurl"] = '//'.$_SERVER['HTTP_HOST'].'/includes/googleapi/googleapi.php?callback='.urlencode('//'.$_SERVER['HTTP_HOST'].'/member/net_login');
 
 switch ($act){

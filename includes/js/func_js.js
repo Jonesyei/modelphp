@@ -11,6 +11,56 @@ WDJQ(document).ready(function(){
 
 
 
+function fblogin() {
+	create_fb_form();
+	if (typeof(FB)=="undefined") return alert('請先引入FB javascript SDK 代碼!! 如:\n	<script>\nwindow.fbAsyncInit = function() {\nFB.init({\nappId      : \'1242572385842024\',\nxfbml      : true,\nversion    : \'v2.8\'\n});\n    FB.AppEvents.logPageView();\n  };\n\n  (function(d, s, id){\n     var js, fjs = d.getElementsByTagName(s)[0];\n     if (d.getElementById(id)) {return;}\n     js = d.createElement(s); js.id = id;\n     js.src = "//connect.facebook.net/en_US/sdk.js";\n     fjs.parentNode.insertBefore(js, fjs);\n   }(document, \'script\', \'facebook-jssdk\'));\n</script>');
+	if(FB.getUserID()=="")
+	{
+		FB.login(function (rs)
+		{
+			_tt = rs;
+			FB.api('/me?fields=id,name,email', function(rs)
+			{
+				_re = rs;
+				if(rs["error"]!=null)
+				{
+					//alert("FB登入失敗");
+					//return window.history.back(-1);
+				}else{
+					///登入完成執行區域
+					member_dataset(rs);
+				}
+			});
+			
+		},{scope:'email'});
+	}
+	else
+	{
+		FB.api('/me?fields=id,name,email', function(rs)
+		{
+			_re = rs;
+			if(rs["error"]!=null)
+			{
+				//alert("FB登入失敗");
+				//return window.history.back(-1);
+			}else{
+				///登入完成執行區域
+				member_dataset(rs);
+			}
+		});
+	}			
+}
+function create_fb_form(){
+	WDJQ('#fbform').remove();
+	WDJQ('body').append('<form id="fbform" action="member.php?act=net_login" method="post"><input type="hidden" name="account"><input type="hidden" name="name"><input type="hidden" name="email"><input type="hidden" name="netclass" value="fb">    <input type="hidden" name="act" value="net_login"></form>');
+}
+function member_dataset(data){
+	WDJQ('#fbform [name="account"]').val(data["id"]);
+	WDJQ('#fbform [name="name"]').val(data["name"]);
+	WDJQ('#fbform [name="email"]').val(data["email"]);
+	WDJQ('#fbform').submit();
+}
+
 
 
 //search_value GET 值
