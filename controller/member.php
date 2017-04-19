@@ -5,7 +5,9 @@ $console->load->module('foor');
 $act = $console->path[1];
 //--引用與設定
 $member = new member($console->conn,PREFIX."member");
+$member->log_delay=3600; //--用來做登入紀錄 網站操作停留秒數表示持續上線時間(秒)
 $member->work();
+
 
 /*
 //相同登入會員使用不同命名空間
@@ -14,7 +16,8 @@ $member2->clone_of($member,'member2');
 */
 
 //--設定認證信功能
-$member->check_mail = 1;
+//$member->check_mail = 1;
+
 //--信箱title設定 (不使用SMTP也要設定)
 $member->set_mail($web_set['title'],$web_set["send_email"]);
 //smtp設定
@@ -91,10 +94,10 @@ switch ($act){
 		if ($_GET["auth"]){
 			if ($member->recive_check_mail($_GET)){
 				print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>";
-				echo '<form id="form1" action="member?act=cpw&nock=1" method="post"><input type="hidden" name="password" value="'.base64_decode(urldecode($_GET["auth"])).'"><br>';
+				echo '<form id="form1" action="'.$console->_j_web_set['main_path'].'/member/cpw?nock=1" method="post"><input type="hidden" name="password" value="'.base64_decode(urldecode($_GET["auth"])).'"><br>';
 				echo $console->tags('PLEASE_ENTER_PASSWORD').':<input type="password" name="new_password" id="password" value=""><br>';
 				echo $console->tags('PLEASE_ENTER_PASSWORD_AGAIN').':<input type="password" id="new_password" value=""><br>';
-				echo '<input type="button" value=" '.$console->tags('SEND').' " onclick="checkdata()"></form>
+				echo '<input type="button" value=" '.$console->tags('SEND').' " onclick="checkdata()">'.$console->get_token().'</form>
 				<script>
 				function checkdata(){
 					if(document.getElementById("password").value=="" || document.getElementById("password").value==null){

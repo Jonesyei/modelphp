@@ -1,5 +1,8 @@
 <?php
+global $_SETUP;
+global $web_set;
 $console->load->module('foor');
+$lang = $_SESSION['mode_lang'];
 ///▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇引用與設定Start▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇
 //## 會員
 $member = new member($console->conn,PREFIX."member");
@@ -133,7 +136,7 @@ if ($_POST && $_REQUEST['submit']){
 	}else{
 		$temp = $shopping_car->esun_pay_send($pay_bill,'回傳路徑');
 	}
-	linkto('index.jsx');
+	linkto('./');
 }else{
 	$pay_bill = $shopping_car->update($_POST);
 }
@@ -344,4 +347,5 @@ $console->module->foor
 ->set("web_set",@$web_set)
 ->set("lang",@$_SESSION["mode_lang"]);
 $console->module->foor->work();
+
 ?>

@@ -32,6 +32,9 @@ $obj->status();
 登出
 $obj->logout();
 
+登入IP紀錄
+$obj->iplogs();
+
 會員郵件審核啟用
 $obj->check_mail = 1;
 
@@ -66,6 +69,9 @@ class member
 		var $namespace = 'member'; //--會員命名空間
 		var $namespace_sql = '';	//--
 		var $iswork = false;
+		
+		
+		var $log_delay = '0'; //--登入記錄延時(秒) 0表示不使用紀錄 基本使用3600秒
 		
 		var $upload_url = 'upload/member/';
 		
@@ -116,8 +122,64 @@ class member
 			
 			if ($_SESSION["login_info"][$this->namespace]){
 				$this->session = $this->conn->GetRow($this->Prepare("select * from ".$this->table." WHERE id=? ".$this->namespace_sql),array($_SESSION["login_info"][$this->namespace]["id"]));
+				$this->iplog();
 			}
 			$this->iswork = true;
+		}
+		
+		/*
+			登入活動紀錄寫入
+		*/
+		function iplog($act=''){
+			if ($this->log_delay<=0) return false;
+			//---檢查資料表
+			$check_row = $this->conn->GetRow("desc ".$this->table."logs");
+			if (!$check_row)
+				$this->conn->Execute("
+				CREATE TABLE `".PREFIX."logs` (
+				  `id` int(11) NOT NULL auto_increment,
+				  `type` varchar(100) NOT NULL COMMENT '暫存類型',
+				  `key1` varchar(100) DEFAULT NULL,
+				  `key2` varchar(100) DEFAULT NULL,
+				  `key3` varchar(100) DEFAULT NULL,
+				  `key4` varchar(100) DEFAULT NULL,
+				  `key5` varchar(100) DEFAULT NULL,
+				  `create_date` datetime NOT NULL COMMENT '建立時間',
+				   PRIMARY KEY  (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+				");
+				
+			//--紀錄寫入
+			$log_delay = $this->log_delay; //1小時內有操作都算在登入中
+			$check_iplog = $this->conn->GetRow("select * from ".PREFIX."logs where type='iplogs' and key1='".$this->session['id']."' and key3>='".date("Y-m-d H:i:s",mktime(date("H"), date("i"), date("s")-$log_delay, date("m"), date("d"), date("Y")))."' and key4='".IP()."' order by create_date desc");
+			if ($check_iplog && $act==''){
+				$this->conn->Execute("UPDATE ".PREFIX."logs set key3='".date("Y-m-d H:i:s")."',key5='".$this->session['name']."' where id='".$check_iplog["id"]."'");
+			}else{
+				$loginsert['type'] = 'iplogs';
+				$loginsert['key1'] = $this->session['id'];
+				$loginsert['key2'] = date("Y-m-d H:i:s");
+				$loginsert['key3'] = date("Y-m-d H:i:s");
+				$loginsert['key4'] = IP();
+				$loginsert['key5'] = $this->session['name'];
+				$loginsert['create_date'] = date("Y-m-d H:i:s");
+				$this->row_have_check($loginsert,"logs");
+				$this->conn->AutoExecute(PREFIX."logs",$loginsert,"INSERT");
+			}
+		}
+		
+		/*
+			登入活動記錄查詢
+		*/
+		function iplogs(){
+			$data = $this->conn->GetArray("select * from ".PREFIX."logs where type='iplogs' and key1='".$this->session['id']."' order by create_date");
+			if ($data)
+				foreach ($data as $k=>$v){
+					$data[$k]["star_date"] = $v["key2"];
+					$data[$k]["end_date"] = $v["key3"];
+					$data[$k]["ip"] = $v["key4"];
+					$data[$k]["name"] = $v["key5"];
+				}
+			return $data;
 		}
 		
 		function Prepare($sql){
@@ -359,16 +421,18 @@ class member
 			}
 		}
 		//--自動建立欄位資料
-		function row_have_check($data){
+		function row_have_check($data,$table=''){
+			if ($table=='') $table = $this->table;
+			
 			//---判斷是否有欄位資料 沒有的話自動建立欄位
-			$check_all_row = $this->conn->GetArray("desc ".$this->table);
+			$check_all_row = $this->conn->GetArray("desc ".$table);
 			foreach ($check_all_row as $k=>$v){ //--取得資料表欄位資料進行判斷
 				$row_colum[] = $v[0];
 			}
 
 			foreach ($data as $k=>$v){//比對資料
 				if (!in_array($k,$row_colum)) {
-						$this->conn->Execute("ALTER TABLE ".$this->table." ADD ".quotes($k)." TEXT NULL COMMENT '註冊資料(程式生成)'");
+						$this->conn->Execute("ALTER TABLE ".$table." ADD ".quotes($k)." TEXT NULL COMMENT '註冊資料(程式生成)'");
 				}
 			}
 		}
