@@ -9,13 +9,7 @@
 <script type="text/javascript" src="../includes/js/jquery-ui.js"></script>
 <script type="text/javascript" src="../includes/js/jquery.validate.js" ></script><!--JQ驗證用套件-->
 
-
-<script type="text/javascript" src="../includes/js/datepick/jquery.datepick.js"></script><!--datepick-->
-<script type="text/javascript" src="../includes/js/datepick/jquery.datepick-zh-TW.js"></script><!--datepick-->
-<script type="text/javascript" src="../includes/js/datepick/jquery.timePicker.js"></script><!--timePicker-->
-
 <script type="text/javascript" src="../includes/js/func_back_js.js" ></script><!--自定後台js-->
-
 
 <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="../ckfinder/ckfinder.js"></script>
@@ -147,14 +141,29 @@ $(document).ready(function (){
 
 <div class="footer"> <!-- footer -->
       © 2014 POWER BY  <a href="vipcase.net.tw" target="_blank">WEB POWER ADVERTISING TECHNOLOGY CO.,LTD. </a>
+      ({if $admin_info.chat==1})
+      <div style="float: right;">
+      <button onclick="$('#serback_dialog').dialog('open');">[Beta] Chat <span serback_online style="color:green;">●</span> <span serbackdialog_notload="0" style="color:red;"></span>
+      </button>
+      </div>
+      ({/if})
   </div>
 
-<div id="dialog-overlay"></div> 
-<div id="dialog-box"> 
-  <div class="dialog-content"> 
-    <div id="dialog-message"></div> 
-  </div> 
+<div id="serback_dialog" title="後台在線管理者成員">
+({section name=m loop=$admin_info.online})
+	<div><span serback_online style="color:green;">●</span> ({$admin_info.online[m].name})(({$admin_info.online[m].account})) ({if $admin_info.online[m].id!=$admin_info.id})<button mbox="({$admin_info.online[m].id})" notload="0" onclick="serback_msgto('({$admin_info.online[m].id})','({$admin_info.online[m].name})');">對話</button>({/if})</div><br>
+({/section})
+<HR>
+<font color=red>本對話功能為協助後台人員進行快速交流資訊所使用，資料庫採用memory cache的方式交談資料將不會留下來!!，重要訊息請記得妥善保管</font>
 </div>
+({if $admin_info.chat_resh_time})<script>var serback_chat_reshtime = ({$admin_info.chat_resh_time});</script>({/if})
+({if $admin_info.chat==1})
+<script type="text/javascript" src="../includes/js/chat.js"></script>
+({/if})
+
+
+
+
 
 <script>
 ///---針對chrom 記憶頁面的修正
