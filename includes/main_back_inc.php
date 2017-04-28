@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set("Asia/Taipei");
 session_start();
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));
@@ -25,7 +26,10 @@ if (!@$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < 
 	$_SESSION["web_ini_time"] = strtotime(date("Y-m-d H:i:s"));
 	if (count($ini_webset)>0 && $ini_webset["web_set"]["upload_check_status"]=='1') {
 		$ini_webset["web_set"]["now_file"] = CalcDirectorySize('../upload/'); //-bytes  取得客戶已上傳的所有檔案資料大小
-		if ($ini_webset["web_set"]["iniloadcheck"]!=NULL && trim($ini_webset["web_set"]["upload_max_size"])!=='') write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現值
+		if ($ini_webset["web_set"]["iniloadcheck"]!=NULL && trim($ini_webset["web_set"]["upload_max_size"])!=='') {
+			$_SESSION["web_ini_data"] = $ini_webset;
+			write_php_ini($ini_webset,APP_PATH."includes/config/web_set.ini"); //寫入大小現值
+		}
 	}
 }else{
 	$ini_webset = $_SESSION["web_ini_data"];

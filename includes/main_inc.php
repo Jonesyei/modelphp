@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set("Asia/Taipei");
 session_start();
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));

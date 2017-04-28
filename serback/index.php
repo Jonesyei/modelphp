@@ -17,7 +17,9 @@ if(Auth_check($conn)==false && !in_array(Now_file(),$menu_list_data))
 //左側選單
 $menu_html = Make_menu($conn);
 
-if(isset($_SESSION["admin_info"]["open_menu"])) $menu_html .= "<script>Open_menu('".$_SESSION["admin_info"]["open_menu"]."')</script>";
+if (!$_SESSION["admin_info"]["tmp"]) $_SESSION["admin_info"]["tmp"] = array();
+
+if($_SESSION["admin_info"]["open_menu"]) $menu_html .= "<script>Open_menu('".$_SESSION["admin_info"]["open_menu"]."')</script>";
 
 
 
@@ -35,6 +37,10 @@ $max_file_disk = number_format($max_file_disk['data'],2).$disk_array[$max_file_d
 $_SESSION["admin_info"]["file_size_total"] = $now_file_disk.' / '.$max_file_disk;
 $_SESSION["admin_info"]["size_bar_width"] = ( ($ini_webset["web_set"]["now_file"]) / ($ini_webset["web_set"]["upload_max_size"]) )*100;
 $_SESSION["admin_info"]["file_size_bar"] = $ini_webset["web_set"]["upload_check_status"];
+
+//--即時對話聊天
+$_SESSION["admin_info"]["chat"] = $ini_webset["web_set"]["chat"];
+$_SESSION["admin_info"]["chat_resh_time"] = $ini_webset["web_set"]["chat_resh_time"];
 
 /*資料庫使用空間*/
 $db_total_disk = 0;
@@ -57,7 +63,7 @@ $_SESSION["admin_info"]["db_bar_width"] = ( $db_now_total_disk / ($ini_webset["w
 //---登入閒置時間驗證
 foreach ($set as $k=>$v){
 	if($v["type"]=='delay_time')
-	if(isset($_SESSION["admin_info"]["delay_time"])&&$_SESSION["admin_info"]["delay_time"]!=''&&$_SESSION["admin_info"]["delay_time"]*1+$v["detail"]*1 <=strtotime(date("Y-m-d H:i:s")))
+	if($_SESSION["admin_info"]["delay_time"]!=NULL&&$_SESSION["admin_info"]["delay_time"]!=''&&$_SESSION["admin_info"]["delay_time"]*1+$v["detail"]*1 <=strtotime(date("Y-m-d H:i:s")))
 	{
 		session_unset();
 		alert('登入閒置過久，因安全因素請您重新登入!!','login.php');
@@ -80,12 +86,15 @@ foreach($_REQUEST as $k => $v)
 }
 
 
-
-
+//--寫入登入資料跟判斷在線使用者
+$serback_login_delay = 300; //-登入時間5分鐘
+$conn->Execute("DELETE FROM ".PREFIX."cache where from_id='".$_SESSION["admin_info"]["id"]."' and type='serback_login'");
+$conn->Execute("INSERT INTO `".PREFIX."cache` (`id`, `type`, `from_id`, `to_id`, `data`, `create_date`) VALUES (NULL, 'serback_login', '".$_SESSION["admin_info"]["id"]."', NULL, '', '".date("Y-m-d H:i:s")."');");
+$_SESSION["admin_info"]["online"] = $conn->GetArray("select * from ".PREFIX."cache as c,".PREFIX."admin as a where c.from_id=a.id and c.type='serback_login' and c.create_date>='".date("Y-m-d H:i:s",mktime(date("H"),date("i"),date("s")-$serback_login_delay,date("m"),date("d"),date("Y")))."'");
 
 
 //現在使用table記錄
-$_SESSION["admin_info"]["table"] = @$table;//SORT_SET用
+$_SESSION["admin_info"]["table"] = $table;//SORT_SET用
 
 //--判斷是否加載 centerpoes.php  檔案
 foreach (get_included_files() as $k=>$v){
@@ -93,7 +102,7 @@ foreach (get_included_files() as $k=>$v){
 		$data["pageget"] = $_GET;
 		$data["pagename"] = $page_name;
 		//--還原操作按鈕路徑
-		if (isset($_SESSION["admin_info"]["data_temp"]) && $_SESSION["admin_info"]["data_temp"]!=''){
+		if ($_SESSION["admin_info"]["data_temp"]!=''&&$_SESSION["admin_info"]["data_temp"]!=NULL){
 			$data["data_temp"] = $_SERVER['REQUEST_URI'];
 			if ($_SERVER['QUERY_STRING']!=''){
 				$data["data_temp"] .= "&re_data_temp=1";
@@ -107,21 +116,21 @@ foreach (get_included_files() as $k=>$v){
 
 
 
-if (!@$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
+if (!$_SESSION["admin_info"]["search"]["search_other"]) $_SESSION["admin_info"]["search"]["search_other"]='';
 
-$tpl->assign("admin_info",@$_SESSION["admin_info"]);//admin_info所有設定
-$tpl->assign("setup", @$_SETUP);//config設定檔
-$tpl->assign("menu", @$menu_html); //menu
-$tpl->assign("data",@$data); //別的頁面傳送來的data
-$tpl->assign("close",@$close); //關閉功能
-$tpl->assign("set",@$set); //網站設定
-$tpl->assign('ini_webset',@$ini_webset);///--ini設定黨
+$tpl->assign("admin_info",$_SESSION["admin_info"]);//admin_info所有設定
+$tpl->assign("setup", $_SETUP);//config設定檔
+$tpl->assign("menu", $menu_html); //menu
+$tpl->assign("data",$data); //別的頁面傳送來的data
+$tpl->assign("close",$close); //關閉功能
+$tpl->assign("set",$set); //網站設定
+$tpl->assign('ini_webset',$ini_webset);///--ini設定黨
 
 $tpl->assign("search_form",ROOT_PATH.$admin_path."templates/_search_form.html");//搜尋form
 $tpl->assign("page_table_html",ROOT_PATH.$admin_path."templates/page_table.html");//頁碼table
 
 
-if(@$include != true)
+if($include != true)
 {
 	//--首頁開發訊息自動接收更新
 	$aa = curl($ini_webset["web_set"]["info_page"]);

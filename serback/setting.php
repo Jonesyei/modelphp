@@ -16,6 +16,7 @@ $sql = " select * from ".$table." WHERE lang='".quotes($record["lang"])."' and "
 
 //--組合參數按鈕
 $data["web_set"]["upload_check_status"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["upload_check_status"],'upload_check_status');//--容量顯示開關
+$data["web_set"]["chat_html"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["chat"],'chat');//--容量顯示開關
 $data["web_set"]["post_fee_button_html"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["post_fee_button"],'post_fee_button');//--運費
 $data["web_set"]["design_button"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["design_button"],'design_button');//--設計師
 $data["web_set"]["system_button"] = Make_radio($_SETUP["status"],$ini_webset["web_set"]["system_button"],'system_button');//--系統

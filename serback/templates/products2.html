@@ -476,6 +476,7 @@ function re_sort(){
 		var obj = new Object();
 		if ($('#ff')[0].files.length>0){
 			if ($('div#piclist div img').length*1+$('#ff')[0].files.length*1>drag_count*1){
+				$('#ff').val('');
 				return alert('已超過圖片上限所設定的 '+drag_count+' 張');
 			}
 			obj.target = document.getElementById('dropDIV');
@@ -495,6 +496,7 @@ function re_sort(){
 				}
 				
 			ajxupload_work(obj);
+			$('#ff').val('');
 		}
 	}
 	function aes (dname){

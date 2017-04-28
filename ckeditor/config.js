@@ -116,7 +116,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 };
-
+CKEDITOR.addCss( 'body {height:auto;}' );
 /*
 var temp_editor_uploadimage_check_status=null;
 function editor_uploadimage_check(){

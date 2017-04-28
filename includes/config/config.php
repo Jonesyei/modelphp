@@ -19,7 +19,7 @@ $_j_web_set['default_controller']	=	'index';				//--預設控制器
 ///--------一般環境參數設定
 if(!isset($_GET["page"]) || !isNumber($_GET["page"])) {$page = $_GET["page"] = 1;}else{$page = $_GET["page"];}
 $per_page_qty = 10;
-$_SETUP["status"] = array ( '1' => '開啟','0' => '關閉');
+$_SETUP["status"] = array ( '1' => '<font color="blue">開啟</font>','0' => '<font color="red">關閉</font>');
 $_SETUP["member_status"] = array ( '1' => '開啟','0' => '關閉','2' => '未認證');
 $_SETUP["sex"] = array ( '1' => '男','2' => '女');
 $_SETUP["member_mode"] = array('normal'=>'一般會員','fb'=>'FB串接帳戶');
@@ -34,7 +34,7 @@ $_SETUP["payment_status"] = array('0'=>'未付款','1'=>'已付款','2'=>'回傳
 $_SETUP["paytype"] = array('1'=>'線上刷卡','2'=>'超商付款','3'=>'ATM轉帳','4'=>'貨到付款','5'=>'WEBATM');
 
 
-$_SETUP["json"] = " var SETUP = ".json_encode($_SETUP).";";//json
+$_SETUP["json"] .= " var SETUP = ".json_encode($_SETUP).";";//json
 
 //--後台設定頁面
 $_SETUP["setting_type"] = array('backup','website_status','website_url','delay_time','demo_show','web_css','recaptcha');
