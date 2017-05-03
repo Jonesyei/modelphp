@@ -91,7 +91,12 @@ if ($smtp_set){
     $mail->IsSMTP();                                // 設定使用SMTP方式寄信        
     $mail->SMTPAuth = true;                         // 設定SMTP需要驗證
 	
-    if ($smtp_set["detail"][0]) $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+    if ($smtp_set["detail"][0]) 
+		$mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+	else{
+		$mail->SMTPAutoTLS = false;
+	}
+	
     $mail->Host = $smtp_set["detail"][1];	        // Gmail的SMTP主機        
     $mail->Port = $smtp_set["detail"][2]*1;                              // Gmail的SMTP主機的port為465      
           

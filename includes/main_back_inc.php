@@ -24,7 +24,7 @@ include(APP_PATH."includes/phpqrcode/qrlib.php");
 if (!@$_SESSION["web_ini_data"] || $_POST || ($_SESSION["web_ini_time"]*1+600 < strtotime(date("Y-m-d H:i:s")) )){
 	$ini_webset = $_SESSION["web_ini_data"] = parse_ini_file(APP_PATH."includes/config/web_set.ini",true);
 	$_SESSION["web_ini_time"] = strtotime(date("Y-m-d H:i:s"));
-	if (count($ini_webset)>0 && $ini_webset["web_set"]["upload_check_status"]=='1') {
+	if (count($ini_webset)>0 && $ini_webset["web_set"]["upload_check_status"]=='1' && strpos($_SERVER['REQUEST_URI'],'/serback')!==false) {
 		$ini_webset["web_set"]["now_file"] = CalcDirectorySize('../upload/'); //-bytes  取得客戶已上傳的所有檔案資料大小
 		if ($ini_webset["web_set"]["iniloadcheck"]!=NULL && trim($ini_webset["web_set"]["upload_max_size"])!=='') {
 			$_SESSION["web_ini_data"] = $ini_webset;
@@ -101,8 +101,8 @@ $mail->IsHTML(true);                         // 設定郵件內容為HTML
 $mail->CharSet = "utf-8";                       // 設定郵件編碼   
 $mail->Encoding = "base64";
 $mail->WordWrap = 50;                           // 每50個字元自動斷行
-
 $smtp_set = $conn->GetRow("select * from ".PREFIX."data_list where type='smtp_mail' and status=1");
+
 //--啟用 SMTP模式
 if ($smtp_set){
 	//--網站設定	
@@ -116,7 +116,12 @@ if ($smtp_set){
     $mail->IsSMTP();                                // 設定使用SMTP方式寄信        
     $mail->SMTPAuth = true;                         // 設定SMTP需要驗證
 	
-    if ($smtp_set["detail"][0]) $mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+    if ($smtp_set["detail"][0]) 
+		$mail->SMTPSecure = $smtp_set["detail"][0];     // Gmail的SMTP主機需要使用SSL連線   
+	else{
+		$mail->SMTPAutoTLS = false;
+	}
+	
     $mail->Host = $smtp_set["detail"][1];	        // Gmail的SMTP主機        
     $mail->Port = $smtp_set["detail"][2]*1;                              // Gmail的SMTP主機的port為465      
           
