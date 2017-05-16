@@ -20,10 +20,14 @@ CKEDITOR.editorConfig = function( config ) {
 	// The configuration options below are needed when running CKEditor from source files.
 	//config.plugins = 'dialogui,dialog,about,a11yhelp,dialogadvtab,basicstyles,bidi,blockquote,clipboard,button,panelbutton,panel,floatpanel,colorbutton,colordialog,templates,menu,contextmenu,div,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,language,link,list,liststyle,magicline,maximize,newpage,pagebreak,pastetext,pastefromword,preview,print,removeformat,save,selectall,showblocks,showborders,sourcearea,specialchar,scayt,stylescombo,tab,table,tabletools,undo,wsc,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
 	config.plugins = 'dragresize,tableresize,youtube,about,basicstyles,blockquote,colorbutton,colordialog,menu,contextmenu,resize,toolbar,elementspath,enterkey,entities,popup,filebrowser,find,fakeobjects,flash,floatingspace,listblock,richcombo,font,forms,format,horizontalrule,htmlwriter,iframe,wysiwygarea,image,indent,indentblock,indentlist,smiley,justify,menubutton,link,list,liststyle,magicline,maximize,newpage,pastetext,pastefromword,preview,print,removeformat,selectall,showblocks,showborders,specialchar,stylescombo,tab,table,tabletools,undo,lineutils,widget,filetools,notification,notificationaggregator,uploadwidget,uploadimage';
-	config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
 	//config.skin = 'moonocolor';
 	config.uiColor = '#746543';
 	
+	if (window.location.href.search('serback')<0 && window.location.host.search('localhost')<0 && window.location.host.search('127.0.0.1')<0 ){
+		config.uploadUrl = '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
+	}else{
+		config.uploadUrl = '../ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json';
+	}
 	//--編輯器檔案預設起始路徑
 	config.baseHref = window.location.href.split('serback')[0];
 	//--預設主體class

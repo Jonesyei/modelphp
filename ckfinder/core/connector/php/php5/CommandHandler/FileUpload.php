@@ -42,6 +42,8 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
      */
     public function sendResponse()
     {
+		global $_SESSION;
+		
 		$dirtemp_name =  explode('ckfinder',dirname(__FILE__));
 		$dirtemp_name = $dirtemp_name[0];
 		$ini_webset = parse_ini_file($dirtemp_name."includes/config/web_set.ini",true);
@@ -208,13 +210,67 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
 			@unlink($sFilePath);
 			$this->_errorHandler->throwError(CKFINDER_CONNECTOR_ERROR_WD_DESK_FULL);
         }
+		
 		/* 後台驗證登入 */
+		/*
 		if (!isset($_SESSION["admin_info"]["id"])){
             clearstatcache();
 			@unlink($sFilePath);
 			$this->_errorHandler->throwError(CKFINDER_CONNECTOR_ERROR_WD_TOKEN);
 		}
+		*/
 		
+		$check_file = explode('.',$sFilePath);
+		$check_file = $check_file[count($check_file)-1];
+		if (strtolower($check_file)=='jpeg' || strtolower($check_file)=='jpg') jpeg_jwork($sFilePath);
+		if (strtolower($check_file)=='png') png_jwork($sFilePath);
         CKFinder_Connector_Core_Hooks::run('AfterFileUpload', array(&$this->_currentFolder, &$uploadedFile, &$sFilePath));
     }
+	
+	//-----漸進式存取圖片 jepg
+	public function jpeg_jwork($file_name){
+		$im = imagecreatefromjpeg($file_name);
+		imageinterlace($im, 1);
+		imagejpeg($im, $file_name, 100);
+		imagedestroy($im); 
+	}
+	//-----交錯式存取圖片 png
+	public function png_jwork($file_name){
+		$im = @imagecreatefrompng($file_name);
+		$srcWidth = imagesx($im);
+		$srcHeight = imagesy($im);
+	
+		$newWidth = $srcWidth;
+		$newHeight = $srcHeight;
+		$newImg = imagecreatetruecolor($newWidth, $newHeight);
+		
+		$alpha = imagecolorallocatealpha($newImg, 0, 0, 0, 127);
+		imagefill($newImg, 0, 0, $alpha);
+		
+		imagecopyresampled($newImg, $im, 0, 0, 0, 0, $newWidth, $newHeight, $srcWidth, $srcHeight);
+		imagesavealpha($newImg, true);
+		
+		imageinterlace($newImg, 1);
+		imagepng($newImg, $file_name);
+		imagedestroy($newImg); 
+	}
+	public function gif_jwork($file_name){
+		$im = @imagecreatefromgif($file_name);
+		$srcWidth = imagesx($im);
+		$srcHeight = imagesy($im);
+	
+		$newWidth = $srcWidth;
+		$newHeight = $srcHeight;
+		$newImg = imagecreatetruecolor($newWidth, $newHeight);
+		
+		$alpha = imagecolorallocatealpha($newImg, 0, 0, 0, 127);
+		imagefill($newImg, 0, 0, $alpha);
+		
+		imagecopyresampled($newImg, $im, 0, 0, 0, 0, $newWidth, $newHeight, $srcWidth, $srcHeight);
+		imagesavealpha($newImg, true);
+		
+		imageinterlace($newImg, 1);
+		imagegif($newImg, $file_name);
+		imagedestroy($newImg);  
+	}
 }
