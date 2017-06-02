@@ -222,6 +222,8 @@ page_initial('table-style01');
 ({/if})
 	
 ({if $data.close.pic==null})
+<script src="../includes/js/jquery.Jcrop.js"></script>
+<link rel="stylesheet" href="../includes/js/jquery.Jcrop.css" type="text/css" />
 ({if is_array($data.button.pic)})
 <script type="text/javascript">
 var Pic;
@@ -234,7 +236,7 @@ function upload_one(response,objname,other_func){
 					filename = filename[filename.length-1];div_file = filename.split('.')[0];
 					$('div[piclist="'+objname+'"]').append('<div class="ui-state-default" picspan="picspan_'+div_file+'" id="picspan_'+div_file+'"></div>');//--增加一個選項
 					var max_idxtopic = $('div[piclist="'+objname+'"]').find('div.ui-state-default').length;
-					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" pic_sort="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'input[pic_sort=pic_sort_'+(max_idxtopic-1)+']\').val(),\''+objname+'\');"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+div_file+',\''+objname+'\');"></div>');
+					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" pic_sort="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'input[pic_sort=pic_sort_'+(max_idxtopic-1)+']\').val(),\''+objname+'\');"> <input type="button" value="剪裁" onclick="jcropimg(this,\'({$data.file_url})\');"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel('+div_file+',\''+objname+'\');"></div>');
 					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
 				 	$('#picspan_'+div_file).append('<input type="hidden" name="'+objname+'[]" value="'+filename+'">');
 					eval("other_func_"+objname+"('#picspan_"+div_file+"');");
@@ -295,12 +297,15 @@ function other_func_({$data.button.pic[m]})(other_obj){
 }
 </script>
 <div piclist="({$data.button.pic[m]})">
+<input type="hidden" pic_size_width="({$data.pic_size[m].width})">
+<input type="hidden" pic_size_height="({$data.pic_size[m].height})">
 ({section name=picidx loop=$data.one[$data.button.pic[m]]})
 ({if $data.one[$data.button.pic[m]][picidx]!=null||$data.one[$data.button.pic[m]][picidx]!=''})
 <div class="ui-state-default" picspan="picspan_({$smarty.section.picidx.index})">
 <div style="float:right;">
 排序到<input type="text" pic_sort="pic_sort_({$smarty.section.picidx.index})" value="({$smarty.section.picidx.index+1})" size="2" style="text-align:center;">
 <input type="button" value="移動" onclick="pic_sort('({$smarty.section.picidx.index})',$('input[pic_sort=pic_sort_({$smarty.section.picidx.index})]').val(),'({$data.button.pic[m]})');">
+<input type="button" value="剪裁" onclick="jcropimg(this,'({$data.file_url})');">
 <input type="button" value=" 刪除 " onclick="if (confirm('確定要移除這張圖片嘛?')) picdel(({$smarty.section.picidx.index}),'({$data.button.pic[m]})');">
 </div>
 <img src="({$data.file_url})({$data.one[$data.button.pic[m]][picidx]})" height="150px">
@@ -397,7 +402,7 @@ function upload_one(response){
 					filename = filename[filename.length-1];div_file = filename.split('.')[0];
 					$('#piclist').append('<div class="ui-state-default" id="picspan_'+div_file+'"></div>');//--增加一個選項
 					var max_idxtopic = $('#piclist>div.ui-state-default').length;
-					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" id="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'#pic_sort_'+(max_idxtopic-1)+'\').val());"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel(\''+div_file+'\');"></div>');
+					$('#picspan_'+div_file).append('<div style="float:right;"><font color="red">(未存檔)</font> 排序到<input type="text" id="pic_sort_'+(max_idxtopic-1)+'" value="'+max_idxtopic+'" size="2" style="text-align:center;"> <input type="button" value="移動" onclick="pic_sort('+(max_idxtopic-1)+',$(\'#pic_sort_'+(max_idxtopic-1)+'\').val());"> <input type="button" value="剪裁" onclick="jcropimg(this,\'({$data.file_url})\');"> <input type="button" value=" 刪除 " onclick="if (confirm(\'確定要移除這張圖片嘛?\')) picdel(\''+div_file+'\');"></div>');
 					$('#picspan_'+div_file).append('<img src="({$data.file_url})'+filename+'" height="150px"><br>');
 				 	$('#picspan_'+div_file).append('<input type="hidden" name="pic[]" value="'+filename+'">');
 					({if $data.button.other!=null})
@@ -462,12 +467,15 @@ function re_sort(){
 </script>
 
 <div id="piclist">
+<input type="hidden" pic_size_width="({$data.pic_size.width})">
+<input type="hidden" pic_size_height="({$data.pic_size.height})">
 ({section name=picidx loop=$data.one.pic})
 ({if $data.one.pic[picidx]!=null||$data.one.pic[picidx]!=''})
 <div class="ui-state-default" id="picspan_({$smarty.section.picidx.index})">
 <div style="float:right;">
 排序到<input type="text" id="pic_sort_({$smarty.section.picidx.index})" value="({$smarty.section.picidx.index+1})" size="2" style="text-align:center;">
 <input type="button" value="移動" onclick="pic_sort('({$smarty.section.picidx.index})',$('#pic_sort_({$smarty.section.picidx.index})').val());">
+<input type="button" value="剪裁" onclick="jcropimg(this,'({$data.file_url})');">
 <input type="button" value=" 刪除 " onclick="if (confirm('確定要移除這張圖片嘛?')) picdel(({$smarty.section.picidx.index}));">
 </div>
 <img src="({$data.file_url})({$data.one.pic[picidx]})" height="150px">
@@ -541,6 +549,89 @@ function re_sort(){
 	</td>
 	</tr>
 ({/if})
+
+
+<!--剪裁區塊-->
+<div id="jcrop_img" title="剪裁圖片">
+	<div jcrop_imgtag><img style="width:100%;"/></div>
+    <canvas id="pcanvas" style="display:none;"></canvas>
+</div>
+<script>
+$(function() {
+	$( "#jcrop_img" ).dialog({
+	  resizable: true,
+	  width:1000,
+	  buttons: {
+		'取消': function() {
+		  $( this ).dialog( "close" );
+		},
+		"裁切": function() {
+		  $('[jcrop_imgtag]').hide();
+		  var obj = this;
+		  $('#pcanvas').show(function(){
+			 if (confirm('確定使用以下的圖片送出裁切')) {
+				$('[jcrop_imgtag]').show().html('');
+				jcrop_image[0].src = $('#pcanvas')[0].toDataURL();
+				$('#pcanvas').hide();
+		            $.ajax( {
+						url: "ajx.php?jcrop=1",
+						data: {file_url:$('#pcanvas').attr('file_url'),datauri:$('#pcanvas')[0].toDataURL()},
+						type:"POST",
+						dataType:'text',
+						async: false,
+						success: function(msg){
+							jcrop_image.parent().find('[name]:hidden').val(msg);
+						}
+					});
+				$( obj ).dialog( "close" );
+			  }else{
+				$('[jcrop_imgtag]').show();
+				$('#pcanvas').hide();
+			  } 
+		  });
+		}
+	  }
+	});
+	$( "#jcrop_img" ).dialog( "close" );
+});
+
+var jcrop_api;
+var jcrop_output_obj = new Object();
+var jcrop_image;
+var jcrop_image_src;
+function jcropimg(obj,file_url){
+	$( "#jcrop_img" ).dialog( "open" );
+	$('#pcanvas').hide().attr('file_url',file_url);
+	$('[jcrop_imgtag]').show();
+	jcrop_image = $(obj).parent().parent().find('img')
+	ratio_width = $(jcrop_image).parentsUntil('[piclist],#piclist').parent().find('input[pic_size_width]').attr('pic_size_width');
+	ratio_heigth = $(jcrop_image).parentsUntil('[piclist],#piclist').parent().find('input[pic_size_height]').attr('pic_size_height');
+	jcrop_image_src = jcrop_image.attr('src');
+	$('[jcrop_imgtag]').html('<img src="'+jcrop_image_src+'">');
+	$('[jcrop_imgtag] img').Jcrop({
+		aspectRatio:ratio_width/ratio_heigth,
+		allowResize:true,
+		onSelect: updateCoords,
+		minSize: [ ratio_width, ratio_heigth ]
+	},function(){
+		jcrop_api = this;
+	});
+}
+function updateCoords(c){
+	 console.log('x='+c.x+',y='+c.y+',w='+c.w+',h='+c.h);
+	 var imgx = new Image();
+	 imgx.onload = function () {
+		var context = document.getElementById('pcanvas').getContext('2d');
+		document.getElementById('pcanvas').width = c.w;
+		document.getElementById('pcanvas').height = c.h;
+		context.drawImage(this,c.x,c.y,+c.w,c.h,0,0,c.w,c.h);
+	 };
+	imgx.src = jcrop_image_src;
+    jcrop_output_obj = c;
+}
+</script>
+
+
 ({/if})
 
 

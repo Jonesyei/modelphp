@@ -68,6 +68,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 	//if ($_SESSION["admin_info"]["lang"]=='ch')
 	switch ($_GET["class"]){
 		case "EDM":
+		/*
 			$data["button"]["file"] = '5';											//-設定檔案上限(一旦設定後則開啟檔案上傳功能)
 			$data["button"]["filename"] = '夾帶檔案';
 			
@@ -78,6 +79,9 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
 			
 			$data["button"]["other"]["mno"][] = array('other_name'=>'內容','other_obj'=>'memo','other_data'=>explode('|__|',$data["one"]["memo"]));
+			*/
+			$data["pic_size"]["width"] = 250;
+			$data["pic_size"]["height"] = 100;
 		break;
 		case "test":
 				$data["one"]["name"] = "首頁EDM";
@@ -110,6 +114,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 				$data["button"]["pic"] = array('pic','mno');							//開放欄位類組
 				$data["pic_size_title"] = array('任意比例','1x1');						//比例說明
 				$data["uploadfilemax"] = array('1','2');								//圖檔上傳上限
+				$data["pic_size"] = array(array('width'=>250,'height'=>100),array('width'=>400,'height'=>300));//裁切設定
 				//額外自由欄位資料設定
 				// array('other_name'=>'設立物件顯示名稱','other_obj'=>'設立物件命名欄位EX:name','other_data'=>array('陣列資料內容'));
 				$data["button"]["other"]["pic"][] = array('other_name'=>'描述','other_obj'=>'name','other_data'=>explode('|__|',$data["one"]["name"]));
@@ -129,7 +134,7 @@ if($_SESSION["admin_info"]["view"]=="detail")
 		
 		case "about":
 				//$data["close"]["pic"] ='1';
-				
+				//echo $_SESSION["p_name"];exit;
 				$data["button"]["detail"]='1';
 				$data["button"]["fck"]='1';
 		break;
