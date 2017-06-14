@@ -227,7 +227,7 @@ namespace console{
 				$path = array_values($path);
 				$path = implode('/',$path);
 				if (in_array($this->path[0],$this->_j_web_set['controller_ninclude'])){echo $this->tags('THE_CONTROLLER_NOT_INCLUDE_PARA');exit;}
-				$this->movePage(200,'//'.$this->_j_web_set['host'].$this->_j_web_set['main_path'].($this->config['setlang'] ? '/views/'.$this->config['setlang']:'').'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
+				$this->movePage(200,'//'.$this->_j_web_set['host'].str_replace('/index.php','',$this->_j_web_set['main_path']).($this->config['setlang'] ? '/views/'.$this->config['setlang']:'').'/'.$path.($_SERVER['QUERY_STRING']!='' ? '?'.$_SERVER['QUERY_STRING']:''));
 			}
 		}
 		
