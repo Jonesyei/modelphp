@@ -560,7 +560,7 @@ function re_sort(){
 $(function() {
 	$( "#jcrop_img" ).dialog({
 	  resizable: true,
-	  width:1000,
+	  width:500,
 	  buttons: {
 		'取消': function() {
 		  $( this ).dialog( "close" );
@@ -607,7 +607,10 @@ function jcropimg(obj,file_url){
 	ratio_width = $(jcrop_image).parentsUntil('[piclist],#piclist').parent().find('input[pic_size_width]').attr('pic_size_width');
 	ratio_heigth = $(jcrop_image).parentsUntil('[piclist],#piclist').parent().find('input[pic_size_height]').attr('pic_size_height');
 	jcrop_image_src = jcrop_image.attr('src');
-	$('[jcrop_imgtag]').html('<img src="'+jcrop_image_src+'">');
+	var aa = new Image();
+	aa.onload = function(){$('[jcrop_imgtag] img').attr('nw',this.width);$('[jcrop_imgtag] img').attr('nh',this.height);}
+	aa.src = jcrop_image_src;
+	$('[jcrop_imgtag]').html('<img src="'+jcrop_image_src+'" width="100%;">');
 	$('[jcrop_imgtag] img').Jcrop({
 		aspectRatio:ratio_width/ratio_heigth,
 		allowResize:true,
@@ -618,13 +621,18 @@ function jcropimg(obj,file_url){
 	});
 }
 function updateCoords(c){
-	 console.log('x='+c.x+',y='+c.y+',w='+c.w+',h='+c.h);
+	//--取得與原圖的比例
+	var wp = $('[jcrop_imgtag] img').width()/$('[jcrop_imgtag] img').attr('nw')*1;
+	var hp = $('[jcrop_imgtag] img').height()/$('[jcrop_imgtag] img').attr('nh')*1;
+	 console.log('wp='+wp+',hp='+hp+',x='+c.x+',y='+c.y+',w='+c.w+',h='+c.h);
 	 var imgx = new Image();
 	 imgx.onload = function () {
 		var context = document.getElementById('pcanvas').getContext('2d');
-		document.getElementById('pcanvas').width = c.w;
-		document.getElementById('pcanvas').height = c.h;
-		context.drawImage(this,c.x,c.y,+c.w,c.h,0,0,c.w,c.h);
+		document.getElementById('pcanvas').width = c.w/wp;
+		document.getElementById('pcanvas').height = c.h/hp;
+		context.drawImage(this,c.x/wp,c.y/hp,c.w/wp,c.h/hp,0,0,c.w/wp,c.h/hp);
+		$('#pcanvas').css('width','100%');
+		console.log('x1='+c.x/wp+',y1='+c.y/hp+',w='+c.w/wp+',h='+c.h/hp);
 	 };
 	imgx.src = jcrop_image_src;
     jcrop_output_obj = c;
