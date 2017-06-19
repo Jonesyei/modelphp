@@ -222,8 +222,8 @@ class CKFinder_Connector_CommandHandler_FileUpload extends CKFinder_Connector_Co
 		
 		$check_file = explode('.',$sFilePath);
 		$check_file = $check_file[count($check_file)-1];
-		if (strtolower($check_file)=='jpeg' || strtolower($check_file)=='jpg') jpeg_jwork($sFilePath);
-		if (strtolower($check_file)=='png') png_jwork($sFilePath);
+		if (strtolower($check_file)=='jpeg' || strtolower($check_file)=='jpg') $this->jpeg_jwork($sFilePath);
+		if (strtolower($check_file)=='png') $this->png_jwork($sFilePath);
         CKFinder_Connector_Core_Hooks::run('AfterFileUpload', array(&$this->_currentFolder, &$uploadedFile, &$sFilePath));
     }
 	
