@@ -498,7 +498,7 @@ function other_func_({$data.button.pic[m]})(other_obj){
 					var check_image_type = ['jpeg','jpg','bmp','gif','png','pdf'];
 					var check_file_name = tt[aa].name.split('.');
 					check_file_name = check_file_name[check_file_name.length-1];
-					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');
+					if (check_image_type.indexOf(check_file_name.toLowerCase())<0) return alert('檔案格式不符要求');
 				}
 			ajxupload_work(obj);
 			//$('#'+dname).val('');
@@ -661,7 +661,7 @@ function re_sort(){
 					var check_image_type = ['jpeg','jpg','bmp','gif','png','pdf'];
 					var check_file_name = tt[aa].name.split('.');
 					check_file_name = check_file_name[check_file_name.length-1];
-					if (check_image_type.indexOf(check_file_name)<0) return alert('檔案格式不符要求');
+					if (check_image_type.indexOf(check_file_name.toLowerCase())<0) return alert('檔案格式不符要求');
 				}
 			ajxupload_work(obj);
 			//$('#ff').val('');
@@ -681,7 +681,7 @@ function re_sort(){
 
 <!--剪裁區塊-->
 <div id="jcrop_img" title="剪裁圖片">
-	<div jcrop_imgtag><img style="width:100%;"/></div>
+	<div jcrop_imgtag style="width:100%;height:100%;"><img style="width:100%;"/></div>
     <canvas id="pcanvas" style="display:none;"></canvas>
 </div>
 <script>
@@ -689,6 +689,7 @@ $(function() {
 	$( "#jcrop_img" ).dialog({
 	  resizable: true,
 	  width:500,
+	  height:500,
 	  buttons: {
 		'取消': function() {
 		  $( this ).dialog( "close" );
@@ -738,12 +739,12 @@ function jcropimg(obj,file_url){
 	var aa = new Image();
 	aa.onload = function(){$('[jcrop_imgtag] img').attr('nw',this.width);$('[jcrop_imgtag] img').attr('nh',this.height);}
 	aa.src = jcrop_image_src;
-	$('[jcrop_imgtag]').html('<img src="'+jcrop_image_src+'" width="100%;">');
+	$('[jcrop_imgtag]').html('<img src="'+jcrop_image_src+'" style="max-width:100%; max-height:100%;">');
 	$('[jcrop_imgtag] img').Jcrop({
 		aspectRatio:ratio_width/ratio_heigth,
 		allowResize:true,
 		onSelect: updateCoords,
-		minSize: [ ratio_width, ratio_heigth ]
+		/*minSize: [ ratio_width, ratio_heigth ]*/
 	},function(){
 		jcrop_api = this;
 	});
@@ -760,7 +761,6 @@ function updateCoords(c){
 		document.getElementById('pcanvas').height = c.h/hp;
 		context.drawImage(this,c.x/wp,c.y/hp,c.w/wp,c.h/hp,0,0,c.w/wp,c.h/hp);
 		$('#pcanvas').css('width','100%');
-		console.log('x1='+c.x/wp+',y1='+c.y/hp+',w='+c.w/wp+',h='+c.h/hp);
 	 };
 	imgx.src = jcrop_image_src;
     jcrop_output_obj = c;

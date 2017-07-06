@@ -551,82 +551,43 @@ function check_email($str)
 
 //檢查身份證字號
 function Userunicode($id){
-
 	$id = strtoupper($id);
 
 	//建立字母分數陣列
-
 	$headPoint = array(
-
 		'A'=>1,'I'=>39,'O'=>48,'B'=>10,'C'=>19,'D'=>28,
-
 		'E'=>37,'F'=>46,'G'=>55,'H'=>64,'J'=>73,'K'=>82,
-
 		'L'=>2,'M'=>11,'N'=>20,'P'=>29,'Q'=>38,'R'=>47,
-
 		'S'=>56,'T'=>65,'U'=>74,'V'=>83,'W'=>21,'X'=>3,
-
 		'Y'=>12,'Z'=>30
-
 	);
-
 	//建立加權基數陣列
-
 	$multiply = array(8,7,6,5,4,3,2,1);
-
 	//檢查身份字格式是否正確
-
-	if (ereg("^[a-zA-Z][1-2][0-9]+$",$id) AND strlen($id) == 10){
-
+	if (preg_match("/^[A-Za-z][1-2][0-9]{8}$/",$id) && strlen($id) == 10){
 		//切開字串
-
-		$len = strlen($id);
-
-		for($i=0; $i<$len; $i++){
-
-			$stringArray[$i] = substr($id,$i,1);
-
-		}
-
-		//取得字母分數
-
+		$stringArray = str_split($id);
+		//取得字母分數(取頭)
 		$total = $headPoint[array_shift($stringArray)];
-
-		//取得比對碼
-
+		//取得比對碼(取尾)
 		$point = array_pop($stringArray);
-
-		//取得數字分數
-
+		//取得數字部分分數
 		$len = count($stringArray);
-
 		for($j=0; $j<$len; $j++){
-
 			$total += $stringArray[$j]*$multiply[$j];
-
 		}
-
 		//計算餘數碼並比對
-
-		$last = (($total%10) == 0 )?0:(10-($total%10));
-
+		$last = (($total%10) == 0 )? 0: (10 - ( $total % 10 ));
 		if ($last != $point) {
-
 			return false;
-
 		} else {
-
 			return true;
-
 		}
-
 	}  else {
-
 	   return false;
-
 	}
-
 }
+
 
 //字體半形轉全形
 function n_to_w($strs, $types = '0'){  // narrow to wide , or wide to narrow
@@ -859,6 +820,8 @@ function curl($long_url,$type='GET',$data=NULL) {
 			$options = array(
 				CURLOPT_URL => $long_url,
 				CURLOPT_RETURNTRANSFER => TRUE, //接收服?端范?的html代?而不是直接??器?出
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_TIMEOUT => 4
 			);
 		break;
