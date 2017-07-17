@@ -80,8 +80,8 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			
 			$data["button"]["other"]["mno"][] = array('other_name'=>'內容','other_obj'=>'memo','other_data'=>explode('|__|',$data["one"]["memo"]));
 			*/
-			$data["pic_size"]["width"] = 250;
-			$data["pic_size"]["height"] = 100;
+			$data["pic_size"]["width"] = 300;
+			$data["pic_size"]["height"] = 200;
 		break;
 		case "test":
 				$data["one"]["name"] = "首頁EDM";
@@ -212,6 +212,16 @@ if($_SESSION["admin_info"]["view"]=="detail")
 			$data["order_html"] .= '<tr><td align="right">類型別名:</td><td><input type="text" name="new_type" value="'.dequotes($data["one"]["new_type"],-1).'" disabled="disabled"></td></tr>';
 			$data["order_html"] .= '<tr><td align="right">折扣率:</td><td><input type="text" name="detail" value="'.dequotes($data["one"]["detail"],-1).'"></td></tr>';
 			$data["order_html"] .= '<tr><td align="right">到達紅利限制:</td><td><input type="text" name="memo[]" value="'.dequotes($data["one"]["memo"][0],-1).'"> - <input type="text" name="memo[]" value="'.dequotes($data["one"]["memo"][1],-1).'"></td></tr>';
+		break;
+		
+		case "hotpro":
+				$data["close"]["pic"] = '1';
+				$data["order_html"] .= '<tr><td align="right">推薦設定:</td><td><div plist></div>
+				<script>
+				var obj_set = {name:"b_name",dataname:"b_value",data_rowname:"'.$data["one"]["b_name"].'",data_rowdata:"'.$data["one"]["b_value"].'"};
+				var pl = new J_hotpro("div[plist]",obj_set);
+				</script>
+				</td></tr>';
 		break;
 		
 		case "contact":

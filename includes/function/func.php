@@ -1204,6 +1204,7 @@ function page_show($cousql,$mount,$page_button_count=10,$page_row_count=false){
 		
 		$data["select_page"] .='<option value="'.($i).'"'.$page_checked.'>'.($i).'</option>';
 	}
+	
 	$data["select_page"] .= '</select> 頁';
 	$data["select_page"] .='<script>
 	function page_change(value){

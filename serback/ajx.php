@@ -38,7 +38,7 @@ if ($_GET["design"]){
 //--商品尺寸規格圖片及時存檔
 if ($_POST["data_img"]){
 	//$img = str_replace('data:image/png;base64,', '', $img);
-	$img = preg_replace('/^data:image\/(png|jpg);base64,/','',$_POST["data_img"]);
+	$img = preg_replace('/^data:image\/(png|jpg|jpeg);base64,/','',$_POST["data_img"]);
 	$img = str_replace(' ', '+', $img);
 	$data = base64_decode($img);
 	$file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.png';
@@ -172,5 +172,35 @@ if ($_GET["back_point"]){
 		$conn->Execute("UPDATE ".PREFIX."shopping_car SET addpoint_status=1 where id='".$_GET["back_point"]."'");
 		echo '已發放紅利點數';exit;
 	}
+}
+
+
+//--圖片剪裁
+if ($_GET["jcrop"]){
+	$img = preg_replace('/^data:image\/(png|jpg|jpeg);base64,/','',$_POST["datauri"]);
+	$img = str_replace(' ', '+', $img);
+	$data = base64_decode($img);
+	$file_name = strtotime(date('Y-m-d H:i:s')).rand(10,99).'.png';
+	$file = $_POST["file_url"].$file_name;
+	$success = file_put_contents($file, $data); 
+	$_SESSION["upload_temp"][] = $file_name;
+	echo $file_name;
+}
+
+
+//--尋找商品
+if ($_GET["prosearch"]){
+	$data = $conn->GetArray("select * from ".PREFIX."products where type='products' and name like '%".$_GET["prosearch"]."%' and lang='".$_SESSION["admin_info"]["lang"]."'");
+	if ($data)
+		foreach ($data as $k=>$v){
+			$plist[$v["id"]] = $v["name"];
+		}
+	echo Make_list($plist,'');
+	exit;
+}
+
+//--推播發送
+if ($_GET["push"]){
+	$fcm->send('/topics/'.PREFIX,$_GET["pt"],$_GET["pb"],$_GET["pimg"],$_GET["purl"]);
 }
 ?>

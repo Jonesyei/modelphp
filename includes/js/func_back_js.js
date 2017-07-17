@@ -662,6 +662,47 @@ J_map = function(selector,context) {
 }
 
 
+///--推薦商品選擇器
+J_hotpro = function (selector,setting){
+	var obj = new Object();
+	
+	var rowname = setting.name;
+	var rowdata = setting.dataname;
+	var data_rowname = setting.data_rowname.split('|__|');
+	var data_rowdata = setting.data_rowdata.split('|__|');
+	
+	var selector = $(selector).parent().prepend('<div pobj></div>').find('div[pobj]');
+	$(selector).append('商品關鍵字:<input type="text" psearch><input type="button" value="查詢" searchbtn><br><select pselect></select><input type="button" value="加入" proadd>');
+	$(selector).find('input[searchbtn]').on('click',function(event){
+		    $.ajax( {
+                url: "ajx.php",
+                data: {prosearch:$(event.target).parent().find('input[psearch]').val()},
+                type:"GET",
+                dataType:'text',
+				async: false,
+                success: function(msg){
+                    $(event.target).parent().find('select[pselect]').html(msg);
+                }
+            });
+	});
+	$(selector).find('input[proadd]').on('click',function (event){
+		var tg = $(event.target).parent();
+		if ($(event.target).parent().find('select[pselect]').val()!=null&&$(event.target).parent().find('select[pselect]').val()!=''){
+			tgobj(selector,tg,$(tg).find('select[pselect] option:selected').html(),$(tg).find('select[pselect]').val());
+		}
+	});
+	
+	tgobj = function (selector,tg,name,id){
+		$(selector).next().append('<div style="border:1px solid #aaaaaa;height:24px;">'+name+'<input type="hidden" name="'+rowname+'[]" value="'+name+'"><input type="hidden" name="'+rowdata+'[]" value="'+id+'"><input type="button" value="X" onclick="$(this).parent().remove();" style="float:right;"></div>');
+	}
+	
+	//--原資料處理
+	$(data_rowdata).each(function(idx,obj){
+		tgobj(selector,selector,data_rowname[idx],data_rowdata[idx]);
+	});
+	
+	if (typeof(jQuery.fn.sortable)=="function") $( selector ).next().sortable( {items: 'div'} );
+}
 
 
 
