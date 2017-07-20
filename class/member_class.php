@@ -279,7 +279,7 @@ class member
 				//--進行 mail處理
 				if ($pagefile==NULL) {
 					$pagefile = explode('/',$_SERVER['SERVER_PROTOCOL']);
-					$pagefile = $pagefile[0].'://'.$_SERVER['HTTP_HOST'].'/member?act=fotgot';
+					$pagefile = $pagefile[0].'://'.$_SERVER['HTTP_HOST'].'/member/fotgot';
 				}
 				if (strpos($pagefile,'?')=='') {
 					$pagefile .= '?';

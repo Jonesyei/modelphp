@@ -93,6 +93,7 @@ switch ($act){
 	case "fotgot":
 		if ($_GET["auth"]){
 			if ($member->recive_check_mail($_GET)){
+				/*
 				print "<meta http-equiv=Content-Type content=text/html; charset=utf-8>";
 				echo '<form id="form1" action="'.$console->_j_web_set['main_path'].'/member/cpw?nock=1" method="post"><input type="hidden" name="password" value="'.base64_decode(urldecode($_GET["auth"])).'"><br>';
 				echo $console->tags('PLEASE_ENTER_PASSWORD').':<input type="password" name="new_password" id="password" value=""><br>';
@@ -111,11 +112,13 @@ switch ($act){
 				}
 				</script>
 				';
-				
+				*/
+				$console->path[1] = "fotgot2";
+				$data["old_password"] = base64_decode(urldecode($_GET["auth"]));
 			}else{
 				alert($console->tags('PASSWORD_CHANGE_VILED_AGAIN'),'/');//資訊來源錯誤!!請重新發送密碼驗證信件!!
 			}
-			exit;
+			//exit;
 		}
 		
 		if ($_POST["account"]){

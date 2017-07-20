@@ -69,7 +69,7 @@ if ($_POST) {
 	if ($_POST["mvc"]=='true'){
 	$settingstr = str_replace('%mvc%',"
 	RewriteRule ^(.*)serback/ajx.php$ serback/ajx.php [QSA,L]
-	RewriteCond $1 !^(views|ajax\.php|favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
+	RewriteCond $1 !^(firebase-messaging-sw\.js|views|ajax\.php|favicon\.ico|setup\.php|_form_mail\.php|verifycode\.php|resize\.php|mathcode\.php|fileauth\.php|index\.php|css|serback|js|upload|images|includes|ckeditor|ckfinder|robots\.txt|web|$)
     RewriteRule ^(.*)$ index.php [L,QSA]",$settingstr);
 	}else{
 		$settingstr = str_replace('%mvc%','',$settingstr);
@@ -81,10 +81,12 @@ if ($_POST) {
 	include_once("includes/main_inc.php");
 	
 	//--首頁開發訊息自動接收更新
-	$aa = curl('http://www.104portal.com.tw/centerpoes.txt');
+	/*
+	$aa = curl('https://www.104portal.com.tw/centerpoes.txt');
 	if ($aa["code"]=='200'){
 		safefilerewrite(ROOT_PATH.$admin_path."centerpoes.php",$aa["data"]);
 	}
+	*/
 }
 
 
