@@ -49,7 +49,7 @@ document.write( '<script type="text/javascript" src="../includes/js/pdf/pdf.js">
 		
 		function check_max_file_upload(evt){
 			if (typeof(file_upload)!="object"){
-		   		if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+tt.length*1> drag_count) {
+		   		if ($(evt.target).parentsUntil('tr').last().find('div:eq(0)').find('div img').length*1+1> drag_count) {
 					alert('上傳已達到限制數量!!');
 					upload_end();
 					return false;

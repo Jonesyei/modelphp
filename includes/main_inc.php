@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set("Asia/Taipei");
 ini_set("session.cookie_httponly", 1);
-session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
+session_set_cookie_params(0, '/', NULL, NULL, TRUE);
 session_start();
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('APP_PATH', str_replace('\\', '/', substr(dirname(__FILE__),0,strlen(dirname(__FILE__))-8 )));
